@@ -1,0 +1,26 @@
+div.controls {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 400px;
+    height: 100vh;
+    border: $controls-border;
+    background-color: $controls-bg-color;
+
+    // #accordion {
+    //   height: 60%;
+    // }
+
+    .panel {
+      border-radius: 0;
+      border: none;
+      margin: 0;
+      h3 {
+        margin: 5px;
+        text-align: center;
+        a {
+          color: white;
+        }
+      }
+    }
+}

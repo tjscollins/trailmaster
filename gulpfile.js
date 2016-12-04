@@ -98,6 +98,6 @@ gulp.task('watch', ['default'], function() {
   require('./server.js');
   livereload.listen();
   gulp.watch(SCRIPTS_PATH, ['scripts']);
-  gulp.watch(SCSS_PATH + '**/*', ['scss']);
-  gulp.watch(HTML_PATH + '**/*', ['default']);
+  gulp.watch(SCSS_PATH + '**/*.scss', ['scss']);
+  gulp.watch(HTML_PATH + '**/*.html', ['default']);
 });

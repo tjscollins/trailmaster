@@ -18,7 +18,6 @@ class MainContainer extends BaseComponent {
         <Header/>
         <Controls/>
         <MapViewer/>
-        <h1>MainContainer.jsx</h1>
       </div>
     );
   }
