@@ -1,3 +1,7 @@
-Add tileset implementation to the game
+Implement basic components and UI
 
-Line of sight on visible portion of dungeon
+Implement Redux store of application state
+
+Implement basic functionality to add Points of Interest to application database
+
+Implement back-end data storage
