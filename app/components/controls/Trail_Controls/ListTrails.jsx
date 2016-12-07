@@ -3,24 +3,20 @@ import React from 'react';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
-import Header from 'Header';
-import Controls from 'Controls';
-import MapViewer from 'MapViewer';
 
-class MainContainer extends BaseComponent {
+class ListTrails extends BaseComponent {
   constructor() {
     super();
     //this._bind(...local methods) from BaseComponent
   }
   render() {
     return (
-      <div>
-        <Header/>
-        <Controls/>
-        <MapViewer/>
+      <div className="list-box well">
+        <br/>
+        <br/>
       </div>
     );
   }
 }
 
-export default MainContainer;
+export default ListTrails;

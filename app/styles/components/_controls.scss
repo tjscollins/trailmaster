@@ -6,15 +6,20 @@ div.controls {
     height: 100vh;
     border: $controls-border;
     background-color: $controls-bg-color;
-
-    // #accordion {
-    //   height: 60%;
-    // }
+    border-radius: 0;
 
     .panel {
       border-radius: 0;
       border: none;
       margin: 0;
+
+      .control-panel {
+        height: 75vh;
+      }
+
+      .list-box {
+        margin-top: 5px;
+      }
       h3 {
         margin: 5px;
         text-align: center;

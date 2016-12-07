@@ -1,6 +1,18 @@
 /*----------Modules----------*/
 import React from 'react';
+import {connect} from 'react-redux';
+
+/*----------Components----------*/
 import BaseComponent from 'BaseComponent';
+import SearchPOI from 'SearchPOI';
+import ListPOI from 'ListPOI';
+import AddPOI from 'AddPOI';
+import SearchRoutes from 'SearchRoutes';
+import ListRoutes from 'ListRoutes';
+import AddRoutes from 'AddRoutes';
+import SearchTrails from 'SearchTrails';
+import ListTrails from 'ListTrails';
+import AddTrails from 'AddTrails';
 
 class Controls extends BaseComponent {
   constructor() {
@@ -9,11 +21,11 @@ class Controls extends BaseComponent {
   }
   render() {
     return (
-      <div className='controls'>
+      <div className="controls">
         <div id="accordion" role="tablist" aria-multiselectable="true">
           <div className="panel panel-primary">
             <div className="panel-heading" role="tab" id="headingOne">
-              <h3 className='controls-title'>
+              <h3 className="controls-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                   Points of Interest
                 </a>
@@ -21,8 +33,10 @@ class Controls extends BaseComponent {
             </div>
 
             <div id="collapseOne" className="collapse in" role="tabpanel" aria-labelledby="headingOne">
-              <div className="panel-body">
-                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+              <div className="panel-body control-panel">
+                <SearchPOI/>
+                <ListPOI/>
+                <AddPOI/>
               </div>
             </div>
           </div>
@@ -35,8 +49,10 @@ class Controls extends BaseComponent {
               </h3>
             </div>
             <div id="collapseTwo" className="collapse" role="tabpanel" aria-labelledby="headingTwo">
-              <div className="panel-body">
-                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+              <div className="panel-body control-panel">
+                <SearchRoutes/>
+                <ListRoutes/>
+                <AddRoutes/>
               </div>
             </div>
           </div>
@@ -49,8 +65,10 @@ class Controls extends BaseComponent {
               </h3>
             </div>
             <div id="collapseThree" className="collapse" role="tabpanel" aria-labelledby="headingThree">
-              <div className="panel-body">
-                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+              <div className="panel-body control-panel">
+                <SearchTrails/>
+                <ListTrails/>
+                <AddTrails/>
               </div>
             </div>
           </div>

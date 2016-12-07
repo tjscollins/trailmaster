@@ -1,5 +1,8 @@
 /*----------Modules----------*/
 import React from 'react';
+import {connect} from 'react-redux';
+
+/*----------Components----------*/
 import BaseComponent from 'BaseComponent';
 
 class Header extends BaseComponent {

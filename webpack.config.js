@@ -3,20 +3,12 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: [
-    'script!jquery/dist/jquery.min.js',
-    'script!bootstrap/dist/js/bootstrap.min.js',
-    './app/app.jsx'
+    'script!jquery/dist/jquery.min.js', 'script!bootstrap/dist/js/bootstrap.min.js', './app/app.jsx'
   ],
   externals: {
     jquery: 'jQuery'
   },
-  plugins: [
-    new webpack.ProvidePlugin({
-      '$': 'jquery',
-      'jQuery': 'jquery',
-      'jquery': 'jquery'
-    })
-  ],
+  plugins: [new webpack.ProvidePlugin({'$': 'jquery', 'jQuery': 'jquery', 'jquery': 'jquery'})],
   output: {
     path: __dirname,
     filename: './public/bundle.js'
@@ -25,7 +17,10 @@ module.exports = {
     root: __dirname,
     modulesDirectories: [
       'node_modules',
-      './app/components',
+      './app/components/',
+      './app/components/controls/PoI_Controls',
+      './app/components/controls/Route_Controls',
+      './app/components/controls/Trail_Controls',
       './app/api'
     ],
     alias: {
@@ -38,29 +33,31 @@ module.exports = {
     extensions: ['', '.js', '.jsx']
   },
   module: {
-    loaders: [{
-      loader: 'babel-loader',
-      query: {
-        presets: ['react', 'es2015', 'stage-0']
-      },
-      test: /\.jsx?$/,
-      exclude: /(node_modules|bower_components)/
-    // }, {
-    //   test: /\.css$/,
-    //   loader: 'style-loader!css-loader'
-    // }, {
-    //   test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-    //   loader: 'file'
-    // }, {
-    //   test: /\.(woff|woff2)$/,
-    //   loader: 'url?prefix=font/&limit=5000'
-    // }, {
-    //   test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-    //   loader: 'url?limit=10000&mimetype=application/octet-stream'
-    // }, {
-    //   test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-    //   loader: 'url?limit=10000&mimetype=image/svg+xml'
-    }]
+    loaders: [
+      {
+        loader: 'babel-loader',
+        query: {
+          presets: ['react', 'es2015', 'stage-0']
+        },
+        test: /\.jsx?$/,
+        exclude: /(node_modules|bower_components)/
+        // }, {
+        //   test: /\.css$/,
+        //   loader: 'style-loader!css-loader'
+        // }, {
+        //   test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+        //   loader: 'file'
+        // }, {
+        //   test: /\.(woff|woff2)$/,
+        //   loader: 'url?prefix=font/&limit=5000'
+        // }, {
+        //   test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+        //   loader: 'url?limit=10000&mimetype=application/octet-stream'
+        // }, {
+        //   test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+        //   loader: 'url?limit=10000&mimetype=image/svg+xml'
+      }
+    ]
   },
   // sassLoader: {
   //   includePaths: [
