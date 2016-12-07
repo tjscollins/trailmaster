@@ -12,15 +12,15 @@ class Header extends BaseComponent {
   }
   render() {
     return (
-      <nav className='navbar navbar-default'>
-        <div className='container-fluid'>
-          <div className='navbar-header'>
-            <a className='navbar-brand' href='#'>TrailMaster</a>
+      <nav className="navbar navbar-default">
+        <div className="container-fluid">
+          <div className="navbar-header">
+            <a className="navbar-brand" href="#">TrailMaster</a>
             <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
               <span className="sr-only">Toggle navigation</span>
-              <span className="icon-bar"></span>
-              <span className="icon-bar"></span>
-              <span className="icon-bar"></span>
+              <span className="icon-bar"/>
+              <span className="icon-bar"/>
+              <span className="icon-bar"/>
             </button>
           </div>
 
@@ -28,7 +28,7 @@ class Header extends BaseComponent {
             <ul className="nav navbar-nav">
               <li className="dropdown">
                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown
-                  <span className="caret"></span>
+                  <span className="caret"/>
                 </a>
                 <ul className="dropdown-menu">
                   <li>
@@ -40,11 +40,11 @@ class Header extends BaseComponent {
                   <li>
                     <a href="#">Something else here</a>
                   </li>
-                  <li role="separator" className="divider"></li>
+                  <li role="separator" className="divider"/>
                   <li>
                     <a href="#">Separated link</a>
                   </li>
-                  <li role="separator" className="divider"></li>
+                  <li role="separator" className="divider"/>
                   <li>
                     <a href="#">One more separated link</a>
                   </li>
@@ -66,6 +66,6 @@ class Header extends BaseComponent {
       </nav>
     );
   }
-};
+}
 
-export default Header; // <- add me
+export default Header;

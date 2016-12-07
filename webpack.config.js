@@ -28,7 +28,8 @@ module.exports = {
       applicationStyles: 'app/styles/app.scss',
       actions: 'app/redux/actions/actions.jsx',
       reducers: 'app/redux/reducers/reducers.jsx',
-      configureStore: 'app/redux/store/configureStore.jsx'
+      configureStore: 'app/redux/store/configureStore.jsx',
+      geoJSON: 'app/redux/store/geoJSON.js'
     },
     extensions: ['', '.js', '.jsx']
   },

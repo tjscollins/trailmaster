@@ -9,3 +9,7 @@
     @content;
   }
 }
+
+@function map-width($non-map-width) {
+  @return 100%-$non-map-width;
+}

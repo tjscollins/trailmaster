@@ -1,8 +1,8 @@
 div.mapviewer {
     position: absolute;
     top: 50px;
-    left: 400px;
-    width: 75vw;
+    left: $controls-width;
+    width: map-width($controls-width);
     height: 100vh;
     border: $mapviewer-border;
 }

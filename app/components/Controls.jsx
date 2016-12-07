@@ -58,7 +58,7 @@ class Controls extends BaseComponent {
           </div>
           <div className="panel panel-primary">
             <div className="panel-heading" role="tab" id="headingThree">
-              <h3 className='controls-title'>
+              <h3 className="controls-title">
                 <a className="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                   Trails
                 </a>
@@ -76,6 +76,6 @@ class Controls extends BaseComponent {
       </div>
     );
   }
-};
+}
 
-export default Controls; // <- add me
+export default connect(state => state)(Controls);
