@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
 
-class Header extends BaseComponent {
+export class Header extends BaseComponent {
   constructor() {
     super();
     //this._bind(...local methods) from BaseComponent

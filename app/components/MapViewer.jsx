@@ -6,21 +6,23 @@ import {connect} from 'react-redux';
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
 
-class MapViewer extends BaseComponent {
+export class MapViewer extends BaseComponent {
   constructor() {
     super();
     // _bind(...methods) {
     //   methods.forEach((method) => this[method] = this[method].bind(this));
     // } inherited from BaseComponent
     this.map = false;
+    this.layerIDs = []; // Will contain a list used to filter against.
+
   }
   createMap() {
+    var {layerIDs} = this;
     var {geoJSON} = this.props;
-    var layerIDs = []; // Will contain a list used to filter against.
     var filterPOI = document.getElementById('poi-searchText');
     var filterRoutes = document.getElementById('routes-searchText');
     mapboxgl.accessToken = 'pk.eyJ1IjoidGpzY29sbGlucyIsImEiOiJjaXdhZjl4b3AwM2h5MzNwbzZ0eDg0YWZsIn0.uR5NCLn73_X2M9PxDO_4KA';
-    console.log('Generating Map...');
+    // console.log('Generating Map...');
     var map = new mapboxgl.Map({
       container: 'mapviewer',
       style: 'mapbox://styles/mapbox/outdoors-v9',
@@ -39,12 +41,8 @@ class MapViewer extends BaseComponent {
       //Try loading desired data....
 
       //Points of Interest & Labels
-      var points = geoJSON
-        .features
-        .filter((point) => {
-          return point.geometry.type === 'Point';
-        });
-      map.addSource('points', {
+      var points = geoJSON.features;
+      map.addSource('store', {
         'type': 'geojson',
         'data': {
           ...geoJSON,
@@ -53,25 +51,64 @@ class MapViewer extends BaseComponent {
       });
       points.forEach((point) => {
         var layerID = point.properties.name;
+        var layerType = '',
+          layout = {};
 
         if (!map.getLayer(layerID)) {
+          switch (point.geometry.type) {
+            case 'Point':
+              layerType = 'symbol';
+              layout = {
+                'icon-image': 'marker-15',
+                'text-field': '{name}',
+                'text-font': [
+                  'Open Sans Regular', 'Arial Unicode MS Regular'
+                ],
+                'text-size': 10,
+                'text-offset': [
+                  0, 0.6
+                ],
+                'text-anchor': 'top',
+                'visibility': 'none'
+              };
+              break;
+            case 'LineString':
+              layerType = 'line';
+              layout = {
+                'line-join': 'round',
+                'line-cap': 'round',
+                'visibility': 'none'
+              };
+              console.log(`${layerID} label`);
+              map.addLayer({
+                'id': `${layerID} label`,
+                'type': 'symbol',
+                'source': 'store',
+                'layout': {
+                  'text-field': '{name}',
+                  'text-font': [
+                    'Open Sans Regular', 'Arial Unicode MS Regular'
+                  ],
+                  'text-size': 10,
+                  'text-offset': [
+                    0, 0.6
+                  ],
+                  'text-anchor': 'top',
+                  'visibility': 'none'
+                },
+                'filter': ['==', 'name', layerID]
+              });
+              layerIDs.push(`${layerID} label`);
+              break;
+            default:
+              throw new Error(`Unknown feature type ${layerType}`);
+          }
+          // console.log('Creating map layer', layerID, layerType);
           map.addLayer({
             'id': layerID,
-            'type': 'symbol',
-            'source': 'points',
-            'layout': {
-              'icon-image': 'marker-15',
-              'text-field': '{name}',
-              'text-font': [
-                'Open Sans Regular', 'Arial Unicode MS Regular'
-              ],
-              'text-size': 10,
-              'text-offset': [
-                0, 0.6
-              ],
-              'text-anchor': 'top',
-              'visibility': 'none'
-            },
+            'type': layerType,
+            'source': 'store',
+            'layout': layout,
             'filter': ['==', 'name', layerID]
           });
 
@@ -88,7 +125,21 @@ class MapViewer extends BaseComponent {
           .trim();
         layerIDs.forEach(function(layerID) {
           var re = new RegExp(value, 'i');
-          console.log(value, layerID, layerID.match(re));
+          map.setLayoutProperty(layerID, 'visibility', layerID.match(re) && value.length
+            ? 'visible'
+            : 'none');
+        });
+      });
+
+      filterRoutes.addEventListener('keyup', function(e) {
+        // If the input value matches a layerID set
+        // it's visibility to 'visible' or else hide it.
+        var value = e
+          .target
+          .value
+          .trim();
+        layerIDs.forEach(function(layerID) {
+          var re = new RegExp(value, 'i');
           map.setLayoutProperty(layerID, 'visibility', layerID.match(re) && value.length
             ? 'visible'
             : 'none');
@@ -96,21 +147,10 @@ class MapViewer extends BaseComponent {
       });
 
       //Routes & Labels
-      // map.addSource('routes', {
-      //   'type': 'geojson',
-      //   'data': {
-      //     ...geoJSON,
-      //     'features': geoJSON
-      //       .features
-      //       .filter((point) => {
-      //         return point.geometry.type === 'LineString';
-      //       })
-      //   }
-      // });
       // map.addLayer({
       //   'id': 'routes',
       //   'type': 'line',
-      //   'source': 'routes',
+      //   'source': 'store',
       //   'layout': {
       //     'line-join': 'round',
       //     'line-cap': 'round'
@@ -120,27 +160,37 @@ class MapViewer extends BaseComponent {
       //     'line-width': 2
       //   }
       // });
-      // map.addLayer({
-      //   'id': 'route-labels',
-      //   'type': 'symbol',
-      //   'source': 'routes',
-      //   'layout': {
-      //     'text-field': "{name}",
-      //     'text-font': [
-      //       'Open Sans Regular', 'Arial Unicode MS Regular'
-      //     ],
-      //     'text-size': 10,
-      //     'text-offset': [
-      //       0, 0.6
-      //     ],
-      //     'text-anchor': 'top'
-      //   }
-      // });
+
     });
     return map;
   }
+  componentWillReceiveProps(nextProps) {
+    var {map} = this;
+    nextProps
+      .geoJSON
+      .features
+      .map((feat) => {
+        return feat.properties;
+      })
+      .forEach(({name, displayed}) => {
+        console.log('Checking for layer', name);
+        if (this.layerIDs.indexOf(name) > -1) {
+          console.log('Toggling map layer', name, displayed);
+          map.setLayoutProperty(name, 'visibility', displayed
+            ? 'visible'
+            : 'none');
+          console.log('Checking for layer', `${name} label`);
+          if (this.layerIDs.indexOf(`${name} label`) > -1) {
+            console.log('Toggling map layer', `${name} label`, displayed);
+            map.setLayoutProperty(`${name} label`, 'visibility', displayed
+              ? 'visible'
+              : 'none');
+          }
+        }
+      });
+  }
   componentDidMount() {
-    console.log('MapViewer mounted...');
+    // console.log('MapViewer mounted...');
     this.map = this.map || this.createMap();
   }
   render() {

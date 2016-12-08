@@ -17,7 +17,7 @@ class SearchRoutes extends BaseComponent {
     return (
       <div className="search-box">
         <div>
-          <input className="form-control" type="search" ref="searchText" placeholder="Search Points of Interest" onChange={() => {
+          <input className="form-control" type="search" id="routes-searchText" ref="routes-searchText" placeholder="Search Points of Interest" onChange={() => {
             var searchText = this.refs.searchText.value;/*dispatch(actions.setSearchText(searchText)); */
           }}/>
         </div>

@@ -8,7 +8,7 @@ import TestUtils from 'react-addons-test-utils';
 import $ from 'jquery';
 
 /*----------Components----------*/
-import Header from 'Header';
+import {Header} from 'Header';
 
 describe('Header', () => {
   it('should exist', () => {

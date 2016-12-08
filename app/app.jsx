@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import {configure} from 'configureStore';
 /*----------Components----------*/
-import MainContainer from 'Main'
+import MainContainer from 'MainContainer';
 
 /*----------Configure Redux Store----------*/
 var store = configure();

@@ -6,6 +6,9 @@ import uuid from 'uuid';
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
 
+/*----------Redux----------*/
+import * as actions from 'actions';
+
 class ListPOI extends BaseComponent {
   constructor() {
     super();
@@ -20,9 +23,9 @@ class ListPOI extends BaseComponent {
         return point.geometry.type === 'Point';
       })
       .map((point) => {
-        var {name, desc, condition, last} = point.properties;
+        var {name, desc, condition, last, id} = point.properties;
         return (
-          <tr onClick={this.display} className="point-of-interest" key={uuid()}>
+          <tr onClick={this.display(id)} id={id} style={this.displayStyle(id)} className="point-of-interest" key={uuid()}>
             <td>{name}</td>
             <td>{desc}</td>
             <td>{condition}</td>
@@ -31,8 +34,27 @@ class ListPOI extends BaseComponent {
         );
       });
   }
-  display() {
+  display(id) {
     //Display point on map
+    var {dispatch} = this.props;
+    return () => {
+      dispatch(actions.toggleVisibility(id));
+    };
+  }
+  displayStyle(id) {
+    var {geoJSON} = this.props;
+    var thisPoint = geoJSON
+      .features
+      .filter((point) => {
+        return point.properties.id === id;
+      })[0];
+    return thisPoint.properties.displayed
+      ? {
+        fontWeight: 'bold'
+      }
+      : {
+        fontWeight: 'normal'
+      };
   }
   render() {
     return (

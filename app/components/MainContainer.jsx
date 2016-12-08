@@ -7,7 +7,7 @@ import Header from 'Header';
 import Controls from 'Controls';
 import MapViewer from 'MapViewer';
 
-class MainContainer extends BaseComponent {
+export class MainContainer extends BaseComponent {
   constructor() {
     super();
     //this._bind(...local methods) from BaseComponent

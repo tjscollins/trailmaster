@@ -14,7 +14,7 @@ import SearchTrails from 'SearchTrails';
 import ListTrails from 'ListTrails';
 import AddTrails from 'AddTrails';
 
-class Controls extends BaseComponent {
+export class Controls extends BaseComponent {
   constructor() {
     super();
     //this._bind(...local methods) from BaseComponent

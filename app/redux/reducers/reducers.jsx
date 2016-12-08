@@ -2,6 +2,26 @@
 
 export var geoJSONReducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'TOGGLE_VISIBILITY':
+      return {
+        ...state,
+        features: state
+          .features
+          .map((point) => {
+            if (point.properties.id === action.id) {
+              console.log(action.id, point.properties.displayed);
+              return {
+                ...point,
+                properties: {
+                  ...point.properties,
+                  displayed: !point.properties.displayed
+                }
+              };
+            } else {
+              return point;
+            }
+          })
+      };
     default:
       return state;
       // throw new Error(`${this} received unknown action type ${action.type}`);
@@ -22,7 +42,8 @@ var initialState = {
         desc: 'Trail to move from Kannat Tabla area down into Chalan Kiya near the start of the Chalan Kiya ravine',
         condition: 'Uncut, overgrown',
         last: 'Dec 2015',
-        displayed: true
+        displayed: false,
+        id: '1'
       },
       geometry: {
         type: 'LineString',
@@ -121,7 +142,8 @@ var initialState = {
         desc: 'Concrete statue of Jesus at the peak of Mt. Tapotchau',
         condition: 'Rough dirt road, easy access on foot',
         last: 'June 2016',
-        displayed: false
+        displayed: false,
+        id: '2'
       },
       geometry: {
         type: 'Point',
@@ -137,7 +159,8 @@ var initialState = {
         desc: 'Hole descends from top of cliff to bottom, forming climbable cave',
         condition: 'Rope in good condition',
         last: 'June 2014',
-        displayed: true
+        displayed: false,
+        id: '4'
       },
       geometry: {
         type: 'Point',
@@ -153,7 +176,8 @@ var initialState = {
         desc: 'Route runs downhill through jungle',
         condition: 'Bees!',
         last: 'Oct 2016',
-        displayed: false
+        displayed: false,
+        id: '3'
       },
       geometry: {
         type: 'LineString',

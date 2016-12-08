@@ -8,7 +8,7 @@ import TestUtils from 'react-addons-test-utils';
 import $ from 'jquery';
 
 /*----------Components----------*/
-import Controls from 'Controls';
+import {Controls} from 'Controls';
 
 describe('Controls', () => {
   it('should exist', () => {
