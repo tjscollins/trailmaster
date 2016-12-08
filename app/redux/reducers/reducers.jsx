@@ -22,7 +22,7 @@ var initialState = {
         desc: 'Trail to move from Kannat Tabla area down into Chalan Kiya near the start of the Chalan Kiya ravine',
         condition: 'Uncut, overgrown',
         last: 'Dec 2015',
-        displayed: false
+        displayed: true
       },
       geometry: {
         type: 'LineString',
