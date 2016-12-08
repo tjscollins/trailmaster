@@ -15,6 +15,7 @@ class ListRoutes extends BaseComponent {
     //this._bind(...local methods) from BaseComponent
   }
   listPoints() {
+    var {RouteSearchText} = this.props.searchText;
     return this
       .props
       .geoJSON

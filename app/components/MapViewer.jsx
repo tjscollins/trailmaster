@@ -79,7 +79,7 @@ export class MapViewer extends BaseComponent {
                 'line-cap': 'round',
                 'visibility': 'none'
               };
-              console.log(`${layerID} label`);
+              // console.log(`${layerID} label`);
               map.addLayer({
                 'id': `${layerID} label`,
                 'type': 'symbol',
@@ -173,15 +173,15 @@ export class MapViewer extends BaseComponent {
         return feat.properties;
       })
       .forEach(({name, displayed}) => {
-        console.log('Checking for layer', name);
+        // console.log('Checking for layer', name);
         if (this.layerIDs.indexOf(name) > -1) {
-          console.log('Toggling map layer', name, displayed);
+          // console.log('Toggling map layer', name, displayed);
           map.setLayoutProperty(name, 'visibility', displayed
             ? 'visible'
             : 'none');
-          console.log('Checking for layer', `${name} label`);
+          // console.log('Checking for layer', `${name} label`);
           if (this.layerIDs.indexOf(`${name} label`) > -1) {
-            console.log('Toggling map layer', `${name} label`, displayed);
+            // console.log('Toggling map layer', `${name} label`, displayed);
             map.setLayoutProperty(`${name} label`, 'visibility', displayed
               ? 'visible'
               : 'none');

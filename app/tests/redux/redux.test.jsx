@@ -20,6 +20,15 @@ describe('redux', () => {
       var res = actions.toggleVisibility('123');
       expect(res).toEqual(action);
     });
+
+    it('should generate the SET_POI_SEARCH_TEXT action', () => {
+      var action = {
+        type: 'SET_POI_SEARCH_TEXT',
+        POISearchText: 'chalan'
+      };
+      var res = actions.setPOISearchText('chalan');
+      expect(res).toEqual(action);
+    });
   });
 
   //reducers

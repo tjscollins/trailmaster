@@ -1,6 +1,20 @@
 // import {geoJSON} from 'geoJSON';
 
-export var geoJSONReducer = (state = initialState, action) => {
+export var searchTextReducer = (state = {
+  POISearchText: ''
+}, action) => {
+  switch (action.type) {
+    case 'SET_POI_SEARCH_TEXT':
+      return {
+        ...state,
+        POISearchText: action.POISearchText
+      };
+    default:
+      return state;
+  }
+};
+
+export var geoJSONReducer = (state = initialGeoState, action) => {
   switch (action.type) {
     case 'TOGGLE_VISIBILITY':
       return {
@@ -9,7 +23,7 @@ export var geoJSONReducer = (state = initialState, action) => {
           .features
           .map((point) => {
             if (point.properties.id === action.id) {
-              console.log(action.id, point.properties.displayed);
+              // console.log(action.id, point.properties.displayed);
               return {
                 ...point,
                 properties: {
@@ -28,7 +42,7 @@ export var geoJSONReducer = (state = initialState, action) => {
   }
 };
 
-var initialState = {
+var initialGeoState = {
 
   type: 'FeatureCollection',
   features: [
