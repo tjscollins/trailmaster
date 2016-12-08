@@ -14,25 +14,26 @@ class ListRoutes extends BaseComponent {
     super();
     //this._bind(...local methods) from BaseComponent
   }
-  listPoints() {
-    var {RouteSearchText} = this.props.searchText;
-    return this
-      .props
-      .geoJSON
+  listRoutes() {
+    var {geoJSON} = this.props;
+    var {RoutesSearchText} = this.props.searchText;
+    return geoJSON
       .features
       .filter((point) => {
         return point.geometry.type === 'LineString';
       })
       .map((point) => {
         var {name, desc, condition, last, id} = point.properties;
-        return (
-          <tr onClick={this.display(id)} id={id} style={this.displayStyle(id)} className="routes" key={uuid()}>
-            <td>{name}</td>
-            <td>{desc}</td>
-            <td>{condition}</td>
-            <td>{last}</td>
-          </tr>
-        );
+        return name.match(new RegExp(RoutesSearchText, 'i'))
+          ? (
+            <tr onClick={this.display(id)} id={id} style={this.displayStyle(id)} className="routes" key={uuid()}>
+              <td>{name}</td>
+              <td>{desc}</td>
+              <td>{condition}</td>
+              <td>{last}</td>
+            </tr>
+          )
+          : null;
       });
   }
   display(id) {
@@ -75,7 +76,7 @@ class ListRoutes extends BaseComponent {
           </tr>
         </thead>
         <tbody>
-          {this.listPoints()}
+          {this.listRoutes()}
         </tbody>
       </table>
     );

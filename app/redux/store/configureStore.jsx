@@ -1,9 +1,9 @@
 import * as redux from 'redux';
 import thunk from 'redux-thunk';
-import {geoJSONReducer, searchTextReducer} from 'reducers';
+import {geoJSONReducer, searchTextReducer, mapReducer} from 'reducers';
 
 export var configure = (initialState = {}) => {
-  var reducer = redux.combineReducers({geoJSON: geoJSONReducer, searchText: searchTextReducer});
+  var reducer = redux.combineReducers({geoJSON: geoJSONReducer, searchText: searchTextReducer, map: mapReducer});
 
   var store = redux.createStore(reducer, initialState, redux.compose(redux.applyMiddleware(thunk), window.devToolsExtension
     ? window.devToolsExtension()

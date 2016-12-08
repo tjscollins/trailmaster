@@ -19,7 +19,6 @@ class SearchPOI extends BaseComponent {
       <div className="search-box">
         <div>
           <input className="form-control" type="search" id="poi-searchText" ref="poisearchText" placeholder="Search Points of Interest" onChange={() => {
-            console.log(this.refs.poisearchText.value);
             dispatch(actions.setPOISearchText(this.refs.poisearchText.value));
           }}/>
         </div>

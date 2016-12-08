@@ -1,4 +1,24 @@
 // import {geoJSON} from 'geoJSON';
+import uuid from 'uuid';
+
+export var mapReducer = (state = {
+  update: false
+}, action) => {
+  switch (action.type) {
+    case 'UPDATE_MAP':
+      return {
+        ...state,
+        update: true
+      };
+    case 'COMPLETE_UPDATE_MAP':
+      return {
+        ...state,
+        update: false
+      };
+    default:
+      return state;
+  }
+};
 
 export var searchTextReducer = (state = {
   POISearchText: ''
@@ -8,6 +28,11 @@ export var searchTextReducer = (state = {
       return {
         ...state,
         POISearchText: action.POISearchText
+      };
+    case 'SET_ROUTES_SEARCH_TEXT':
+      return {
+        ...state,
+        RoutesSearchText: action.RoutesSearchText
       };
     default:
       return state;
@@ -35,6 +60,44 @@ export var geoJSONReducer = (state = initialGeoState, action) => {
               return point;
             }
           })
+      };
+    case 'ADD_POI':
+      var {
+        type,
+        pos,
+        name,
+        desc,
+        cond,
+        date
+      } = action;
+
+      var newFeature = {
+        type: 'Feature',
+        properties: {
+          'marker-color': '#7e7e7e',
+          'marker-size': 'medium',
+          'marker-symbol': '',
+          name,
+          desc,
+          condition: cond,
+          last: `${date.getMonth()} ${date.getFullYear()}`,
+          displayed: false,
+          id: uuid()
+        },
+        geometry: {
+          type: 'Point',
+          coordinates: [
+            pos.coords.longitude - 360,
+            pos.coords.latitude
+          ]
+        }
+      };
+      return {
+        ...state,
+        features: [
+          ...state.features,
+          newFeature
+        ]
       };
     default:
       return state;

@@ -29,6 +29,15 @@ describe('redux', () => {
       var res = actions.setPOISearchText('chalan');
       expect(res).toEqual(action);
     });
+
+    it('should generate the SET_ROUTES_SEARCH_TEXT action', () => {
+      var action = {
+        type: 'SET_ROUTES_SEARCH_TEXT',
+        RoutesSearchText: 'chalan'
+      };
+      var res = actions.setRoutesSearchText('chalan');
+      expect(res).toEqual(action);
+    });
   });
 
   //reducers
@@ -53,5 +62,7 @@ describe('redux', () => {
         expect(res.features[0].properties.displayed).toBe(false);
       });
     });
+
+    describe('searchTextReducer', () => {});
   });
 });

@@ -2,9 +2,13 @@
 import React from 'react';
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
 import {connect} from 'react-redux';
+import {createMap} from 'TrailmasterAPI';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
+
+/*----------Redux----------*/
+import * as actions from 'actions';
 
 export class MapViewer extends BaseComponent {
   constructor() {
@@ -98,7 +102,7 @@ export class MapViewer extends BaseComponent {
                 },
                 'filter': ['==', 'name', layerID]
               });
-              layerIDs.push(`${layerID} label`);
+              layerIDs.push([`${layerID} label`, 'label']);
               break;
             default:
               throw new Error(`Unknown feature type ${layerType}`);
@@ -112,7 +116,7 @@ export class MapViewer extends BaseComponent {
             'filter': ['==', 'name', layerID]
           });
 
-          layerIDs.push(layerID);
+          layerIDs.push([layerID, layerType]);
         }
       });
 
@@ -125,9 +129,15 @@ export class MapViewer extends BaseComponent {
           .trim();
         layerIDs.forEach(function(layerID) {
           var re = new RegExp(value, 'i');
-          map.setLayoutProperty(layerID, 'visibility', layerID.match(re) && value.length
-            ? 'visible'
-            : 'none');
+          if (layerID[1] === 'symbol') {
+            map.setLayoutProperty(layerID[0], 'visibility', layerID[0].match(re) && value.length
+              ? 'visible'
+              : geoJSON.features.filter((point) => {
+                return point.properties.name === layerID;
+              })[0].properties.displayed
+                ? 'visible'
+                : 'none');
+          }
         });
       });
 
@@ -140,32 +150,24 @@ export class MapViewer extends BaseComponent {
           .trim();
         layerIDs.forEach(function(layerID) {
           var re = new RegExp(value, 'i');
-          map.setLayoutProperty(layerID, 'visibility', layerID.match(re) && value.length
-            ? 'visible'
-            : 'none');
+          if (layerID[1] === 'line' || layerID[1] === 'label') {
+            map.setLayoutProperty(layerID[0], 'visibility', layerID[0].match(re) && value.length
+              ? 'visible'
+              : geoJSON.features.filter((point) => {
+                return point.properties.name === layerID;
+              })[0].properties.displayed
+                ? 'visible'
+                : 'none');
+          }
         });
       });
-
-      //Routes & Labels
-      // map.addLayer({
-      //   'id': 'routes',
-      //   'type': 'line',
-      //   'source': 'store',
-      //   'layout': {
-      //     'line-join': 'round',
-      //     'line-cap': 'round'
-      //   },
-      //   'paint': {
-      //     'line-color': '#500',
-      //     'line-width': 2
-      //   }
-      // });
-
     });
     return map;
   }
   componentWillReceiveProps(nextProps) {
+    var {dispatch} = this.props;
     var {map} = this;
+    var willReplaceMap = nextProps.map.update;
     nextProps
       .geoJSON
       .features
@@ -173,25 +175,33 @@ export class MapViewer extends BaseComponent {
         return feat.properties;
       })
       .forEach(({name, displayed}) => {
-        // console.log('Checking for layer', name);
-        if (this.layerIDs.indexOf(name) > -1) {
-          // console.log('Toggling map layer', name, displayed);
+        if (this.layerIDs.map((id) => {
+          return id[0];
+        }).indexOf(name) > -1) {
           map.setLayoutProperty(name, 'visibility', displayed
             ? 'visible'
             : 'none');
-          // console.log('Checking for layer', `${name} label`);
-          if (this.layerIDs.indexOf(`${name} label`) > -1) {
-            // console.log('Toggling map layer', `${name} label`, displayed);
+          if (this.layerIDs.map((id) => {
+            return id[0];
+          }).indexOf(`${name} label`) > -1) {
             map.setLayoutProperty(`${name} label`, 'visibility', displayed
               ? 'visible'
               : 'none');
           }
         }
       });
+
+    if (willReplaceMap) {
+      map.remove();
+      this.map = this.createMap();
+      dispatch(actions.completeUpdateMap());
+    }
   }
   componentDidMount() {
+    var {dispatch} = this.props;
     // console.log('MapViewer mounted...');
     this.map = this.map || this.createMap();
+    // dispatch(actions.updateMap(map));
   }
   render() {
     return (<div id="mapviewer" className="mapviewer"/>);
