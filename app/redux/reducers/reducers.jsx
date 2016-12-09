@@ -109,7 +109,7 @@ export var geoJSONReducer = (state = initialGeoState, action) => {
         },
         geometry: {
           type: 'LineString',
-          coordinates: list
+          coordinates: [...list]
         }
       };
       return {

@@ -25,6 +25,7 @@ class AddRoutes extends BaseComponent {
     $('#add-route-modal').modal('show');
   }
   tracking() {
+    console.log('Started Tracking');
     var {dispatch} = this.props;
     // var form = this.refs.addPOI;
     this.list = [];
@@ -54,6 +55,7 @@ class AddRoutes extends BaseComponent {
     $('#tracking-modal').modal('show');
   }
   stopTracking() {
+    console.log('Stopped Tracking');
     var {dispatch} = this.props;
     var {name, desc, cond} = this.refs;
     var date = new Date();
@@ -61,6 +63,7 @@ class AddRoutes extends BaseComponent {
     navigator
       .geolocation
       .clearWatch(this.trackingID);
+    console.log('Adding Route', name.value, this.list);
     dispatch(actions.addRoute(this.list, name.value, desc.value, cond.value, date));
     dispatch(actions.updateMap());
   }

@@ -2,7 +2,7 @@
 import React from 'react';
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
 import {connect} from 'react-redux';
-import {createMap} from 'TrailmasterAPI';
+// import {createMap} from 'TrailmasterAPI';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
@@ -18,15 +18,15 @@ export class MapViewer extends BaseComponent {
     // } inherited from BaseComponent
     this.map = false;
     this.layerIDs = []; // Will contain a list used to filter against.
-
   }
   createMap() {
+    var self = this;
     var {layerIDs} = this;
     var {geoJSON} = this.props;
+    var layerIDs = [];
     var filterPOI = document.getElementById('poi-searchText');
     var filterRoutes = document.getElementById('routes-searchText');
     mapboxgl.accessToken = 'pk.eyJ1IjoidGpzY29sbGlucyIsImEiOiJjaXdhZjl4b3AwM2h5MzNwbzZ0eDg0YWZsIn0.uR5NCLn73_X2M9PxDO_4KA';
-    // console.log('Generating Map...');
     var map = new mapboxgl.Map({
       container: 'mapviewer',
       style: 'mapbox://styles/mapbox/outdoors-v9',
@@ -83,7 +83,7 @@ export class MapViewer extends BaseComponent {
                 'line-cap': 'round',
                 'visibility': 'none'
               };
-              // console.log(`${layerID} label`);
+              console.log(`Creating map layer: ${layerID} label`, 'symbol');
               map.addLayer({
                 'id': `${layerID} label`,
                 'type': 'symbol',
@@ -107,7 +107,7 @@ export class MapViewer extends BaseComponent {
             default:
               throw new Error(`Unknown feature type ${layerType}`);
           }
-          // console.log('Creating map layer', layerID, layerType);
+          console.log('Creating map layer', layerID, layerType);
           map.addLayer({
             'id': layerID,
             'type': layerType,
@@ -123,20 +123,22 @@ export class MapViewer extends BaseComponent {
       filterPOI.addEventListener('keyup', function(e) {
         // If the input value matches a layerID set
         // it's visibility to 'visible' or else hide it.
+        console.log('Calling filterPOI');
+        var {geoJSON} = self.props;
         var value = e
           .target
           .value
-          .trim();
+          .trim() || '!!!!!!!';
         layerIDs.forEach(function(layerID) {
           var re = new RegExp(value, 'i');
           if (layerID[1] === 'symbol') {
-            map.setLayoutProperty(layerID[0], 'visibility', layerID[0].match(re) && value.length
-              ? 'visible'
-              : geoJSON.features.filter((point) => {
-                return point.properties.name === layerID;
-              })[0].properties.displayed
-                ? 'visible'
-                : 'none');
+            //Only layers representing POIs
+            if (self.shouldDisplay(layerID[0], re, self.props)) {
+              //Only POIs that match the search for non-zero length search
+              map.setLayoutProperty(layerID[0], 'visibility', 'visible');
+            } else {
+              map.setLayoutProperty(layerID[0], 'visibility', 'none');
+            }
           }
         });
       });
@@ -144,54 +146,77 @@ export class MapViewer extends BaseComponent {
       filterRoutes.addEventListener('keyup', function(e) {
         // If the input value matches a layerID set
         // it's visibility to 'visible' or else hide it.
+        console.log('Calling filterRoutes');
+        var {geoJSON} = self.props;
         var value = e
           .target
           .value
-          .trim();
+          .trim() || '!!!!!!!!';
         layerIDs.forEach(function(layerID) {
           var re = new RegExp(value, 'i');
-          if (layerID[1] === 'line' || layerID[1] === 'label') {
-            map.setLayoutProperty(layerID[0], 'visibility', layerID[0].match(re) && value.length
-              ? 'visible'
-              : geoJSON.features.filter((point) => {
-                return point.properties.name === layerID;
-              })[0].properties.displayed
-                ? 'visible'
-                : 'none');
+          if (layerID[1] === 'line') {
+            //Only Layers representing Route-Line
+            if (self.shouldDisplay(layerID[0], re, self.props)) {
+              map.setLayoutProperty(layerID[0], 'visibility', 'visible');
+            } else {
+              map.setLayoutProperty(layerID[0], 'visibility', 'none');
+            }
+          } else if (layerID[1] === 'label') {
+            //Only Layers representing Route-Line
+            //Trim off ' label' suffix from layerID
+            var name = layerID[0].substring(0, layerID[0].length - 6);
+            if (self.shouldDisplay(name, re, self.props)) {
+              //Only Route-Lines that match the non-zero search
+              map.setLayoutProperty(layerID[0], 'visibility', 'visible');
+            } else {
+              map.setLayoutProperty(layerID[0], 'visibility', 'none');
+            }
           }
         });
       });
     });
+    this.layerIDs = layerIDs;
     return map;
   }
+  shouldDisplay(layerName, search, props) {
+    //Props should be passed in here to allow selection between current or nextProps as appropriate
+    var {geoJSON} = props;
+    var {properties} = geoJSON
+      .features
+      .filter((point) => {
+        return point.properties.name === layerName;
+      })[0];
+    return search.test(layerName) || properties.displayed;
+  }
   componentWillReceiveProps(nextProps) {
-    var {dispatch} = this.props;
-    var {map} = this;
-    var willReplaceMap = nextProps.map.update;
+    var {dispatch, searchText} = nextProps;
+    var {map, layerIDs} = this;
+    var searchPOI = new RegExp(searchText.POISearchText || '!!!!!!', 'i');
+    var searchRoutes = new RegExp(searchText.RoutesSearchText || '!!!!!!', 'i');
     nextProps
       .geoJSON
       .features
-      .map((feat) => {
-        return feat.properties;
-      })
-      .forEach(({name, displayed}) => {
-        if (this.layerIDs.map((id) => {
+      .forEach(({properties, geometry}) => {
+        var {name, displayed} = properties;
+        var i = layerIDs.map((id) => {
           return id[0];
-        }).indexOf(name) > -1) {
-          map.setLayoutProperty(name, 'visibility', displayed
-            ? 'visible'
-            : 'none');
-          if (this.layerIDs.map((id) => {
-            return id[0];
-          }).indexOf(`${name} label`) > -1) {
-            map.setLayoutProperty(`${name} label`, 'visibility', displayed
-              ? 'visible'
-              : 'none');
-          }
+        }).indexOf(name);
+        if (i > -1) {
+          if (this.shouldDisplay(name, searchPOI, nextProps) && layerIDs[i][1] === 'symbol') {
+            map.setLayoutProperty(name, 'visibility', 'visible');
+          } else if (this.shouldDisplay(name, searchRoutes, nextProps) && layerIDs[i][1] !== 'symbol') {
+            map.setLayoutProperty(name, 'visibility', 'visible');
+            map.setLayoutProperty(name + ' label', 'visibility', 'visible');
+          } else {
+            map.setLayoutProperty(name, 'visibility', 'none');
+            if (layerIDs[i][1] !== 'symbol')
+              map.setLayoutProperty(name + ' label', 'visibility', 'none');
+            }
+
         }
       });
 
-    if (willReplaceMap) {
+    if (nextProps.map.update) {
       map.remove();
       this.map = this.createMap();
       dispatch(actions.completeUpdateMap());
@@ -199,9 +224,7 @@ export class MapViewer extends BaseComponent {
   }
   componentDidMount() {
     var {dispatch} = this.props;
-    // console.log('MapViewer mounted...');
     this.map = this.map || this.createMap();
-    // dispatch(actions.updateMap(map));
   }
   render() {
     return (<div id="mapviewer" className="mapviewer"/>);
