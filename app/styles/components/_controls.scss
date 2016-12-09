@@ -9,9 +9,9 @@ div.controls {
     border-radius: 0;
 
     .panel {
+        margin: 0;
         border-radius: 0;
         border: none;
-        margin: 0;
 
         .control-panel {
             height: 75vh;
@@ -33,7 +33,7 @@ div.controls {
 }
 
 table.list-box {
-  th {
-    text-align: center;
-  }
+    th {
+        text-align: center;
+    }
 }

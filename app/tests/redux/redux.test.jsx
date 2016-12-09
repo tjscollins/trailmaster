@@ -34,6 +34,19 @@ describe('redux', () => {
       expect(res).toEqual(action);
     });
 
+    it('should generate the ADD_ROUTE action', () => {
+      var action = {
+        type: 'ADD_ROUTE',
+        list: 'list',
+        name: 'name',
+        desc: 'desc',
+        cond: 'cond',
+        date: 'date'
+      };
+      var res = actions.addRoute('list', 'name', 'desc', 'cond', 'date');
+      expect(res).toEqual(action);
+    });
+
     it('should generate the UPDATE_MAP action', () => {
       var action = {
         type: 'UPDATE_MAP'
@@ -170,6 +183,42 @@ describe('redux', () => {
         expect(res.features[0].properties.last).toBe('Dec 2016');
         expect(res.features[0].geometry.coordinates[0]).toBe(-215);
         expect(res.features[0].geometry.coordinates[1]).toBe(15);
+      });
+
+      it('should ADD new ROUTEs to the store', () => {
+        var action = {
+          type: 'ADD_ROUTE',
+          list: [
+            [
+              -214.27445769309995, 15.167432624111209
+            ],
+            [
+              -214.27433967590332, 15.167339428181535
+            ],
+            [-214.27423238754272, 15.16729800775516]
+          ],
+          name: 'Test Route',
+          desc: 'Description',
+          cond: 'Condition',
+          date: new Date(2016, 11, 25, 0, 0, 0)
+        };
+        var state = {
+          type: 'FeatureCollection',
+          features: []
+        };
+
+        var res = reducers.geoJSONReducer(df(state), df(action));
+        expect(res.features.length).toBe(1);
+        expect(res.features[0].properties.name).toBe(action.name);
+        expect(res.features[0].properties.desc).toBe(action.desc);
+        expect(res.features[0].properties.condition).toBe(action.cond);
+        expect(res.features[0].properties.last).toBe('Dec 2016');
+        expect(res.features[0].geometry.coordinates[0]).toBeA('array');
+        expect(res.features[0].geometry.coordinates[0][0]).toBe(-214.27445769309995);
+        expect(res.features[0].geometry.coordinates[1]).toBeA('array');
+        expect(res.features[0].geometry.coordinates[2]).toBeA('array');
+        expect(res.features[0].geometry.coordinates[3]).toNotExist();
+
       });
     });
 

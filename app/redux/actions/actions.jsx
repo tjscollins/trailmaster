@@ -13,6 +13,17 @@ export var addPOI = (pos, name, desc, cond, date) => {
   };
 };
 
+export var addRoute = (list, name, desc, cond, date) => {
+  return {
+    type: 'ADD_ROUTE',
+    list,
+    name,
+    desc,
+    cond,
+    date
+  };
+};
+
 export var updateMap = () => {
   return {type: 'UPDATE_MAP'};
 };

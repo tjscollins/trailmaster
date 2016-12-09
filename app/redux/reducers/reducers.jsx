@@ -62,46 +62,7 @@ export var geoJSONReducer = (state = initialGeoState, action) => {
           })
       };
     case 'ADD_POI':
-      var {
-        type,
-        pos,
-        name,
-        desc,
-        cond,
-        date
-      } = action;
-
-      var month = (mo) => {
-        switch (mo) {
-          case 0:
-            return 'Jan';
-          case 1:
-            return 'Feb';
-          case 2:
-            return 'Mar';
-          case 3:
-            return 'Apr';
-          case 4:
-            return 'May';
-          case 5:
-            return 'Jun';
-          case 6:
-            return 'Jul';
-          case 7:
-            return 'Aug';
-          case 8:
-            return 'Sep';
-          case 9:
-            return 'Oct';
-          case 10:
-            return 'Nov';
-          case 11:
-            return 'Dec';
-          default:
-            return mo;
-        }
-      };
-
+      var {pos, name, desc, cond, date} = action;
       var newFeature = {
         type: 'Feature',
         properties: {
@@ -131,9 +92,36 @@ export var geoJSONReducer = (state = initialGeoState, action) => {
           newFeature
         ]
       };
+    case 'ADD_ROUTE':
+      var {list, name, desc, cond, date} = action;
+      var newFeature = {
+        type: 'Feature',
+        properties: {
+          stroke: '#555555',
+          'stroke-width': 2,
+          'stroke-opacity': 1,
+          name,
+          desc,
+          condition: cond,
+          last: `${month(date.getMonth())} ${date.getFullYear()}`,
+          displayed: false,
+          id: uuid()
+        },
+        geometry: {
+          type: 'LineString',
+          coordinates: list
+        }
+      };
+      return {
+        ...state,
+        features: [
+          ...state.features,
+          newFeature
+        ]
+      };
     default:
+      // console.error(`${this} received unknown action type ${action.type}`);
       return state;
-      // throw new Error(`${this} received unknown action type ${action.type}`);
   }
 };
 
@@ -449,4 +437,35 @@ var initialGeoState = {
       }
     }
   ]
+};
+
+var month = (mo) => {
+  switch (mo) {
+    case 0:
+      return 'Jan';
+    case 1:
+      return 'Feb';
+    case 2:
+      return 'Mar';
+    case 3:
+      return 'Apr';
+    case 4:
+      return 'May';
+    case 5:
+      return 'Jun';
+    case 6:
+      return 'Jul';
+    case 7:
+      return 'Aug';
+    case 8:
+      return 'Sep';
+    case 9:
+      return 'Oct';
+    case 10:
+      return 'Nov';
+    case 11:
+      return 'Dec';
+    default:
+      return mo;
+  }
 };

@@ -1,11 +1,11 @@
+//Bootstrap
+@import "bootstrap";
+// @import "bootstrap/theme";
+
 @import "base/variables";
 @import "base/mixins";
 @import "base/breakpoints";
 @import "base/reset";
-
-//Bootstrap
-@import "bootstrap";
-// @import "bootstrap/theme";
 
 //Components
 @import "components/controls";
