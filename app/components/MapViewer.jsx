@@ -297,30 +297,41 @@ export class MapViewer extends BaseComponent {
           swLat = bounds._sw.lat;
         var neLng = bounds._ne.lng,
           neLat = bounds._ne.lat;
-
         if (newLong > swLng || newLong < neLng || newLat > neLat || newLat < swLat) {
+          // this
+          //   .map
+          //   .fitBounds([
+          //     [
+          //       oldLong < newLong
+          //         ? oldLong - 0.5
+          //         : newLong - 0.5,
+          //       oldLat < newLat
+          //         ? oldLat - 0.5
+          //         : newLat - 0.5
+          //     ],
+          //     [
+          //       oldLong > newLong
+          //         ? oldLong + 0.5
+          //         : newLong + 0.5,
+          //       oldLat > newLat
+          //         ? oldLat + 0.5
+          //         : newLat + 0.5
+          //     ]
+          //   ]);
           this
             .map
-            .fitBounds([
-              [
-                oldLong < newLong
-                  ? oldLong - 0.5
-                  : newLong - 0.5,
-                oldLat < newLat
-                  ? oldLat - 0.5
-                  : newLat - 0.5
+            .easeTo({
+              duration: 5000,
+              animate: true,
+              center: [
+                newLong, newLat
               ],
-              [
-                oldLong > newLong
-                  ? oldLong + 0.5
-                  : newLong + 0.5,
-                oldLat > newLat
-                  ? oldLat + 0.5
-                  : newLat + 0.5
-              ]
-            ]);
+              zoom: this
+                .map
+                .getZoom()
+            });
         }
-      }, 500);
+      }, 750);
 
     }
   }
