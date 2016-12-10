@@ -23,7 +23,7 @@ export class MapViewer extends BaseComponent {
     //Passing props as arg to allow choice of nextProps or current props as appropriate
     var self = this;
     var {layerIDs} = this;
-    var {geoJSON} = props;
+    var {geoJSON, userLocation} = props;
     var layerIDs = [];
     var filterPOI = document.getElementById('poi-searchText');
     var filterRoutes = document.getElementById('routes-searchText');
@@ -32,7 +32,7 @@ export class MapViewer extends BaseComponent {
       container: 'mapviewer',
       style: 'mapbox://styles/mapbox/outdoors-v9',
       center: [
-        145.72672, 15.16795
+        userLocation.coords.longitude, userLocation.coords.latitude
       ],
       zoom: 12,
       hash: false,
@@ -43,6 +43,47 @@ export class MapViewer extends BaseComponent {
     map.addControl(new mapboxgl.NavigationControl());
 
     map.on('load', () => {
+      //place userLocation
+      map.addSource('user', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: [
+            {
+              type: 'Feature',
+              properties: {
+                'marker-color': '#00007e',
+                'marker-size': 'large',
+                'marker-symbol': 'icon-color',
+                name: 'You'
+              },
+              geometry: {
+                type: 'Point',
+                coordinates: [userLocation.coords.longitude, userLocation.coords.latitude]
+              }
+            }
+          ]
+        }
+      });
+      map.addLayer({
+        'id': 'You Are Here',
+        'type': 'symbol',
+        'source': 'user',
+        'layout': {
+          'icon-image': 'marker-15',
+          'icon-size': 2,
+          'text-field': '{name}',
+          'text-font': [
+            'Open Sans Regular', 'Arial Unicode MS Regular'
+          ],
+          'text-size': 10,
+          'text-offset': [
+            0, 1
+          ],
+          'text-anchor': 'top',
+          'visibility': 'visible'
+        }
+      });
       //Try loading desired data....
 
       //Points of Interest & Labels

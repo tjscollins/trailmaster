@@ -12,6 +12,15 @@ describe('redux', () => {
 
   //actions
   describe('actions', () => {
+    it('should generate the UPDATE_POS action', () => {
+      var action = {
+        type: 'UPDATE_POS',
+        position: 'position'
+      };
+      var res = actions.updatePOS('position');
+      expect(res).toEqual(action);
+    });
+
     it('should generate the TOGGLE_VISIBILITY action', () => {
       var action = {
         type: 'TOGGLE_VISIBILITY',
@@ -84,6 +93,32 @@ describe('redux', () => {
 
   //reducers
   describe('reducers', () => {
+    describe('userLocationReducer', () => {
+      it('should UPDATE the user\'s POS', () => {
+        var action = {
+          type: 'UPDATE_POS',
+          position: {
+            coords: {
+              latitude: 10,
+              longitude: 210
+            }
+          }
+        };
+        var state = {
+          coords: {
+            latitude: 15,
+            longitude: 215
+          }
+        };
+        var res = reducers.userLocationReducer(df(state), df(action));
+        expect(res.coords.longitude).toBeA('number');
+        expect(res.coords.latitude).toBeA('number');
+        expect(res.coords.longitude).toNotEqual(state.coords.longitude);
+        expect(res.coords.latitude).toNotEqual(state.coords.latitude);
+        expect(res).toEqual(action.position);
+      });
+    });
+
     describe('mapReducer', () => {
       it('should set the UPDATE MAP value', () => {
         var action = {

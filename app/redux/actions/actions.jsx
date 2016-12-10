@@ -1,3 +1,7 @@
+export var updatePOS = (position) => {
+  return {type: 'UPDATE_POS', position};
+};
+
 export var toggleVisibility = (id) => {
   return {type: 'TOGGLE_VISIBILITY', id};
 };

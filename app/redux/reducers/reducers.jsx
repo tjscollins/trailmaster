@@ -1,6 +1,27 @@
 // import {geoJSON} from 'geoJSON';
 import uuid from 'uuid';
 
+export var userLocationReducer = (state = {
+  timestamp: 100,
+  coords: {
+    latitude: 10,
+    longitude: 210
+  }
+}, action) => {
+  switch (action.type) {
+    case 'UPDATE_POS':
+      return {
+        timestamp: action.timestamp,
+        coords: {
+          latitude: action.position.coords.latitude,
+          longitude: action.position.coords.longitude
+        }
+      };
+    default:
+      return state;
+  }
+};
+
 export var mapReducer = (state = {
   update: false
 }, action) => {
