@@ -1,5 +1,6 @@
 div.mapviewer {
-    position: fixed;
+    position: absolute;
+    z-index: 0;
     top: 50px;
     @include for-phone-only {
       left: $phone-controls-width;

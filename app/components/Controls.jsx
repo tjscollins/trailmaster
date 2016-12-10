@@ -34,9 +34,9 @@ export class Controls extends BaseComponent {
 
             <div id="collapseOne" className="collapse in" role="tabpanel" aria-labelledby="headingOne">
               <div className="panel-body control-panel">
+                <AddPOI/>
                 <SearchPOI/>
                 <ListPOI/>
-                <AddPOI/>
               </div>
             </div>
           </div>
@@ -50,9 +50,9 @@ export class Controls extends BaseComponent {
             </div>
             <div id="collapseTwo" className="collapse" role="tabpanel" aria-labelledby="headingTwo">
               <div className="panel-body control-panel">
+                <AddRoutes/>
                 <SearchRoutes/>
                 <ListRoutes/>
-                <AddRoutes/>
               </div>
             </div>
           </div>
@@ -66,9 +66,9 @@ export class Controls extends BaseComponent {
             </div>
             <div id="collapseThree" className="collapse" role="tabpanel" aria-labelledby="headingThree">
               <div className="panel-body control-panel">
+                <AddTrails/>
                 <SearchTrails/>
                 <ListTrails/>
-                <AddTrails/>
               </div>
             </div>
           </div>

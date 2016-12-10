@@ -21,6 +21,14 @@ describe('redux', () => {
       expect(res).toEqual(action);
     });
 
+    it('should generate the TOGGLE_MAP_CENTERING action', () => {
+      var action = {
+        type: 'TOGGLE_MAP_CENTERING'
+      };
+      var res = actions.toggleMapCentering();
+      expect(res).toEqual(action);
+    });
+
     it('should generate the TOGGLE_VISIBILITY action', () => {
       var action = {
         type: 'TOGGLE_VISIBILITY',
@@ -116,6 +124,17 @@ describe('redux', () => {
         expect(res.coords.longitude).toNotEqual(state.coords.longitude);
         expect(res.coords.latitude).toNotEqual(state.coords.latitude);
         expect(res).toEqual(action.position);
+      });
+
+      it('should TOGGLE the MAP CENTERING state', () => {
+        var action = {
+          type: 'TOGGLE_MAP_CENTERING'
+        };
+        var state = {
+          mapCentering: false
+        };
+        var res = reducers.userLocationReducer(df(state), df(action));
+        expect(res.mapCentering).toBe(true);
       });
     });
 

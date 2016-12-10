@@ -21,25 +21,27 @@ class AddPOI extends BaseComponent {
     $('#add-poi-modal').modal('show');
   }
   submit() {
-    var {dispatch} = this.props;
+    var {dispatch, userLocation} = this.props;
     var {name, desc, cond} = this.refs;
     // var form = this.refs.addPOI;
     var date = new Date();
-    var success = (pos) => {
-      dispatch(actions.addPOI(pos, name.value, desc.value, cond.value, date));
-      dispatch(actions.updateMap());
-    };
-    var error = (err) => {
-      throw new Error(err.message);
-    };
-    var options = {
-      timeout: 5000,
-      enableHighAccuracy: true,
-      maximumAge: 0
-    };
-    navigator
-      .geolocation
-      .getCurrentPosition(success, error, options);
+    // var success = (pos) => {
+    //
+    // };
+    // var error = (err) => {
+    //   throw new Error(err.message);
+    // };
+    // var options = {
+    //   timeout: 5000,
+    //   enableHighAccuracy: true,
+    //   maximumAge: 0
+    // };
+    // navigator
+    //   .geolocation
+    //   .getCurrentPosition(success, error, options);
+    console.log('Received position, adding new POI', name.value, userLocation);
+    dispatch(actions.addPOI(userLocation, name.value, desc.value, cond.value, date));
+    dispatch(actions.updateMap());
   }
   render() {
     return (

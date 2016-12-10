@@ -261,9 +261,9 @@ export class MapViewer extends BaseComponent {
       map.remove();
       this.map = this.createMap(nextProps);
       dispatch(actions.completeUpdateMap());
-    } else {
-      var oldLong = this.props.userLocation.coords.longitude
-      var oldLat = this.props.userLocation.coords.latitude
+    } else if (nextProps.userLocation.mapCentering) {
+      // var oldLong = this.props.userLocation.coords.longitude
+      // var oldLat = this.props.userLocation.coords.latitude
       var newLong = nextProps.userLocation.coords.longitude;
       var newLat = nextProps.userLocation.coords.latitude;
       setTimeout(() => {

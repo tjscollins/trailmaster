@@ -2,7 +2,7 @@
 import uuid from 'uuid';
 
 export var userLocationReducer = (state = {
-  timestamp: 100,
+  mapCentering: true,
   coords: {
     latitude: 10,
     longitude: 210
@@ -11,11 +11,16 @@ export var userLocationReducer = (state = {
   switch (action.type) {
     case 'UPDATE_POS':
       return {
-        timestamp: action.timestamp,
+        ...state,
         coords: {
           latitude: action.position.coords.latitude,
           longitude: action.position.coords.longitude
         }
+      };
+    case 'TOGGLE_MAP_CENTERING':
+      return {
+        ...state,
+        mapCentering: !state.mapCentering
       };
     default:
       return state;

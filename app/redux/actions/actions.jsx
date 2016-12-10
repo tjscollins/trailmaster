@@ -2,6 +2,10 @@ export var updatePOS = (position) => {
   return {type: 'UPDATE_POS', position};
 };
 
+export var toggleMapCentering = () => {
+  return {type: 'TOGGLE_MAP_CENTERING'};
+};
+
 export var toggleVisibility = (id) => {
   return {type: 'TOGGLE_VISIBILITY', id};
 };

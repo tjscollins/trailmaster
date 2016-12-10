@@ -1,5 +1,5 @@
 div.controls {
-    position: fixed;
+    position: absolute;
     top: 50px;
     left: 0;
     overflow: auto;
@@ -65,4 +65,8 @@ table.list-box {
     th {
         text-align: center;
     }
+}
+
+.search-box {
+  margin-top: 10px;
 }
