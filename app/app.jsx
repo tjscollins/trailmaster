@@ -15,7 +15,7 @@ var store = configure();
 
 //Initialize User Location Monitoring
 var processGeolocation = (pos) => {
-  alert('Successful location');
+  // alert('Successful location');
   store.dispatch(actions.updatePOS(pos));
   store.dispatch(actions.updateMap());
 };
