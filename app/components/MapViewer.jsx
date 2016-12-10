@@ -261,6 +261,34 @@ export class MapViewer extends BaseComponent {
       map.remove();
       this.map = this.createMap(nextProps);
       dispatch(actions.completeUpdateMap());
+    } else {
+      setTimeout(() => {
+        this
+          .map
+          .getSource('user')
+          .setData({
+            type: 'FeatureCollection',
+            features: [
+              {
+                type: 'Feature',
+                properties: {
+                  'marker-color': '#00007e',
+                  'marker-size': 'large',
+                  'marker-symbol': 'icon-color',
+                  name: 'You'
+                },
+                geometry: {
+                  type: 'Point',
+                  coordinates: [nextProps.userLocation.coords.longitude, nextProps.userLocation.coords.latitude]
+                }
+              }
+            ]
+          });
+        this
+          .map
+          .setCenter([nextProps.userLocation.coords.longitude, nextProps.userLocation.coords.latitude])
+      }, 500);
+
     }
   }
   componentDidMount() {

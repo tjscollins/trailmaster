@@ -17,7 +17,7 @@ var store = configure();
 var processGeolocation = (pos) => {
   // alert('Successful location');
   store.dispatch(actions.updatePOS(pos));
-  store.dispatch(actions.updateMap());
+  // store.dispatch(actions.updateMap());
 };
 
 var geolocationError = (err) => {
