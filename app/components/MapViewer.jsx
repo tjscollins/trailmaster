@@ -17,12 +17,13 @@ export class MapViewer extends BaseComponent {
     //   methods.forEach((method) => this[method] = this[method].bind(this));
     // } inherited from BaseComponent
     this.map = false;
-    this.layerIDs = []; // Will contain a list used to filter against.
+    this.layerIDs = []; // Will contain a list of layers to filter against.
   }
-  createMap() {
+  createMap(props) {
+    //Passing props as arg to allow choice of nextProps or current props as appropriate
     var self = this;
     var {layerIDs} = this;
-    var {geoJSON} = this.props;
+    var {geoJSON} = props;
     var layerIDs = [];
     var filterPOI = document.getElementById('poi-searchText');
     var filterRoutes = document.getElementById('routes-searchText');
@@ -83,7 +84,8 @@ export class MapViewer extends BaseComponent {
                 'line-cap': 'round',
                 'visibility': 'none'
               };
-              console.log(`Creating map layer: ${layerID} label`, 'symbol');
+              // console.log('Creating map layer', layerID, layerType);
+              // console.log(`Creating map layer: ${layerID} label`, 'symbol');
               map.addLayer({
                 'id': `${layerID} label`,
                 'type': 'symbol',
@@ -107,7 +109,6 @@ export class MapViewer extends BaseComponent {
             default:
               throw new Error(`Unknown feature type ${layerType}`);
           }
-          console.log('Creating map layer', layerID, layerType);
           map.addLayer({
             'id': layerID,
             'type': layerType,
@@ -115,7 +116,6 @@ export class MapViewer extends BaseComponent {
             'layout': layout,
             'filter': ['==', 'name', layerID]
           });
-
           layerIDs.push([layerID, layerType]);
         }
       });
@@ -205,6 +205,7 @@ export class MapViewer extends BaseComponent {
           if (this.shouldDisplay(name, searchPOI, nextProps) && layerIDs[i][1] === 'symbol') {
             map.setLayoutProperty(name, 'visibility', 'visible');
           } else if (this.shouldDisplay(name, searchRoutes, nextProps) && layerIDs[i][1] !== 'symbol') {
+            console.log('Displaying', name);
             map.setLayoutProperty(name, 'visibility', 'visible');
             map.setLayoutProperty(name + ' label', 'visibility', 'visible');
           } else {
@@ -212,19 +213,18 @@ export class MapViewer extends BaseComponent {
             if (layerIDs[i][1] !== 'symbol')
               map.setLayoutProperty(name + ' label', 'visibility', 'none');
             }
-
-        }
+          }
       });
-
     if (nextProps.map.update) {
+      console.log('Re-generating map');
       map.remove();
-      this.map = this.createMap();
+      this.map = this.createMap(nextProps);
       dispatch(actions.completeUpdateMap());
     }
   }
   componentDidMount() {
     var {dispatch} = this.props;
-    this.map = this.map || this.createMap();
+    this.map = this.map || this.createMap(this.props);
   }
   render() {
     return (<div id="mapviewer" className="mapviewer"/>);

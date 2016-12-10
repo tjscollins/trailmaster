@@ -1,20 +1,45 @@
 div.controls {
-    position: absolute;
+    position: fixed;
     top: 50px;
     left: 0;
-    width: $controls-width;
-    height: 100vh;
+    overflow: auto;
+
     border: $controls-border;
     background-color: $controls-bg-color;
-    border-radius: 0;
+    @include for-phone-only {
+        width: $phone-controls-width;
+        height: 85vh;
+
+        .list-box {
+            font-size: $phone-controls-font-size;
+        }
+    }
+    @include for-tablet-portrait-up {
+        width: $phone-controls-width;
+        height: 95vh;
+
+        .list-box {
+            font-size: $phone-controls-font-size;
+        }
+    }
+    @include for-tablet-landscape-up {
+      width: $controls-width;
+      height: 95vh;
+
+      .list-box {
+          font-size: $controls-font-size;
+      }
+    }
 
     .panel {
         margin: 0;
-        border-radius: 0;
         border: none;
+        .panel-heading {
+            border-radius: 0;
+        }
 
         .control-panel {
-            height: 75vh;
+
         }
 
         .list-box {
@@ -24,6 +49,10 @@ div.controls {
         h3 {
             margin: 5px;
             text-align: center;
+            @include for-phone-only {
+                margin: 0;
+                font-size: $phone-controls-font-size + 0.5rem;
+            }
 
             a {
                 color: white;
