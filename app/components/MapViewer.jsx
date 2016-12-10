@@ -290,27 +290,36 @@ export class MapViewer extends BaseComponent {
           });
 
         //is New Position on Visible Map?
-
-        this
+        var bounds = this
           .map
-          .fitBounds([
-            [
-              oldLong < newLong
-                ? oldLong - 1
-                : newLong - 1,
-              oldLat < newLat
-                ? oldLat - 1
-                : newLat - 1
-            ],
-            [
-              oldLong > newLong
-                ? oldLong + 1
-                : newLong + 1,
-              oldLat > newLat
-                ? oldLat + 1
-                : newLat + 1
-            ]
-          ]);
+          .getBounds();
+        var swLng = bounds._sw.lng,
+          swLat = bounds._sw.lat;
+        var neLng = bounds._ne.lng,
+          neLat = bounds._ne.lat;
+
+        if (newLong > swLng || newLong < neLng || newLat > neLat || newLat < swLat) {
+          this
+            .map
+            .fitBounds([
+              [
+                oldLong < newLong
+                  ? oldLong - 0.5
+                  : newLong - 0.5,
+                oldLat < newLat
+                  ? oldLat - 0.5
+                  : newLat - 0.5
+              ],
+              [
+                oldLong > newLong
+                  ? oldLong + 0.5
+                  : newLong + 0.5,
+                oldLat > newLat
+                  ? oldLat + 0.5
+                  : newLat + 0.5
+              ]
+            ]);
+        }
       }, 500);
 
     }
