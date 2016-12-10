@@ -262,6 +262,10 @@ export class MapViewer extends BaseComponent {
       this.map = this.createMap(nextProps);
       dispatch(actions.completeUpdateMap());
     } else {
+      var oldLong = this.props.userLocation.coords.longitude
+      var oldLat = this.props.userLocation.coords.latitude
+      var newLong = nextProps.userLocation.coords.longitude;
+      var newLat = nextProps.userLocation.coords.latitude;
       setTimeout(() => {
         this
           .map
@@ -279,14 +283,34 @@ export class MapViewer extends BaseComponent {
                 },
                 geometry: {
                   type: 'Point',
-                  coordinates: [nextProps.userLocation.coords.longitude, nextProps.userLocation.coords.latitude]
+                  coordinates: [newLong, newLat]
                 }
               }
             ]
           });
+
+        //is New Position on Visible Map?
+
         this
           .map
-          .setCenter([nextProps.userLocation.coords.longitude, nextProps.userLocation.coords.latitude])
+          .fitBounds([
+            [
+              oldLong < newLong
+                ? oldLong - 1
+                : newLong - 1,
+              oldLat < newLat
+                ? oldLat - 1
+                : newLat - 1
+            ],
+            [
+              oldLong > newLong
+                ? oldLong + 1
+                : newLong + 1,
+              oldLat > newLat
+                ? oldLat + 1
+                : newLat + 1
+            ]
+          ]);
       }, 500);
 
     }
