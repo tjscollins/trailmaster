@@ -6,4 +6,10 @@ div.mapviewer {
     width: 100vw;
     height: 100vh;
     border: $mapviewer-border;
+    @include for-phone-only {
+
+    }
+    @include for-tablet-landscape-up {
+
+    }
 }

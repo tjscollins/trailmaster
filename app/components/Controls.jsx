@@ -22,11 +22,11 @@ export class Controls extends BaseComponent {
   }
   hide() {
     if ($('#hidecontrols').hasClass('fa-arrow-left')) {
-      $('div.controls').css('left', '-325px');
+      $('div.controls').addClass('hide-left');
       $('#hidecontrols').removeClass('fa-arrow-left');
       $('#hidecontrols').addClass('fa-arrow-right');
     } else {
-      $('div.controls').css('left', '0px');
+      $('div.controls').removeClass('hide-left');
       $('#hidecontrols').removeClass('fa-arrow-right');
       $('#hidecontrols').addClass('fa-arrow-left');
     }

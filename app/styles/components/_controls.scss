@@ -1,16 +1,26 @@
+div.controls.hide-left {
+    height: 36px;
+    overflow: hidden;
+    left: -240px;
+    @include for-tablet-landscape-up {
+        left: -365px;
+        height: 50px;
+    }
+}
+
 div.controls {
     position: absolute;
     top: 50px;
     left: 0;
     overflow: auto;
-    transition: left 1s;
+    transition: left 1s, height 1s;
     transition-timing-function: ease-in-out;
     transition-delay: 0.125s;
     border: $controls-border;
     background-color: $controls-bg-color;
     @include for-phone-only {
         width: $phone-controls-width;
-        height: 85vh;
+        height: 87vh;
 
         .list-box {
             font-size: $phone-controls-font-size;
@@ -39,6 +49,8 @@ div.controls {
 
         .panel-heading {
             border-radius: 0;
+            border: none;
+            transition: background-color 3s;
         }
 
         .control-panel {}
@@ -49,10 +61,14 @@ div.controls {
 
         #hidecontrols {
             position: absolute;
-            top: 15px;
-            left: 325px;
+            top: 10px;
+            left: 345px;
             padding-left: 25px;
             cursor: pointer;
+            @include for-phone-only {
+                top: 5px;
+                left: $phone-controls-width - 55px;
+            }
         }
 
         h3 {
