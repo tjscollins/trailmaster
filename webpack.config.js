@@ -5,6 +5,13 @@ module.exports = {
   entry: [
     'script!jquery/dist/jquery.min.js', 'script!bootstrap/dist/js/bootstrap.min.js', './app/app.jsx'
   ],
+  // node: {
+  //   console: 'empty',
+  //   fs: 'empty',
+  //   net: 'empty',
+  //   tls: 'empty',
+  //   module: 'empty'
+  // },
   externals: {
     jquery: 'jQuery'
   },
@@ -34,6 +41,12 @@ module.exports = {
     extensions: ['', '.js', '.jsx']
   },
   module: {
+    preLoaders: [
+      {
+        test: /\.json$/,
+        loader: 'json'
+      }
+    ],
     loaders: [
       {
         loader: 'babel-loader',

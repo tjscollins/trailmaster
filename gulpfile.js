@@ -107,7 +107,7 @@ gulp.task('default', [
 });
 
 gulp.task('watch', ['default'], function() {
-  require('./server.js');
+  require('./server/server.js');
   livereload.listen();
   gulp.watch(SCRIPTS_PATH, ['scripts']);
   gulp.watch(SCSS_PATH + '**/*.scss', ['scss']);

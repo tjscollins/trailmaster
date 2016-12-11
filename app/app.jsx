@@ -7,6 +7,11 @@ import {Provider} from 'react-redux';
 import {configure} from 'configureStore';
 import * as actions from 'actions';
 
+/*----------MongoDB----------*/
+// import {MongoClient} from 'mongodb';
+//
+// MongoClient.connect('mongodb://localhost:27017/TrailMaster', getDB);
+
 /*----------Components----------*/
 import MainContainer from 'MainContainer';
 
@@ -41,3 +46,11 @@ ReactDOM.render(
   <Provider store={store}>
   <MainContainer/>
 </Provider>, document.getElementById('app'));
+
+function getDB(err, db) {
+  if (err) {
+    return console.log('Unable to connect to MongoDB server', err);
+  }
+  console.log('Connected to MongoDB server');
+
+}
