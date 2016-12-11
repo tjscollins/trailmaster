@@ -1,6 +1,32 @@
 // import {geoJSON} from 'geoJSON';
 import uuid from 'uuid';
 
+export var trailsReducer = (state = {
+  myTrails: []
+}, action) => {
+  switch (action.type) {
+    case 'SAVE_TRAIL':
+      var {list, name, desc} = action;
+      var date = new Date();
+      return {
+        ...state,
+        myTrails: [
+          ...state.myTrails, {
+            id: uuid(),
+            list,
+            name,
+            desc,
+            date: `${month(date.getMonth())} ${date.getFullYear()}`
+          }
+        ]
+      };
+    case 'SHOW_TRAIL':
+      return state;
+    default:
+      return state;
+  }
+};
+
 export var userLocationReducer = (state = {
   trackingRoute: false,
   routeList: [],
@@ -72,7 +98,9 @@ export var mapReducer = (state = {
 };
 
 export var searchTextReducer = (state = {
-  POISearchText: ''
+  POISearchText: '',
+  RoutesSearchText: '',
+  trailSearchText: ''
 }, action) => {
   switch (action.type) {
     case 'SET_POI_SEARCH_TEXT':
@@ -84,6 +112,11 @@ export var searchTextReducer = (state = {
       return {
         ...state,
         RoutesSearchText: action.RoutesSearchText
+      };
+    case 'SET_TRAIL_SEARCH_TEXT':
+      return {
+        ...state,
+        trailSearchText: action.trailSearchText
       };
     default:
       return state;

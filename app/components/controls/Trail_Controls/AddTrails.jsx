@@ -1,5 +1,8 @@
 /*----------Modules----------*/
 import React from 'react';
+import {connect} from 'react-redux';
+import $ from 'jquery';
+import * as actions from 'actions';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
@@ -8,20 +11,102 @@ class AddTrails extends BaseComponent {
   constructor() {
     super();
     //this._bind(...local methods) from BaseComponent
+    this.submit = this
+      .submit
+      .bind(this);
+  }
+  saveTrail() {
+    $('#save-trail-modal').modal('show');
+  }
+  submit() {
+    console.log('Submitting New Trail!');
+    var {dispatch, geoJSON} = this.props;
+    var {name, desc} = this.refs;
+    var trailList = geoJSON
+      .features
+      .filter((point) => {
+        return point.properties.displayed;
+      });
+    dispatch(actions.saveTrail(trailList, name.value, desc.value));
+  }
+  remove(id) {
+    var {dispatch} = this.props;
+    return () => {
+      dispatch(actions.toggleVisibility(id));
+    };
+  }
+  currentTrail() {
+    var {geoJSON} = this.props;
+    return geoJSON
+      .features
+      .filter((point) => {
+        return point.properties.displayed;
+      })
+      .map((point) => {
+        var {name, desc, condition, last, id} = point.properties;
+        return (
+          <tr onClick={this.remove(id)} id={id} className="point-of-interest" key={id} style={{
+            cursor: 'pointer'
+          }}>
+            <td>{name}</td>
+            <td>{desc}</td>
+            <td>{condition}</td>
+            <td>{last}</td>
+          </tr>
+        );
+      });
   }
   render() {
     return (
       <div>
-        <form ref="AddTrails" onSubmit={this.handleSubmit}>
-          <input className="form-control" ref="newPOI" type="text" placeholder="New Point of Interest"/>
-          <p></p>
-          <button className="btn btn-info form-control" type="submit">
-            Add Point of Interest
-          </button>
-        </form>
+        <button onClick={this.saveTrail} className="btn btn-info form-control" type="submit">
+          Save Current Trail
+        </button>
+        <h4>Current Trail Includes:</h4>
+        <table className="list-box table table-striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>
+                Description
+              </th>
+              <th>
+                Condition
+              </th>
+              <th>
+                Last Outing
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.currentTrail()}
+          </tbody>
+        </table>
+
+        <div id="save-trail-modal" className="modal fade">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 className="modal-title">Save Current Trail</h4>
+              </div>
+              <div className="modal-body">
+                <form ref="addPOI">
+                  <input className="form-control" ref="name" type="text" placeholder="Name"/>
+                  <input className="form-control" ref="desc" type="text" placeholder="Description"/>
+                </form>
+              </div>
+              <div className="modal-footer">
+                <button onClick={this.submit} type="submit" className="btn btn-secondary" data-dismiss="modal">Save Trail</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 }
 
-export default AddTrails;
+export default connect(state => state)(AddTrails);

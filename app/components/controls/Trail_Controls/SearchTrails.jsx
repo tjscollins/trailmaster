@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import BaseComponent from 'BaseComponent';
 
 /*----------Redux Store----------*/
-// import * as actions from 'actions';
+import * as actions from 'actions';
 
 class SearchTrails extends BaseComponent {
   constructor() {
@@ -14,11 +14,12 @@ class SearchTrails extends BaseComponent {
     //this._bind(...local methods) from BaseComponent
   }
   render() {
+    var {dispatch} = this.props;
     return (
       <div className="search-box">
         <div>
-          <input className="form-control" type="search" ref="searchText" placeholder="Search Points of Interest" onChange={() => {
-            var searchText = this.refs.searchText.value;/*dispatch(actions.setSearchText(searchText)); */
+          <input className="form-control" type="search" ref="searchText" placeholder="Search Your Saved Trails" onChange={() => {
+            dispatch(actions.setTrailSearchText(this.refs.searchText.value));
           }}/>
         </div>
       </div>
@@ -26,4 +27,4 @@ class SearchTrails extends BaseComponent {
   }
 }
 
-export default SearchTrails;
+export default connect(state => state)(SearchTrails);

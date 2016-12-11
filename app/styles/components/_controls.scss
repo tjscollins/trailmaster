@@ -3,7 +3,9 @@ div.controls {
     top: 50px;
     left: 0;
     overflow: auto;
-
+    transition: left 1s;
+    transition-timing-function: ease-in-out;
+    transition-delay: 0.125s;
     border: $controls-border;
     background-color: $controls-bg-color;
     @include for-phone-only {
@@ -23,27 +25,34 @@ div.controls {
         }
     }
     @include for-tablet-landscape-up {
-      width: $controls-width;
-      height: 95vh;
+        width: $controls-width;
+        height: 95vh;
 
-      .list-box {
-          font-size: $controls-font-size;
-      }
+        .list-box {
+            font-size: $controls-font-size;
+        }
     }
 
     .panel {
         margin: 0;
         border: none;
+
         .panel-heading {
             border-radius: 0;
         }
 
-        .control-panel {
-
-        }
+        .control-panel {}
 
         .list-box {
             margin-top: 5px;
+        }
+
+        #hidecontrols {
+            position: absolute;
+            top: 15px;
+            left: 325px;
+            padding-left: 25px;
+            cursor: pointer;
         }
 
         h3 {
@@ -68,5 +77,5 @@ table.list-box {
 }
 
 .search-box {
-  margin-top: 10px;
+    margin-top: 10px;
 }

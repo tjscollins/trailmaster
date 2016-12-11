@@ -1,22 +1,76 @@
 /*----------Modules----------*/
 import React from 'react';
+import {connect} from 'react-redux';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
+
+/*----------Redux----------*/
+import * as actions from 'actions';
 
 class ListTrails extends BaseComponent {
   constructor() {
     super();
     //this._bind(...local methods) from BaseComponent
   }
+  display(id) {
+    var {dispatch, trails} = this.props;
+    var {myTrails} = trails;
+    return () => {
+      var trail = myTrails.filter((item) => {
+        return item.id === id;
+      });
+      console.log(trail);
+      if (trail.length > 0) {
+        trail[0]
+          .list
+          .forEach((feature) => {
+            dispatch(actions.toggleVisibility(feature.properties.id));
+          });
+      }
+    };
+  }
+  displayStyle(id) {
+    return {cursor: 'pointer'};
+  }
+  listTrails() {
+    var {searchText, trails} = this.props;
+    var {trailSearchText} = searchText;
+    return trails
+      .myTrails
+      .map((trail) => {
+        var {name, desc, date, id} = trail;
+        return name.match(new RegExp(trailSearchText, 'i'))
+          ? (
+            <tr onClick={this.display(id)} id={id} style={this.displayStyle(id)} className="point-of-interest" key={id}>
+              <td>{name}</td>
+              <td>{desc}</td>
+              <td>{date}</td>
+            </tr>
+          )
+          : null;
+      });
+  }
   render() {
     return (
-      <div className="list-box well">
-        <br/>
-        <br/>
-      </div>
+      <table className="list-box table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>
+              Description
+            </th>
+            <th>
+              Date Created
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {this.listTrails()}
+        </tbody>
+      </table>
     );
   }
 }
 
-export default ListTrails;
+export default connect(state => state)(ListTrails);;

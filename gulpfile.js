@@ -17,6 +17,9 @@ const SCRIPTS_PATH = SRC_PATH + '/**/*.jsx';
 const SCSS_PATH = SRC_PATH + 'styles/';
 
 //SCSS
+//font-awesome source
+var fontAwesome = { in: 'node_modules/font-awesome/'
+};
 // Bootstrap scss source
 var bootstrapSass = { in: './node_modules/bootstrap-sass/'
 };
@@ -28,7 +31,8 @@ var mapboxgl = { in: './node_modules/mapbox-gl/dist/'
 // fonts
 var fonts = { in: [
     SRC_PATH + 'fonts/*.*',
-    bootstrapSass. in + 'assets/fonts/**/*'
+    bootstrapSass. in + 'assets/fonts/**/*',
+    fontAwesome. in + 'fonts/**/*'
   ],
   out: DIST_PATH + 'fonts/'
 };
@@ -42,7 +46,8 @@ var scss = { in: SCSS_PATH,
     errLogToConsole: true,
     includePaths: [
       bootstrapSass. in + 'assets/stylesheets',
-      mapboxgl. in
+      mapboxgl. in,
+      fontAwesome. in + 'scss/'
     ]
   }
 };

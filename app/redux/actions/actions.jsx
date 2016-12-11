@@ -1,3 +1,12 @@
+//trails actions
+export var saveTrail = (list, name, desc) => {
+  return {type: 'SAVE_TRAIL', list, name, desc};
+};
+
+export var showTrail = (id) => {
+  return {type: 'SHOW_TRAIL', id};
+};
+
 //userLocation actions
 export var updatePOS = (position) => {
   return {type: 'UPDATE_POS', position};
@@ -66,4 +75,8 @@ export var setPOISearchText = (POISearchText) => {
 
 export var setRoutesSearchText = (RoutesSearchText) => {
   return {type: 'SET_ROUTES_SEARCH_TEXT', RoutesSearchText};
+};
+
+export var setTrailSearchText = (trailSearchText) => {
+  return {type: 'SET_TRAIL_SEARCH_TEXT', trailSearchText};
 };

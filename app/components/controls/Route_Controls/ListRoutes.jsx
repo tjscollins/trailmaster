@@ -52,10 +52,12 @@ class ListRoutes extends BaseComponent {
       })[0];
     return thisPoint.properties.displayed
       ? {
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        cursor: 'pointer'
       }
       : {
-        fontWeight: 'normal'
+        fontWeight: 'normal',
+        cursor: 'pointer'
       };
   }
   render() {

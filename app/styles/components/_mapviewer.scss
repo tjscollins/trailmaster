@@ -1,22 +1,9 @@
 div.mapviewer {
     position: absolute;
-    z-index: 0;
+    z-index: -1;
     top: 50px;
-    @include for-phone-only {
-      left: $phone-controls-width;
-      width: 450px;
-    }
-    @include for-tablet-portrait-up {
-      left: $phone-controls-width;
-      width: 500px;
-    }
-    @include for-tablet-landscape-up {
-      left: $controls-width;
-      width: 1200px;
-    }
-    // width: map-width($controls-width);
+    left: 0;
+    width: 100vw;
     height: 100vh;
     border: $mapviewer-border;
 }
-
-// h1{color:red;}
