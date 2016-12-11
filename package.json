@@ -8,6 +8,9 @@
     "test-watch": "nodemon --exec 'npm test'",
     "start": "node server/server.js"
   },
+  "engines": {
+    "node":"7.1.0"
+  },
   "author": "Tyler Collins",
   "license": "MIT",
   "repository": {

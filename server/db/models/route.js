@@ -1,6 +1,6 @@
-var mongoose, {Schema} = require('mongoose');
+var mongoose = require('mongoose');
 
-var routeModel = mongoose.model('Route', new Schema({
+var routeModel = mongoose.model('Route', new mongoose.Schema({
   type: {
     type: String,
     required: true,

@@ -4,6 +4,7 @@ const request = require('supertest');
 
 const {app} = require('./../server.js');
 const {poiModel} = require('./../db/models/poi');
+const {routeModel} = require('./../db/models/route');
 
 const pois = [
   {
@@ -43,11 +44,48 @@ const pois = [
   }
 ];
 
+const routes = [
+  {
+    type: 'Feature',
+    properties: {
+      stroke: '#555555',
+      'stroke-width': 2,
+      'stroke-opacity': 1,
+      name: 'Chalan Kiya to Kannat Tabla Connector',
+      desc: 'Trail to move from Kannat Tabla area down into Chalan Kiya near the start of the Chalan Kiya ravine',
+      condition: 'Uncut, overgrown',
+      last: 'Dec 2015',
+      displayed: false,
+      id: '1'
+    },
+    geometry: {
+      type: 'LineString',
+      coordinates: [
+        [
+          -214.27445769309995, 15.167432624111209
+        ],
+        [
+          -214.27433967590332, 15.167339428181535
+        ],
+        [
+          -214.27423238754272, 15.16729800775516
+        ],
+        [-214.27410364151, 15.167266942430045]
+      ]
+    }
+  }
+];
+
 beforeEach((done) => {
   poiModel
     .remove({})
     .then(() => {
       return poiModel.insertMany(pois);
+    })
+  routeModel
+    .remove({})
+    .then(() => {
+      return routeModel.insertMany(routes);
     })
     .then(() => done());
 });
@@ -143,6 +181,111 @@ describe('GET /pois', () => {
       .expect(200)
       .expect((res) => {
         expect(res.body.pois.length).toBe(2);
+      })
+      .end(done);
+  });
+});
+
+describe('POST /routes', () => {
+  it('should create a new ROUTE', (done) => {
+    var route = {
+      type: 'Feature',
+      properties: {
+        stroke: '#555555',
+        'stroke-width': 2,
+        'stroke-opacity': 1,
+        name: 'Chalan Kiya to Kannat Tabla Connector',
+        desc: 'Trail to move from Kannat Tabla area down into Chalan Kiya near the start of the Chalan Kiya ravine',
+        condition: 'Uncut, overgrown',
+        last: 'Dec 2015',
+        displayed: false
+      },
+      geometry: {
+        type: 'LineString',
+        coordinates: [
+          [
+            -214.27445769309995, 15.167432624111209
+          ],
+          [
+            -214.27433967590332, 15.167339428181535
+          ],
+          [
+            -214.27423238754272, 15.16729800775516
+          ],
+          [-214.27410364151, 15.167266942430045]
+        ]
+      }
+    };
+
+    request(app)
+      .post('/routes')
+      .send(route)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.type).toEqual(route.type);
+        expect(res.body.geometry).toEqual(route.geometry);
+        expect(res.body.properties).toEqual(route.properties);
+      })
+      .end((err, res) => {
+        if (err)
+          return done(err);
+        routeModel
+          .find()
+          .then((routeList) => {
+            expect(routeList.length).toBe(2);
+            expect(routeList[0].type === 'Feature');
+            done();
+          })
+          .catch((e) => done(e));
+      });
+  });
+
+  it('should not create a new ROUTE with invalid data', (done) => {
+    var route = {
+      type: 'Something\'s wrong',
+      properties: {
+        stroke: '#555555',
+        'stroke-width': 2,
+        'stroke-opacity': 1,
+        name: 'Chalan Kiya to Kannat Tabla Connector',
+        desc: 'Trail to move from Kannat Tabla area down into Chalan Kiya near the start of the Chalan Kiya ravine',
+        condition: 'Uncut, overgrown',
+        last: 'Dec 2015',
+        displayed: false
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [
+          [-214.27445769309995, 15.167432624111209]
+        ]
+      }
+    };
+
+    request(app)
+      .post('/routes')
+      .send(route)
+      .expect(400)
+      .end((err, res) => {
+        if (err)
+          return done(err);
+        routeModel
+          .find()
+          .then((routes) => {
+            expect(routes.length).toBe(1);
+            done();
+          })
+          .catch((e) => done(e));
+      });
+  });
+});
+
+describe('GET /routes', () => {
+  it('should get all ROUTES', (done) => {
+    request(app)
+      .get('/routes')
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.routes.length).toBe(1);
       })
       .end(done);
   });
