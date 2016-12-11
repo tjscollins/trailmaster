@@ -23,6 +23,17 @@ app.post('/pois', (req, res) => {
         .send(e);
     });
 });
+app.get('/pois', (req, res) => {
+  poiModel
+    .find()
+    .then((pois) => {
+      res.send({pois});
+    }, (e) => {
+      res
+        .status(400)
+        .send(e);
+    });
+});
 app.use(express.static('public'));
 
 app.listen(PORT, function() {
