@@ -2,10 +2,12 @@
 import uuid from 'uuid';
 
 export var userLocationReducer = (state = {
+  trackingRoute: false,
+  routeList: [],
   mapCentering: true,
   coords: {
-    latitude: 10,
-    longitude: 210
+    latitude: 15,
+    longitude: 145
   }
 }, action) => {
   switch (action.type) {
@@ -21,6 +23,29 @@ export var userLocationReducer = (state = {
       return {
         ...state,
         mapCentering: !state.mapCentering
+      };
+    case 'TRACK_ROUTE':
+      return {
+        ...state,
+        trackingRoute: true
+      };
+    case 'STOP_TRACKING_ROUTE':
+      return {
+        ...state,
+        trackingRoute: false
+      };
+    case 'CLEAR_ROUTE_LIST':
+      return {
+        ...state,
+        routeList: []
+      };
+    case 'ADD_TO_ROUTE_LIST':
+      return {
+        ...state,
+        routeList: [
+          ...state.routeList,
+          [action.position.coords.longitude, action.position.coords.latitude]
+        ]
       };
     default:
       return state;

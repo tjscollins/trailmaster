@@ -19,7 +19,6 @@ class AddRoutes extends BaseComponent {
     this.stopTracking = this
       .stopTracking
       .bind(this);
-    this.trackingFlag = false;
   }
   modal() {
     $('#add-route-modal').modal('show');
@@ -27,44 +26,22 @@ class AddRoutes extends BaseComponent {
   tracking() {
     console.log('Started Tracking');
     var {dispatch} = this.props;
-    // var form = this.refs.addPOI;
-    this.list = [];
-    var success = (pos) => {
-      this
-        .list
-        .push([
-          pos.coords.longitude - 360,
-          pos.coords.latitude
-        ]);
-    };
-    var error = (err) => {
-      throw new Error(err.message);
-    };
-    var options = {
-      timeout: 5000,
-      enableHighAccuracy: true,
-      maximumAge: 0
-    };
-    this.trackingFlag = true;
-    navigator
-      .geolocation
-      .getCurrentPosition(success, error, options);
-    this.trackingID = navigator
-      .geolocation
-      .watchPosition(success, error, options);
+    dispatch(actions.trackRoute());
     $('#tracking-modal').modal('show');
   }
   stopTracking() {
     console.log('Stopped Tracking');
-    var {dispatch} = this.props;
+    var {dispatch, userLocation} = this.props;
     var {name, desc, cond} = this.refs;
     var date = new Date();
-    this.trackingFlag = false;
-    navigator
-      .geolocation
-      .clearWatch(this.trackingID);
-    console.log('Adding Route', name.value, this.list);
-    dispatch(actions.addRoute(this.list, name.value, desc.value, cond.value, date));
+    dispatch(actions.stopTrackingRoute());
+    console.log('Adding Route', name.value, userLocation.routeList);
+    if (userLocation.routeList.length > 0) {
+      dispatch(actions.addRoute(userLocation.routeList, name.value, desc.value, cond.value, date));
+    } else {
+      console.error('No Route added due to lack of routeList');
+    }
+    dispatch(actions.clearRouteList());
     dispatch(actions.updateMap());
   }
   render() {

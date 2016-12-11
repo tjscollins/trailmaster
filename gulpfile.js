@@ -21,6 +21,10 @@ const SCSS_PATH = SRC_PATH + 'styles/';
 var bootstrapSass = { in: './node_modules/bootstrap-sass/'
 };
 
+//Mapbox-gl css
+var mapboxgl = { in: './node_modules/mapbox-gl/dist/'
+};
+
 // fonts
 var fonts = { in: [
     SRC_PATH + 'fonts/*.*',
@@ -36,7 +40,10 @@ var scss = { in: SCSS_PATH,
     outputStyle: 'compressed',
     precison: 3,
     errLogToConsole: true,
-    includePaths: [bootstrapSass. in + 'assets/stylesheets']
+    includePaths: [
+      bootstrapSass. in + 'assets/stylesheets',
+      mapboxgl. in
+    ]
   }
 };
 

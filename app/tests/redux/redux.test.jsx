@@ -12,91 +12,133 @@ describe('redux', () => {
 
   //actions
   describe('actions', () => {
-    it('should generate the UPDATE_POS action', () => {
-      var action = {
-        type: 'UPDATE_POS',
-        position: 'position'
-      };
-      var res = actions.updatePOS('position');
-      expect(res).toEqual(action);
+    describe('userLocation actions', () => {
+      it('should generate the UPDATE_POS action', () => {
+        var action = {
+          type: 'UPDATE_POS',
+          position: 'position'
+        };
+        var res = actions.updatePOS('position');
+        expect(res).toEqual(action);
+      });
+
+      it('should generate the TOGGLE_MAP_CENTERING action', () => {
+        var action = {
+          type: 'TOGGLE_MAP_CENTERING'
+        };
+        var res = actions.toggleMapCentering();
+        expect(res).toEqual(action);
+      });
+
+      it('should generate the TRACK_ROUTE action', () => {
+        var action = {
+          type: 'TRACK_ROUTE'
+        };
+        var res = actions.trackRoute();
+        expect(res).toEqual(action);
+      });
+
+      it('should generate the STOP_TRACKING_ROUTE action', () => {
+        var action = {
+          type: 'STOP_TRACKING_ROUTE'
+        };
+        var res = actions.stopTrackingRoute();
+        expect(res).toEqual(action);
+      });
+
+      it('should generate the CLEAR_ROUTE_LIST action', () => {
+        var action = {
+          type: 'CLEAR_ROUTE_LIST'
+        };
+        var res = actions.clearRouteList();
+        expect(res).toEqual(action);
+      });
+
+      it('should generate the ADD_TO_ROUTE_LIST action', () => {
+        var action = {
+          type: 'ADD_TO_ROUTE_LIST',
+          position: 'position'
+        };
+        var res = actions.addToRouteList('position');
+        expect(res).toEqual(action);
+      });
     });
 
-    it('should generate the TOGGLE_MAP_CENTERING action', () => {
-      var action = {
-        type: 'TOGGLE_MAP_CENTERING'
-      };
-      var res = actions.toggleMapCentering();
-      expect(res).toEqual(action);
+    describe('geoJSON actions', () => {
+      it('should generate the TOGGLE_VISIBILITY action', () => {
+        var action = {
+          type: 'TOGGLE_VISIBILITY',
+          id: '123'
+        };
+        var res = actions.toggleVisibility('123');
+        expect(res).toEqual(action);
+      });
+
+      it('should generate the ADD_POI action', () => {
+        var action = {
+          type: 'ADD_POI',
+          pos: 'pos',
+          name: 'name',
+          desc: 'desc',
+          cond: 'cond',
+          date: 'date'
+        };
+        var res = actions.addPOI('pos', 'name', 'desc', 'cond', 'date');
+        expect(res).toEqual(action);
+      });
+
+      it('should generate the ADD_ROUTE action', () => {
+        var action = {
+          type: 'ADD_ROUTE',
+          list: 'list',
+          name: 'name',
+          desc: 'desc',
+          cond: 'cond',
+          date: 'date'
+        };
+        var res = actions.addRoute('list', 'name', 'desc', 'cond', 'date');
+        expect(res).toEqual(action);
+      });
     });
 
-    it('should generate the TOGGLE_VISIBILITY action', () => {
-      var action = {
-        type: 'TOGGLE_VISIBILITY',
-        id: '123'
-      };
-      var res = actions.toggleVisibility('123');
-      expect(res).toEqual(action);
+    describe('map actions', () => {
+      it('should generate the UPDATE_MAP action', () => {
+        var action = {
+          type: 'UPDATE_MAP'
+        };
+        var res = actions.updateMap();
+        expect(res).toEqual(action);
+      });
+
+      it('should generate the COMPLETE_UPDATE_MAP action', () => {
+        var action = {
+          type: 'COMPLETE_UPDATE_MAP'
+        };
+        var res = actions.completeUpdateMap();
+        expect(res).toEqual(action);
+      });
     });
 
-    it('should generate the ADD_POI action', () => {
-      var action = {
-        type: 'ADD_POI',
-        pos: 'pos',
-        name: 'name',
-        desc: 'desc',
-        cond: 'cond',
-        date: 'date'
-      };
-      var res = actions.addPOI('pos', 'name', 'desc', 'cond', 'date');
-      expect(res).toEqual(action);
+    describe('searchText actions', () => {
+      it('should generate the SET_POI_SEARCH_TEXT action', () => {
+        var action = {
+          type: 'SET_POI_SEARCH_TEXT',
+          POISearchText: 'chalan'
+        };
+        var res = actions.setPOISearchText('chalan');
+        expect(res).toEqual(action);
+      });
+
+      it('should generate the SET_ROUTES_SEARCH_TEXT action', () => {
+        var action = {
+          type: 'SET_ROUTES_SEARCH_TEXT',
+          RoutesSearchText: 'chalan'
+        };
+        var res = actions.setRoutesSearchText('chalan');
+        expect(res).toEqual(action);
+      });
     });
 
-    it('should generate the ADD_ROUTE action', () => {
-      var action = {
-        type: 'ADD_ROUTE',
-        list: 'list',
-        name: 'name',
-        desc: 'desc',
-        cond: 'cond',
-        date: 'date'
-      };
-      var res = actions.addRoute('list', 'name', 'desc', 'cond', 'date');
-      expect(res).toEqual(action);
-    });
-
-    it('should generate the UPDATE_MAP action', () => {
-      var action = {
-        type: 'UPDATE_MAP'
-      };
-      var res = actions.updateMap();
-      expect(res).toEqual(action);
-    });
-
-    it('should generate the COMPLETE_UPDATE_MAP action', () => {
-      var action = {
-        type: 'COMPLETE_UPDATE_MAP'
-      };
-      var res = actions.completeUpdateMap();
-      expect(res).toEqual(action);
-    });
-
-    it('should generate the SET_POI_SEARCH_TEXT action', () => {
-      var action = {
-        type: 'SET_POI_SEARCH_TEXT',
-        POISearchText: 'chalan'
-      };
-      var res = actions.setPOISearchText('chalan');
-      expect(res).toEqual(action);
-    });
-
-    it('should generate the SET_ROUTES_SEARCH_TEXT action', () => {
-      var action = {
-        type: 'SET_ROUTES_SEARCH_TEXT',
-        RoutesSearchText: 'chalan'
-      };
-      var res = actions.setRoutesSearchText('chalan');
-      expect(res).toEqual(action);
-    });
   });
 
   //reducers
@@ -135,6 +177,68 @@ describe('redux', () => {
         };
         var res = reducers.userLocationReducer(df(state), df(action));
         expect(res.mapCentering).toBe(true);
+      });
+
+      it('should set the TRACK_ROUTE state', () => {
+        var action = {
+          type: 'TRACK_ROUTE'
+        };
+        var state = {
+          trackingRoute: false
+        };
+        var res = reducers.userLocationReducer(df(state), df(action));
+        expect(res.trackingRoute).toBe(true);
+      });
+
+      it('should unset the TRACK_ROUTE state', () => {
+        var action = {
+          type: 'STOP_TRACKING_ROUTE'
+        };
+        var state = {
+          trackingRoute: true
+        };
+        var res = reducers.userLocationReducer(df(state), df(action));
+        expect(res.trackingRoute).toBe(false);
+      });
+
+      it('should CLEAR the ROUTE LIST', () => {
+        var action = {
+          type: 'CLEAR_ROUTE_LIST'
+        };
+        var state = {
+          routeList: [
+            [
+              1, 1
+            ],
+            [
+              2, 2
+            ],
+            [3, 3]
+          ]
+        };
+        var res = reducers.userLocationReducer(df(state), df(action));
+        expect(res.routeList).toEqual([]);
+      });
+
+      it('should ADD a position TO the ROUTE LIST', () => {
+        var action = {
+          type: 'ADD_TO_ROUTE_LIST',
+          position: {
+            coords: {
+              latitude: 10,
+              longitude: 210
+            }
+          }
+        };
+        var state = {
+          routeList: []
+        };
+        var res = reducers.userLocationReducer(df(state), df(action));
+        expect(res.routeList).toBeA('array');
+        expect(res.routeList.length).toBe(1);
+        expect(res.routeList[0]).toBeA('array');
+        expect(res.routeList[0][0]).toBe(210);
+        expect(res.routeList[0][1]).toBe(10);
       });
     });
 

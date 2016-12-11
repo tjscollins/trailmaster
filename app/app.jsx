@@ -15,13 +15,15 @@ var store = configure();
 
 //Initialize User Location Monitoring
 var processGeolocation = (pos) => {
-  // alert('Successful location');
+  console.log('Successful location:', pos);
   store.dispatch(actions.updatePOS(pos));
-  // store.dispatch(actions.updateMap());
-};
+  if (store.getState().userLocation.trackingRoute)
+    store.dispatch(actions.addToRouteList(pos));
+    // store.dispatch(actions.updateMap());
+  };
 
 var geolocationError = (err) => {
-  alert('Error tracking user position: ' + err.message);
+  // alert('Error tracking user position: ' + err.message);
   console.error('Error tracking user position', err);
 };
 
