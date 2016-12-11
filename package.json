@@ -4,7 +4,8 @@
   "description": "Hash Trail Design Application",
   "main": "server.js",
   "scripts": {
-    "test": "karma start",
+    "test": "mocha server/**/*test.js && karma start",
+    "test-watch": "nodemon --exec 'npm test'",
     "start": "node server/server.js"
   },
   "author": "Tyler Collins",
@@ -75,11 +76,13 @@
     "less-loader": "^2.2.3",
     "mocha": "^2.4.5",
     "node-sass": "^3.4.2",
+    "nodemon": "^1.11.0",
     "react-addons-test-utils": "^15.4.0",
     "redux-thunk": "^2.1.0",
     "sass-loader": "^3.1.2",
     "script-loader": "^0.6.1",
     "style-loader": "^0.13.0",
+    "supertest": "^2.0.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.12.13"
   }

@@ -12,7 +12,6 @@ var app = express();
 app.use(bodyParser.json());
 
 app.post('/pois', (req, res) => {
-  console.log(req.body);
   var poi = new poiModel(req.body);
   poi
     .save()
@@ -29,3 +28,7 @@ app.use(express.static('public'));
 app.listen(PORT, function() {
   console.log('Express server is up on port ' + PORT);
 });
+
+module.exports = {
+  app
+};
