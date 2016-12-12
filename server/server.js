@@ -6,6 +6,7 @@ var {poiModel} = require('./db/models/poi');
 var {routeModel} = require('./db/models/route');
 var {trailModel} = require('./db/models/trail');
 var {userModel} = require('./db/models/user');
+var {authenticate} = require('./middleware/authenticate');
 
 // var passport = require('passport'),
 //   LocalStrategy = require('passport-local').Strategy;
@@ -133,6 +134,10 @@ app.get('/trails', (req, res) => {
         .status(400)
         .send(e);
     });
+});
+
+app.get('/users/me', authenticate, (req, res) => {
+  res.send(req.user);
 });
 
 app.use(express.static('public'));
