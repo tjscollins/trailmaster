@@ -1,9 +1,14 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var _ = require('lodash');
 var mongoose = require('./db/mongoose');
 var {poiModel} = require('./db/models/poi');
 var {routeModel} = require('./db/models/route');
 var {trailModel} = require('./db/models/trail');
+var {userModel} = require('./db/models/user');
+
+// var passport = require('passport'),
+//   LocalStrategy = require('passport-local').Strategy;
 
 //Create our app
 const PORT = process.env.PORT || 3000;
@@ -12,6 +17,51 @@ const PORT = process.env.PORT || 3000;
 var app = express();
 
 app.use(bodyParser.json());
+
+// app.post('/login', passport.authenticate('local', {
+//   successRedirect: '/',
+//   failureRedirect: '/login',
+//   failureFlash: true
+// }));
+//
+// passport.use(new LocalStrategy(function(username, password, done) {
+//   User
+//     .findOne({
+//       username: username
+//     }, function(err, user) {
+//       if (err) {
+//         return done(err);
+//       }
+//       if (!user) {
+//         return done(null, false, {message: 'Incorrect username.'});
+//       }
+//       if (!user.validPassword(password)) {
+//         return done(null, false, {message: 'Incorrect password.'});
+//       }
+//       return done(null, user);
+//     });
+// }));
+
+app.post('/users', (req, res) => {
+  var body = _.pick(req.body, ['email', 'password'])
+  var user = new userModel(body);
+
+  user
+    .save()
+    .then(() => {
+      return user.generateAuthToken();
+    })
+    .then((token) => {
+      res
+        .header('x-auth', token)
+        .send(user);
+    })
+    .catch((e) => {
+      res
+        .status(400)
+        .send(e);
+    });
+});
 
 app.post('/pois', (req, res) => {
   var poi = new poiModel(req.body);

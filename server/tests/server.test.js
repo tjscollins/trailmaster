@@ -5,6 +5,7 @@ const request = require('supertest');
 const {app} = require('./../server.js');
 const {poiModel} = require('./../db/models/poi');
 const {routeModel} = require('./../db/models/route');
+const {trailModel} = require('./../db/models/trail');
 
 const pois = [
   {
@@ -76,16 +77,70 @@ const routes = [
   }
 ];
 
+const trails = [
+  {
+    '_id': '584dfc6bd96e98209375e82c',
+    'name': 'Kagman High to Rabbit Trail',
+    'desc': 'Test',
+    'date': 'Dec 2016',
+    '__v': 0,
+    'list': [
+      {
+        '_id': '584df765d96e98209375e82a',
+        'type': 'Feature',
+        '__v': 0,
+        'geometry': {
+          'type': 'Point',
+          'coordinates': [-214.25509214401245, 15.10071455043649]
+        },
+        'properties': {
+          'marker-color': '#7e7e7e',
+          'marker-size': 'medium',
+          'marker-symbol': '',
+          'name': 'Rabbit Hole',
+          'desc': 'Hole descends from top of cliff to bottom, forming climbable cave',
+          'condition': 'Rope in good condition',
+          'last': 'June 2014',
+          'displayed': true
+        }
+      }, {
+        '_id': '584dfbbfd96e98209375e82b',
+        'type': 'Feature',
+        '__v': 0,
+        'geometry': {
+          'type': 'Point',
+          'coordinates': [-214.2152855, 15.167236099999998]
+        },
+        'properties': {
+          'marker-color': '#7e7e7e',
+          'marker-size': 'medium',
+          'marker-symbol': '',
+          'name': 'Kagman High',
+          'desc': 'test',
+          'condition': 'test',
+          'last': 'Dec 2016',
+          'displayed': true
+        }
+      }
+    ]
+  }
+];
+
 beforeEach((done) => {
   poiModel
     .remove({})
     .then(() => {
       return poiModel.insertMany(pois);
-    })
+    });
   routeModel
     .remove({})
     .then(() => {
       return routeModel.insertMany(routes);
+    });
+  trailModel
+    .remove({})
+    .then(() => {
+      return trailModel.insertMany(trails);
     })
     .then(() => done());
 });
@@ -286,6 +341,111 @@ describe('GET /routes', () => {
       .expect(200)
       .expect((res) => {
         expect(res.body.routes.length).toBe(1);
+      })
+      .end(done);
+  });
+});
+
+describe('POST /trails', () => {
+  it('should create a new Trail', (done) => {
+    var trail = {
+      'name': 'Kagman High to Rabbit Trail',
+      'desc': 'Test',
+      'date': 'Dec 2016',
+      '__v': 0,
+      'list': [
+        {
+          '_id': '584df765d96e98209375e82a',
+          'type': 'Feature',
+          '__v': 0,
+          'geometry': {
+            'type': 'Point',
+            'coordinates': [-214.25509214401245, 15.10071455043649]
+          },
+          'properties': {
+            'marker-color': '#7e7e7e',
+            'marker-size': 'medium',
+            'marker-symbol': '',
+            'name': 'Rabbit Hole',
+            'desc': 'Hole descends from top of cliff to bottom, forming climbable cave',
+            'condition': 'Rope in good condition',
+            'last': 'June 2014',
+            'displayed': true
+          }
+        }, {
+          '_id': '584dfbbfd96e98209375e82b',
+          'type': 'Feature',
+          '__v': 0,
+          'geometry': {
+            'type': 'Point',
+            'coordinates': [-214.2152855, 15.167236099999998]
+          },
+          'properties': {
+            'marker-color': '#7e7e7e',
+            'marker-size': 'medium',
+            'marker-symbol': '',
+            'name': 'Kagman High',
+            'desc': 'test',
+            'condition': 'test',
+            'last': 'Dec 2016',
+            'displayed': true
+          }
+        }
+      ]
+    };
+
+    request(app)
+      .post('/trails')
+      .send(trail)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.name).toEqual(trail.name);
+        expect(res.body.desc).toEqual(trail.desc);
+        expect(res.body.list).toEqual(trail.list);
+      })
+      .end((err, res) => {
+        if (err)
+          return done(err);
+        trailModel
+          .find()
+          .then((trailList) => {
+            expect(trailList.length).toBe(2);
+            expect(trailList[0].list).toExist();
+            done();
+          })
+          .catch((e) => done(e));
+      });
+  });
+
+  it('should not create a new Trail with invalid data', (done) => {
+    var trail = {};
+
+    request(app)
+      .post('/trails')
+      .send(trail)
+      .expect(400)
+      .end((err, res) => {
+        if (err)
+          return done(err);
+        trailModel
+          .find()
+          .then((trailList) => {
+            expect(trailList.length).toBe(1);
+            done();
+          })
+          .catch((e) => done(e));
+      });
+  });
+});
+
+describe('GET /trails', () => {
+
+  it('should GET all Trails', (done) => {
+    request(app)
+      .get('/trails')
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.trails.length).toBe(1);
       })
       .end(done);
   });

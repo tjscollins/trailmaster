@@ -473,8 +473,8 @@ describe('redux', () => {
         var geoJSON = {
           features: [
             {
+              '_id': '123',
               properties: {
-                'id': '123',
                 'displayed': true
               }
             }

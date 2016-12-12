@@ -2,6 +2,9 @@ div.controls.hide-left {
     height: 36px;
     overflow: hidden;
     left: -240px;
+    .panel-heading {
+      background-color: transparentize(#73B6E6, 0.25);
+    }
     @include for-tablet-landscape-up {
         left: -365px;
         height: 50px;
