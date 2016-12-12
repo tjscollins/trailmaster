@@ -7,16 +7,44 @@ import {Provider} from 'react-redux';
 import {configure} from 'configureStore';
 import * as actions from 'actions';
 
-/*----------MongoDB----------*/
-// import {MongoClient} from 'mongodb';
-//
-// MongoClient.connect('mongodb://localhost:27017/TrailMaster', getDB);
-
 /*----------Components----------*/
 import MainContainer from 'MainContainer';
 
 /*----------Configure Redux Store----------*/
-var store = configure();
+var getData = (route) => {
+  var xmlHTTP = new XMLHttpRequest();
+  xmlHTTP.open('GET', `/${route}`, false);
+  xmlHTTP.send(null);
+  return xmlHTTP.responseText;
+};
+
+var sendData = (route, data) => {
+  var xmlHTTP = new XLMHttpRequest();
+  xmlHTTP.open('POST', `/${route}`, true);
+  xmlHTTP.setRequestHeader('Content-type', 'applicaiton/json');
+  xmlHTTP.onload = () => {
+    console.log(xmlHTTP.responseText);
+  };
+  xmlHTTP.send(JSON.stringify(data));
+};
+
+var initialState = {
+  geoJSON: {
+    type: 'FeatureCollection',
+    features: JSON
+      .parse(getData('routes'))
+      .routes
+      .concat(JSON.parse(getData('pois')).pois)
+  },
+  trails: {
+    myTrails: JSON
+      .parse(getData('trails'))
+      .trails
+  }
+};
+var store = configure(initialState);
+
+store.subscribe(() => {});
 
 //Initialize User Location Monitoring
 var processGeolocation = (pos) => {
@@ -28,7 +56,6 @@ var processGeolocation = (pos) => {
   };
 
 var geolocationError = (err) => {
-  // alert('Error tracking user position: ' + err.message);
   console.error('Error tracking user position', err);
 };
 

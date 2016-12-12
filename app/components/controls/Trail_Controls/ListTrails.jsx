@@ -18,14 +18,14 @@ class ListTrails extends BaseComponent {
     var {myTrails} = trails;
     return () => {
       var trail = myTrails.filter((item) => {
-        return item.id === id;
+        return item._id === id;
       });
-      console.log(trail);
+      // console.log(trail);
       if (trail.length > 0) {
         trail[0]
           .list
           .forEach((feature) => {
-            dispatch(actions.toggleVisibility(feature.properties.id));
+            dispatch(actions.toggleVisibility(feature._id));
           });
       }
     };
@@ -39,10 +39,10 @@ class ListTrails extends BaseComponent {
     return trails
       .myTrails
       .map((trail) => {
-        var {name, desc, date, id} = trail;
+        var {name, desc, date, _id} = trail;
         return name.match(new RegExp(trailSearchText, 'i'))
           ? (
-            <tr onClick={this.display(id)} id={id} style={this.displayStyle(id)} className="point-of-interest" key={id}>
+            <tr onClick={this.display(_id)} id={_id} style={this.displayStyle(_id)} className="point-of-interest" key={_id}>
               <td>{name}</td>
               <td>{desc}</td>
               <td>{date}</td>
@@ -73,4 +73,4 @@ class ListTrails extends BaseComponent {
   }
 }
 
-export default connect(state => state)(ListTrails);;
+export default connect(state => state)(ListTrails);

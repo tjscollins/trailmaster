@@ -1,7 +1,6 @@
 /*----------Modules----------*/
 import React from 'react';
 import {connect} from 'react-redux';
-import uuid from 'uuid';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
@@ -23,10 +22,11 @@ class ListRoutes extends BaseComponent {
         return point.geometry.type === 'LineString';
       })
       .map((point) => {
-        var {name, desc, condition, last, id} = point.properties;
+        var id = point._id;
+        var {name, desc, condition, last} = point.properties;
         return name.match(new RegExp(RoutesSearchText, 'i'))
           ? (
-            <tr onClick={this.display(id)} id={id} style={this.displayStyle(id)} className="routes" key={uuid()}>
+            <tr onClick={this.display(id)} id={id} style={this.displayStyle(id)} className="routes" key={id}>
               <td>{name}</td>
               <td>{desc}</td>
               <td>{condition}</td>
@@ -48,7 +48,7 @@ class ListRoutes extends BaseComponent {
     var thisPoint = geoJSON
       .features
       .filter((point) => {
-        return point.properties.id === id;
+        return point._id === id;
       })[0];
     return thisPoint.properties.displayed
       ? {

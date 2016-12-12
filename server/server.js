@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('./db/mongoose');
 var {poiModel} = require('./db/models/poi');
 var {routeModel} = require('./db/models/route');
+var {trailModel} = require('./db/models/trail');
 
 //Create our app
 const PORT = process.env.PORT || 3000;
@@ -59,6 +60,31 @@ app.get('/routes', (req, res) => {
         .send(e);
     });
 });
+
+app.post('/trails', (req, res) => {
+  var trail = new trailModel(req.body);
+  trail
+    .save()
+    .then((doc) => {
+      res.send(doc);
+    }, (e) => {
+      res
+        .status(400)
+        .send(e);
+    });
+});
+app.get('/trails', (req, res) => {
+  trailModel
+    .find()
+    .then((trails) => {
+      res.send({trails});
+    }, (e) => {
+      res
+        .status(400)
+        .send(e);
+    });
+});
+
 app.use(express.static('public'));
 
 app.listen(PORT, function() {

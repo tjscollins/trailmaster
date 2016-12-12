@@ -8,16 +8,19 @@ export var trailsReducer = (state = {
     case 'SAVE_TRAIL':
       var {list, name, desc} = action;
       var date = new Date();
+      var newTrail = {
+        list,
+        name,
+        desc,
+        date: `${month(date.getMonth())} ${date.getFullYear()}`
+      };
+      sendDataToServer('trails', newTrail);
+      newTrail._id = uuid();
       return {
         ...state,
         myTrails: [
-          ...state.myTrails, {
-            id: uuid(),
-            list,
-            name,
-            desc,
-            date: `${month(date.getMonth())} ${date.getFullYear()}`
-          }
+          ...state.myTrails,
+          newTrail
         ]
       };
     case 'SHOW_TRAIL':
@@ -131,7 +134,7 @@ export var geoJSONReducer = (state = initialGeoState, action) => {
         features: state
           .features
           .map((point) => {
-            if (point.properties.id === action.id) {
+            if (point._id === action.id) {
               // console.log(action.id, point.properties.displayed);
               return {
                 ...point,
@@ -157,8 +160,7 @@ export var geoJSONReducer = (state = initialGeoState, action) => {
           desc,
           condition: cond,
           last: `${month(date.getMonth())} ${date.getFullYear()}`,
-          displayed: false,
-          id: uuid()
+          displayed: false
         },
         geometry: {
           type: 'Point',
@@ -168,7 +170,8 @@ export var geoJSONReducer = (state = initialGeoState, action) => {
           ]
         }
       };
-
+      sendDataToServer('pois', newFeature);
+      newFeature._id = uuid();
       return {
         ...state,
         features: [
@@ -188,14 +191,15 @@ export var geoJSONReducer = (state = initialGeoState, action) => {
           desc,
           condition: cond,
           last: `${month(date.getMonth())} ${date.getFullYear()}`,
-          displayed: false,
-          id: uuid()
+          displayed: false
         },
         geometry: {
           type: 'LineString',
           coordinates: [...list]
         }
       };
+      sendDataToServer('routes', newFeature);
+      newFeature._id = uuid();
       return {
         ...state,
         features: [
@@ -214,6 +218,7 @@ var initialGeoState = {
   type: 'FeatureCollection',
   features: [
     {
+      _id: '1',
       type: 'Feature',
       properties: {
         stroke: '#555555',
@@ -223,8 +228,7 @@ var initialGeoState = {
         desc: 'Trail to move from Kannat Tabla area down into Chalan Kiya near the start of the Chalan Kiya ravine',
         condition: 'Uncut, overgrown',
         last: 'Dec 2015',
-        displayed: false,
-        id: '1'
+        displayed: false
       },
       geometry: {
         type: 'LineString',
@@ -314,6 +318,7 @@ var initialGeoState = {
         ]
       }
     }, {
+      _id: '2',
       type: 'Feature',
       properties: {
         'marker-color': '#7e7e7e',
@@ -323,14 +328,14 @@ var initialGeoState = {
         desc: 'Concrete statue of Jesus at the peak of Mt. Tapotchau',
         condition: 'Rough dirt road, easy access on foot',
         last: 'June 2016',
-        displayed: false,
-        id: '2'
+        displayed: false
       },
       geometry: {
         type: 'Point',
         coordinates: [-214.2563098669052, 15.18629359866948]
       }
     }, {
+      _id: '4',
       type: 'Feature',
       properties: {
         'marker-color': '#7e7e7e',
@@ -340,14 +345,14 @@ var initialGeoState = {
         desc: 'Hole descends from top of cliff to bottom, forming climbable cave',
         condition: 'Rope in good condition',
         last: 'June 2014',
-        displayed: false,
-        id: '4'
+        displayed: false
       },
       geometry: {
         type: 'Point',
         coordinates: [-214.25509214401245, 15.10071455043649]
       }
     }, {
+      _id: '3',
       type: 'Feature',
       properties: {
         stroke: '#555555',
@@ -357,8 +362,7 @@ var initialGeoState = {
         desc: 'Route runs downhill through jungle',
         condition: 'Bees!',
         last: 'Oct 2016',
-        displayed: false,
-        id: '3'
+        displayed: false
       },
       geometry: {
         type: 'LineString',
@@ -552,4 +556,14 @@ var month = (mo) => {
     default:
       return mo;
   }
+};
+
+var sendDataToServer = (route, data) => {
+  var xmlHTTP = new XMLHttpRequest();
+  xmlHTTP.open('POST', `/${route}`, true);
+  xmlHTTP.setRequestHeader('Content-type', 'application/json');
+  xmlHTTP.onload = () => {
+    console.log(xmlHTTP.responseText);
+  };
+  xmlHTTP.send(JSON.stringify(data));
 };

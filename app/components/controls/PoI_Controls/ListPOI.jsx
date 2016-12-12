@@ -23,7 +23,8 @@ class ListPOI extends BaseComponent {
         return point.geometry.type === 'Point';
       })
       .map((point) => {
-        var {name, desc, condition, last, id} = point.properties;
+        var id = point._id;
+        var {name, desc, condition, last} = point.properties;
         return name.match(new RegExp(POISearchText, 'i'))
           ? (
             <tr onClick={this.display(id)} id={id} style={this.displayStyle(id)} className="point-of-interest" key={uuid()}>
@@ -48,7 +49,7 @@ class ListPOI extends BaseComponent {
     var thisPoint = geoJSON
       .features
       .filter((point) => {
-        return point.properties.id === id;
+        return point._id === id;
       })[0];
     return thisPoint.properties.displayed
       ? {

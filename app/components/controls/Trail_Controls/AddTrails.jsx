@@ -43,7 +43,8 @@ class AddTrails extends BaseComponent {
         return point.properties.displayed;
       })
       .map((point) => {
-        var {name, desc, condition, last, id} = point.properties;
+        var id = point._id;
+        var {name, desc, condition, last} = point.properties;
         return (
           <tr onClick={this.remove(id)} id={id} className="point-of-interest" key={id} style={{
             cursor: 'pointer'
