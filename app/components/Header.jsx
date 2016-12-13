@@ -20,24 +20,47 @@ export class Header extends BaseComponent {
       .logout
       .bind(this);
   }
+  createAccount() {
+    $('#account-creator').modal('show');
+  }
   handleCheckbox() {
-    //Toggle Map-Centering
-    var {dispatch} = this.props;
-    dispatch(actions.toggleMapCentering());
+    this
+      .props
+      .dispatch(actions.toggleMapCentering());
   }
   login() {
     $('#login-modal').modal('show');
   }
   logout() {
-    var {dispatch} = this.props;
+    var {dispatch, userSession} = this.props;
+    var xmlHTTP = new XMLHttpRequest();
+    xmlHTTP.open('DELETE', '/users/me/token', false);
+    xmlHTTP.setRequestHeader('x-auth', userSession.xAuth);
+    xmlHTTP.send(null);
     dispatch(actions.logout());
     dispatch(actions.clearTrails());
   }
   manageLogin() {
     var {userSession} = this.props;
     return userSession.xAuth
-      ? <a href="#" onClick={this.logout}>Log out</a>
-      : <a href="#" onClick={this.login}>Sign-in</a>;
+      ? [(
+          <li>
+            <a href="#">{userSession.email}</a>
+          </li>
+        ), (
+          <li>
+            <a href="#" onClick={this.logout}>Log out</a>
+          </li>
+        )]
+      : [(
+          <li>
+            <a href="#" onClick={this.createAccount}>Create Account</a>
+          </li>
+        ), (
+          <li>
+            <a href="#" onClick={this.login}>Sign-in</a>
+          </li>
+        )];
   }
   render() {
     return (
@@ -45,7 +68,7 @@ export class Header extends BaseComponent {
         <div className="container-fluid">
           <div className="navbar-header">
             <a className="navbar-brand" href="#">
-              <i className="fa fa-compass" aria-hidden="true"></i>TrailMaster</a>
+              <i className="fa fa-compass" aria-hidden="true"/>TrailMaster</a>
             <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
               <span className="sr-only">Toggle navigation</span>
               <span className="icon-bar"/>
@@ -55,7 +78,9 @@ export class Header extends BaseComponent {
           </div>
 
           <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul className="nav navbar-nav"></ul>
+            <ul className="nav navbar-nav navbar-left">
+              {this.manageLogin()}
+            </ul>
             <ul className="nav navbar-nav navbar-right">
               <li id="centermap-checkbox">
                 <input type="checkbox" onChange={this.handleCheckbox} ref="centerMap" checked={this.props.userLocation.mapCentering} value="centermap"/>
@@ -63,11 +88,7 @@ export class Header extends BaseComponent {
               <li>
                 <a>Keep Map Centered</a>
               </li>
-              <li>
-                {this.manageLogin()}
-              </li>
             </ul>
-
           </div>
         </div>
       </nav>

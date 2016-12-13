@@ -27,7 +27,7 @@ class ListPOI extends BaseComponent {
         var {name, desc, condition, last} = point.properties;
         return name.match(new RegExp(POISearchText, 'i'))
           ? (
-            <tr onClick={this.display(id)} id={id} style={this.displayStyle(id)} className="point-of-interest" key={uuid()}>
+            <tr onClick={this.display(id)} id={id} style={this.displayStyle(id)} className="point-of-interest" key={id}>
               <td>{name}</td>
               <td>{desc}</td>
               <td>{condition}</td>
@@ -45,13 +45,15 @@ class ListPOI extends BaseComponent {
     };
   }
   displayStyle(id) {
-    var {geoJSON} = this.props;
+    var {geoJSON, userSession} = this.props;
     var thisPoint = geoJSON
       .features
       .filter((point) => {
         return point._id === id;
       })[0];
-    return thisPoint.properties.displayed
+    return userSession
+      .visibleFeatures
+      .indexOf(thisPoint._id) > -1
       ? {
         fontWeight: 'bold',
         cursor: 'pointer'

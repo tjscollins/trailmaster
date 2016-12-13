@@ -46,7 +46,7 @@ const pois = [
       'desc': 'test',
       'condition': 'test',
       'last': 'Dec 2016',
-      'displayed': true
+      'displayed': false
     }
   }, {
     '_creator': userTwoID,

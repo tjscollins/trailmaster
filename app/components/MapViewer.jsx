@@ -221,13 +221,15 @@ export class MapViewer extends BaseComponent {
   }
   shouldDisplay(layerName, search, props) {
     //Props should be passed in here to allow selection between current or nextProps as appropriate
-    var {geoJSON} = props;
-    var {properties} = geoJSON
+    var {geoJSON, userSession} = props;
+    var onePoint = geoJSON
       .features
       .filter((point) => {
         return point.properties.name === layerName;
       })[0];
-    return search.test(layerName) || properties.displayed;
+    return search.test(layerName) || userSession
+      .visibleFeatures
+      .indexOf(onePoint._id) > -1;
   }
   componentWillReceiveProps(nextProps) {
     var {dispatch, searchText} = nextProps;

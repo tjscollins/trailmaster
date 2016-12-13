@@ -125,8 +125,14 @@ app.get('/routes', (req, res) => {
 });
 
 app.post('/trails', authenticate, (req, res) => {
-  console.log(req.body);
-  var trail = new trailModel({list: req.body.list, name: req.body.name, desc: req.body.desc, date: req.body.date, _creator: req.user._id});
+  console.log('Received newTrail:', req.body);
+  var trail = new trailModel({
+    list: req.body.list,
+    name: req.body.name,
+    desc: req.body.desc,
+    date: req.body.date,
+    _creator: ObjectID(req.user._id)
+  });
   trail
     .save()
     .then((doc) => {

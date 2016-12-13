@@ -44,13 +44,15 @@ class ListRoutes extends BaseComponent {
     };
   }
   displayStyle(id) {
-    var {geoJSON} = this.props;
+    var {geoJSON, userSession} = this.props;
     var thisPoint = geoJSON
       .features
       .filter((point) => {
         return point._id === id;
       })[0];
-    return thisPoint.properties.displayed
+    return userSession
+      .visibleFeatures
+      .indexOf(thisPoint._id) > -1
       ? {
         fontWeight: 'bold',
         cursor: 'pointer'

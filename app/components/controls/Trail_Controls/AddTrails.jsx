@@ -20,14 +20,16 @@ class AddTrails extends BaseComponent {
   }
   submit() {
     console.log('Submitting New Trail!');
-    var {dispatch, geoJSON} = this.props;
+    var {dispatch, geoJSON, userSession} = this.props;
     var {name, desc} = this.refs;
     var trailList = geoJSON
       .features
       .filter((point) => {
-        return point.properties.displayed;
+        return userSession
+          .visibleFeatures
+          .indexOf(point._id) > -1;
       });
-    dispatch(actions.saveTrail(trailList, name.value, desc.value));
+    dispatch(actions.saveTrail(trailList, name.value, desc.value, userSession.xAuth, userSession._id));
   }
   remove(id) {
     var {dispatch} = this.props;
@@ -36,11 +38,13 @@ class AddTrails extends BaseComponent {
     };
   }
   currentTrail() {
-    var {geoJSON} = this.props;
+    var {geoJSON, userSession} = this.props;
     return geoJSON
       .features
       .filter((point) => {
-        return point.properties.displayed;
+        return userSession
+          .visibleFeatures
+          .indexOf(point._id) > -1;
       })
       .map((point) => {
         var id = point._id;

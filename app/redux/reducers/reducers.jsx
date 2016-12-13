@@ -1,18 +1,42 @@
 // import {geoJSON} from 'geoJSON';
 import uuid from 'uuid';
 
-export var userSessionReducer = (state = {}, action) => {
+export var userSessionReducer = (state = {
+  visibleFeatures: []
+}, action) => {
   switch (action.type) {
     case 'LOGIN':
       return {
         ...state,
-        xAuth: action.xAuth
+        xAuth: action.xAuth,
+        _id: action.userId,
+        email: action.email
       };
     case 'LOGOUT':
       return {
         ...state,
-        xAuth: ''
+        xAuth: '',
+        _id: ''
       };
+    case 'TOGGLE_VISIBILITY':
+      return state
+        .visibleFeatures
+        .indexOf(action.id) > -1
+        ? {
+          ...state,
+          visibleFeatures: state
+            .visibleFeatures
+            .filter((id) => {
+              return id !== action.id;
+            })
+        }
+        : {
+          ...state,
+          visibleFeatures : [
+            ...state.visibleFeatures,
+            action.id
+          ]
+        };
     default:
       return state;
   }
@@ -34,7 +58,7 @@ export var trailsReducer = (state = {
         myTrails: []
       };
     case 'SAVE_TRAIL':
-      var {list, name, desc} = action;
+      var {list, name, desc, auth, id} = action;
       var date = new Date();
       var newTrail = {
         list,
@@ -42,8 +66,16 @@ export var trailsReducer = (state = {
         desc,
         date: `${month(date.getMonth())} ${date.getFullYear()}`
       };
-      sendDataToServer('trails', newTrail);
-      newTrail._id = uuid();
+      console.log('Checking newTrail', JSON.stringify(newTrail));
+      var send = new XMLHttpRequest();
+      send.open('POST', '/trails', false);
+      send.setRequestHeader('x-auth', auth);
+      send.send(JSON.stringify(newTrail));
+      console.log(send.response, list);
+      // var get = new XMLHttpRequest();
+      // get.open('GET', '/trails', false);
+      // get.setRequestHeader('x-auth', auth);
+      // get.send(null);
       return {
         ...state,
         myTrails: [
@@ -156,26 +188,26 @@ export var searchTextReducer = (state = {
 
 export var geoJSONReducer = (state = initialGeoState, action) => {
   switch (action.type) {
-    case 'TOGGLE_VISIBILITY':
-      return {
-        ...state,
-        features: state
-          .features
-          .map((point) => {
-            if (point._id === action.id) {
-              // console.log(action.id, point.properties.displayed);
-              return {
-                ...point,
-                properties: {
-                  ...point.properties,
-                  displayed: !point.properties.displayed
-                }
-              };
-            } else {
-              return point;
-            }
-          })
-      };
+      // case 'TOGGLE_VISIBILITY':
+      //   return {
+      //     ...state,
+      //     features: state
+      //       .features
+      //       .map((point) => {
+      //         if (point._id === action.id) {
+      //           // console.log(action.id, point.properties.displayed);
+      //           return {
+      //             ...point,
+      //             properties: {
+      //               ...point.properties,
+      //               displayed: !point.properties.displayed
+      //             }
+      //           };
+      //         } else {
+      //           return point;
+      //         }
+      //       })
+      //   };
     case 'ADD_POI':
       var {pos, name, desc, cond, date} = action;
       var newFeature = {

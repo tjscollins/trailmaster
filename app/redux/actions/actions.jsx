@@ -1,10 +1,14 @@
 //user session actions
-export var login = (xAuth) => {
-  return {type: 'LOGIN', xAuth};
+export var login = (xAuth, userId, email) => {
+  return {type: 'LOGIN', xAuth, userId, email};
 };
 
 export var logout = () => {
   return {type: 'LOGOUT'};
+};
+
+export var toggleVisibility = (id) => {
+  return {type: 'TOGGLE_VISIBILITY', id};
 };
 
 //trails actions
@@ -16,8 +20,15 @@ export var clearTrails = () => {
   return {type: 'CLEAR_TRAILS'};
 };
 
-export var saveTrail = (list, name, desc) => {
-  return {type: 'SAVE_TRAIL', list, name, desc};
+export var saveTrail = (list, name, desc, auth, id) => {
+  return {
+    type: 'SAVE_TRAIL',
+    list,
+    name,
+    desc,
+    auth,
+    id
+  };
 };
 
 export var showTrail = (id) => {
@@ -50,10 +61,6 @@ export var addToRouteList = (position) => {
 };
 
 //geoJSON actions
-export var toggleVisibility = (id) => {
-  return {type: 'TOGGLE_VISIBILITY', id};
-};
-
 export var addPOI = (pos, name, desc, cond, date) => {
   return {
     type: 'ADD_POI',
