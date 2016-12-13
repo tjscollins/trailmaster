@@ -19,8 +19,39 @@ class AddTrails extends BaseComponent {
     $('#save-trail-modal').modal('show');
   }
   submit() {
+    var month = (mo) => {
+      switch (mo) {
+        case 0:
+          return 'Jan';
+        case 1:
+          return 'Feb';
+        case 2:
+          return 'Mar';
+        case 3:
+          return 'Apr';
+        case 4:
+          return 'May';
+        case 5:
+          return 'Jun';
+        case 6:
+          return 'Jul';
+        case 7:
+          return 'Aug';
+        case 8:
+          return 'Sep';
+        case 9:
+          return 'Oct';
+        case 10:
+          return 'Nov';
+        case 11:
+          return 'Dec';
+        default:
+          return mo;
+      }
+    };
     console.log('Submitting New Trail!');
     var {dispatch, geoJSON, userSession} = this.props;
+    var {xAuth} = userSession;
     var {name, desc} = this.refs;
     var trailList = geoJSON
       .features
@@ -29,7 +60,28 @@ class AddTrails extends BaseComponent {
           .visibleFeatures
           .indexOf(point._id) > -1;
       });
-    dispatch(actions.saveTrail(trailList, name.value, desc.value, userSession.xAuth, userSession._id));
+    var date = new Date();
+    var newTrail = {
+      list: trailList,
+      name: name.value,
+      desc: desc.value,
+      date: `${month(date.getMonth())} ${date.getFullYear()}`
+    };
+    var send = new XMLHttpRequest();
+    send.open('POST', '/trails', false);
+    send.setRequestHeader('Content-type', 'application/json');
+    send.setRequestHeader('x-auth', xAuth);
+    send.send(JSON.stringify(newTrail));
+    console.log(send.response, JSON.stringify(newTrail));
+    var get = new XMLHttpRequest();
+    get.open('GET', '/trails', false);
+    get.setRequestHeader('x-auth', xAuth);
+    get.send(null);
+    var displayTrails = JSON
+      .parse(get.responseText)
+      .trails;
+    dispatch(actions.displayTrails(displayTrails));
+
   }
   remove(id) {
     var {dispatch} = this.props;

@@ -20,15 +20,8 @@ export var clearTrails = () => {
   return {type: 'CLEAR_TRAILS'};
 };
 
-export var saveTrail = (list, name, desc, auth, id) => {
-  return {
-    type: 'SAVE_TRAIL',
-    list,
-    name,
-    desc,
-    auth,
-    id
-  };
+export var saveTrail = (list, name, desc) => {
+  return {type: 'SAVE_TRAIL', list, name, desc};
 };
 
 export var showTrail = (id) => {

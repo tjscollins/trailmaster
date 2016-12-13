@@ -58,7 +58,7 @@ export var trailsReducer = (state = {
         myTrails: []
       };
     case 'SAVE_TRAIL':
-      var {list, name, desc, auth, id} = action;
+      var {list, name, desc} = action;
       var date = new Date();
       var newTrail = {
         list,
@@ -66,16 +66,6 @@ export var trailsReducer = (state = {
         desc,
         date: `${month(date.getMonth())} ${date.getFullYear()}`
       };
-      console.log('Checking newTrail', JSON.stringify(newTrail));
-      var send = new XMLHttpRequest();
-      send.open('POST', '/trails', false);
-      send.setRequestHeader('x-auth', auth);
-      send.send(JSON.stringify(newTrail));
-      console.log(send.response, list);
-      // var get = new XMLHttpRequest();
-      // get.open('GET', '/trails', false);
-      // get.setRequestHeader('x-auth', auth);
-      // get.send(null);
       return {
         ...state,
         myTrails: [
