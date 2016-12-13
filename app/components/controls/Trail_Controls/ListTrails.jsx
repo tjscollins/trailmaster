@@ -51,6 +51,27 @@ class ListTrails extends BaseComponent {
           : null;
       });
   }
+  componentWillReceiveProps(nextProps) {
+    console.log('List Trails received new props');
+    var {userSession, dispatch, trails} = nextProps;
+    var getData = (route, auth) => {
+      var xmlHTTP = new XMLHttpRequest();
+      xmlHTTP.open('GET', `/${route}`, false);
+      xmlHTTP.setRequestHeader('x-auth', auth);
+      xmlHTTP.send(null);
+      return xmlHTTP.responseText;
+    };
+
+    if (userSession.xAuth) {
+      //get trails
+      var newTrails = JSON
+        .parse(getData('trails', userSession.xAuth))
+        .trails;
+      if (newTrails.length !== trails.myTrails.length) {
+        dispatch(actions.displayTrails(newTrails));
+      }
+    }
+  }
   render() {
     return (
       <table className="list-box table table-striped">

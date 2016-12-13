@@ -1,7 +1,7 @@
 /*----------Modules----------*/
 import React from 'react';
 import {connect} from 'react-redux';
-// import 'bootstrap';
+import $ from 'jquery';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
@@ -16,11 +16,28 @@ export class Header extends BaseComponent {
     this.handleCheckbox = this
       .handleCheckbox
       .bind(this);
+    this.logout = this
+      .logout
+      .bind(this);
   }
   handleCheckbox() {
     //Toggle Map-Centering
     var {dispatch} = this.props;
     dispatch(actions.toggleMapCentering());
+  }
+  login() {
+    $('#login-modal').modal('show');
+  }
+  logout() {
+    var {dispatch} = this.props;
+    dispatch(actions.logout());
+    dispatch(actions.clearTrails());
+  }
+  manageLogin() {
+    var {userSession} = this.props;
+    return userSession.xAuth
+      ? <a href="#" onClick={this.logout}>Log out</a>
+      : <a href="#" onClick={this.login}>Sign-in</a>;
   }
   render() {
     return (
@@ -38,33 +55,7 @@ export class Header extends BaseComponent {
           </div>
 
           <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul className="nav navbar-nav">
-              {/* <li className="dropdown">
-                <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown
-                <span className="caret"/>
-                </a>
-                <ul className="dropdown-menu">
-                <li>
-                <a href="#">Action</a>
-                </li>
-                <li>
-                <a href="#">Another action</a>
-                </li>
-                <li>
-                <a href="#">Something else here</a>
-                </li>
-                <li role="separator" className="divider"/>
-                <li>
-                <a href="#">Separated link</a>
-                </li>
-                <li role="separator" className="divider"/>
-                <li>
-                <a href="#">One more separated link</a>
-                </li>
-                </ul>
-              </li> */}
-
-            </ul>
+            <ul className="nav navbar-nav"></ul>
             <ul className="nav navbar-nav navbar-right">
               <li id="centermap-checkbox">
                 <input type="checkbox" onChange={this.handleCheckbox} ref="centerMap" checked={this.props.userLocation.mapCentering} value="centermap"/>
@@ -73,15 +64,10 @@ export class Header extends BaseComponent {
                 <a>Keep Map Centered</a>
               </li>
               <li>
-                <a href="#">Sign-in</a>
+                {this.manageLogin()}
               </li>
             </ul>
-            <form className="navbar-form navbar-right">
-              {/* <div className="header-search form-group">
-                <input type="text" className="header-search-input form-control" placeholder="Search for Points of Interest, Routes, or Trails"/>
-              </div> */}
 
-            </form>
           </div>
         </div>
       </nav>

@@ -19,9 +19,9 @@ var getData = (route) => {
 };
 
 var sendData = (route, data) => {
-  var xmlHTTP = new XLMHttpRequest();
+  var xmlHTTP = new XMLHttpRequest();
   xmlHTTP.open('POST', `/${route}`, true);
-  xmlHTTP.setRequestHeader('Content-type', 'applicaiton/json');
+  xmlHTTP.setRequestHeader('Content-type', 'appliction/json');
   xmlHTTP.onload = () => {
     console.log(xmlHTTP.responseText);
   };
@@ -36,11 +36,11 @@ var initialState = {
       .routes
       .concat(JSON.parse(getData('pois')).pois)
   },
-  trails: {
-    myTrails: JSON
-      .parse(getData('trails'))
-      .trails
-  }
+  // trails: {
+  //   myTrails: JSON
+  //     .parse(getData('trails'))
+  //     .trails
+  // }
 };
 var store = configure(initialState);
 

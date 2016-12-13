@@ -1,10 +1,38 @@
 // import {geoJSON} from 'geoJSON';
 import uuid from 'uuid';
 
+export var userSessionReducer = (state = {}, action) => {
+  switch (action.type) {
+    case 'LOGIN':
+      return {
+        ...state,
+        xAuth: action.xAuth
+      };
+    case 'LOGOUT':
+      return {
+        ...state,
+        xAuth: ''
+      };
+    default:
+      return state;
+  }
+};
+
 export var trailsReducer = (state = {
   myTrails: []
 }, action) => {
   switch (action.type) {
+    case 'DISPLAY_TRAILS':
+      var {trails} = action;
+      return {
+        ...state,
+        myTrails: trails
+      };
+    case 'CLEAR_TRAILS':
+      return {
+        ...state,
+        myTrails: []
+      };
     case 'SAVE_TRAIL':
       var {list, name, desc} = action;
       var date = new Date();

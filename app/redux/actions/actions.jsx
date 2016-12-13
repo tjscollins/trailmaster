@@ -1,4 +1,21 @@
+//user session actions
+export var login = (xAuth) => {
+  return {type: 'LOGIN', xAuth};
+};
+
+export var logout = () => {
+  return {type: 'LOGOUT'};
+};
+
 //trails actions
+export var displayTrails = (trails) => {
+  return {type: 'DISPLAY_TRAILS', trails};
+};
+
+export var clearTrails = () => {
+  return {type: 'CLEAR_TRAILS'};
+};
+
 export var saveTrail = (list, name, desc) => {
   return {type: 'SAVE_TRAIL', list, name, desc};
 };
