@@ -1,47 +1,22 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var _ = require('lodash');
-var mongoose = require('./db/mongoose');
+require('./config/config');
+
+const express = require('express');
+const bodyParser = require('body-parser');
+const _ = require('lodash');
+const {ObjectID} = require('mongodb');
+
+var {mongoose} = require('./db/mongoose');
 var {poiModel} = require('./db/models/poi');
 var {routeModel} = require('./db/models/route');
 var {trailModel} = require('./db/models/trail');
 var {userModel} = require('./db/models/user');
 var {authenticate} = require('./middleware/authenticate');
 
-// var passport = require('passport'),
-//   LocalStrategy = require('passport-local').Strategy;
-
 //Create our app
-const PORT = process.env.PORT || 3000;
-// console.log(process.versions);
-
 var app = express();
+const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
-
-// app.post('/login', passport.authenticate('local', {
-//   successRedirect: '/',
-//   failureRedirect: '/login',
-//   failureFlash: true
-// }));
-//
-// passport.use(new LocalStrategy(function(username, password, done) {
-//   User
-//     .findOne({
-//       username: username
-//     }, function(err, user) {
-//       if (err) {
-//         return done(err);
-//       }
-//       if (!user) {
-//         return done(null, false, {message: 'Incorrect username.'});
-//       }
-//       if (!user.validPassword(password)) {
-//         return done(null, false, {message: 'Incorrect password.'});
-//       }
-//       return done(null, user);
-//     });
-// }));
 
 app.post('/users', (req, res) => {
   var body = _.pick(req.body, ['email', 'password'])
@@ -61,6 +36,43 @@ app.post('/users', (req, res) => {
       res
         .status(400)
         .send(e);
+    });
+});
+app.get('/users/me', authenticate, (req, res) => {
+  res.send(req.user);
+});
+app.post('/users/login', (req, res) => {
+  var body = _.pick(req.body, ['email', 'password']);
+
+  userModel
+    .findByCredentials(body.email, body.password)
+    .then((user) => {
+      return user
+        .generateAuthToken()
+        .then((token) => {
+          res
+            .header('x-auth', token)
+            .send(user);
+        });
+    })
+    .catch((e) => {
+      res
+        .status(400)
+        .send();
+    });
+});
+app.delete('/users/me/token', authenticate, (req, res) => {
+  req
+    .user
+    .removeToken(req.token)
+    .then(() => {
+      res
+        .status(200)
+        .send();
+    }, () => {
+      res
+        .status(400)
+        .send();
     });
 });
 
@@ -112,8 +124,9 @@ app.get('/routes', (req, res) => {
     });
 });
 
-app.post('/trails', (req, res) => {
-  var trail = new trailModel(req.body);
+app.post('/trails', authenticate, (req, res) => {
+  console.log(req.body);
+  var trail = new trailModel({list: req.body.list, name: req.body.name, desc: req.body.desc, date: req.body.date, _creator: req.user._id});
   trail
     .save()
     .then((doc) => {
@@ -124,9 +137,9 @@ app.post('/trails', (req, res) => {
         .send(e);
     });
 });
-app.get('/trails', (req, res) => {
+app.get('/trails', authenticate, (req, res) => {
   trailModel
-    .find()
+    .find({_creator: req.user._id})
     .then((trails) => {
       res.send({trails});
     }, (e) => {
@@ -134,10 +147,6 @@ app.get('/trails', (req, res) => {
         .status(400)
         .send(e);
     });
-});
-
-app.get('/users/me', authenticate, (req, res) => {
-  res.send(req.user);
 });
 
 app.use(express.static('public'));

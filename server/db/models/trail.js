@@ -25,6 +25,10 @@ var trailModel = mongoose.model('Trail', new mongoose.Schema({
   date: {
     type: String,
     required: true
+  },
+  _creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
   }
 }));
 
