@@ -36,6 +36,10 @@ var initialState = {
       .routes
       .concat(JSON.parse(getData('pois')).pois)
   },
+  userSession: {
+    ...JSON.parse(sessionStorage.getItem('trailmaster-login')),
+    visibleFeatures: []
+  }
   // trails: {
   //   myTrails: JSON
   //     .parse(getData('trails'))

@@ -6,11 +6,19 @@ export var userSessionReducer = (state = {
 }, action) => {
   switch (action.type) {
     case 'LOGIN':
+      //store Login data to sessionStorage;
+      var {xAuth, userId, email} = action;
+      var trailmasterLogin = {
+        xAuth,
+        _id: userId,
+        email
+      };
+      sessionStorage.setItem('trailmaster-login', JSON.stringify(trailmasterLogin));
       return {
         ...state,
-        xAuth: action.xAuth,
-        _id: action.userId,
-        email: action.email
+        xAuth,
+        _id: userId,
+        email
       };
     case 'LOGOUT':
       return {

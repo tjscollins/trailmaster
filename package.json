@@ -1,6 +1,6 @@
 {
   "name": "trailmaster",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Hash Trail Design Application",
   "main": "server.js",
   "scripts": {
@@ -29,8 +29,6 @@
     "mapbox-gl": "^0.28.0",
     "mongodb": "^2.2.15",
     "mongoose": "^4.7.2",
-    "passport": "^0.3.2",
-    "passport-local": "^1.0.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-redux": "^4.4.6",
