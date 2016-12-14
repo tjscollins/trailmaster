@@ -99,21 +99,21 @@ export class Controls extends BaseComponent {
               </div>
             </div>
 
-            <div className="panel panel-primary">
+            {/* <div className="panel panel-primary">
               <div className="panel-heading" role="tab" id="headingThree">
-                <h3 className="controls-title">
-                  <a className="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                    <i className="fa fa-wrench" aria-hidden="true"/>
-                    &nbsp; Tools
-                  </a>
-                </h3>
+              <h3 className="controls-title">
+              <a className="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+              <i className="fa fa-wrench" aria-hidden="true"/>
+              &nbsp; Tools
+              </a>
+              </h3>
               </div>
               <div id="collapseFour" className="collapse" role="tabpanel" aria-labelledby="headingFour">
-                <div className="panel-body control-panel">
-                  <Tools/>
-                </div>
+              <div className="panel-body control-panel">
+              <Tools/>
               </div>
-            </div>
+              </div>
+            </div> */}
           </div>
         </div>
       </div>

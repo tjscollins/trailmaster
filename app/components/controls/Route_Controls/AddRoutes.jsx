@@ -82,6 +82,12 @@ class AddRoutes extends BaseComponent {
                 </button>
                 <h4 className="modal-title">Tracking...</h4>
               </div>
+              <div className="modal-body">
+                <p>
+                  <span style={{
+                    color: 'red'
+                  }}>Warning</span>: Tracking only works while this message is visible. Locking or sleeping your device will pause GPS tracking and create gaps in your route. Unlocking or waking your device will resume tracking when this message is visible again.</p>
+              </div>
               <div className="modal-footer">
                 <button onClick={this.stopTracking} type="submit" className="btn btn-danger" data-dismiss="modal">Stop Tracking</button>
               </div>

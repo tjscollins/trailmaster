@@ -3,6 +3,10 @@ nav {
     // height: 100%;
     overflow: hidden;
     @include transition($hide-ui-transition, $hide-ui-transition-func, $hide-ui-transition-delay);
+
+    .navbar-right {
+      padding-right: 25px;
+    }
 }
 
 nav.minified-header {

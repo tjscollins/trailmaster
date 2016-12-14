@@ -11,6 +11,9 @@ class Tools extends BaseComponent {
     super();
     //this._bind(...local methods) from BaseComponent
   }
+  importKML() {
+    $('#import-route').modal('show');
+  }
   render() {
     return (
       <div className="">
@@ -32,6 +35,16 @@ class Tools extends BaseComponent {
           </div>
           <div className="col-xs-10">
             <p>Update POI or Route</p>
+          </div>
+        </div>
+        <div style={{
+          cursor: 'pointer'
+        }} onClick={this.importKML} className="row tool">
+          <div className="col-xs-2">
+            <i className="fa fa-upload"/>
+          </div>
+          <div className="col-xs-10">
+            <p>Import Existing KML or GPX as Route</p>
           </div>
         </div>
         <div style={{

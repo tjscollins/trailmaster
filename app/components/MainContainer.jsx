@@ -7,6 +7,7 @@ import Header from 'Header';
 import Controls from 'Controls';
 import MapViewer from 'MapViewer';
 import Login from 'Login';
+import Import from 'Import';
 
 export class MainContainer extends BaseComponent {
   constructor() {
@@ -20,6 +21,7 @@ export class MainContainer extends BaseComponent {
         <Controls/>
         <MapViewer/>
         <Login/>
+        <Import/>
       </div>
     );
   }
