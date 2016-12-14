@@ -1,7 +1,7 @@
 div.mapviewer {
     position: absolute;
     z-index: -1;
-    top: 50px;
+    top: 0px;
     left: 0;
     width: 100vw;
     height: 100vh;
@@ -11,5 +11,9 @@ div.mapviewer {
     }
     @include for-tablet-landscape-up {
 
+    }
+
+    .mapboxgl-ctrl-top-right {
+      top: 50px;
     }
 }

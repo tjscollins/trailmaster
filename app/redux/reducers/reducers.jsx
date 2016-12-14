@@ -21,6 +21,7 @@ export var userSessionReducer = (state = {
         email
       };
     case 'LOGOUT':
+      sessionStorage.removeItem('trailmaster-login');
       return {
         ...state,
         xAuth: '',

@@ -1,6 +1,6 @@
 {
   "name": "trailmaster",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Hash Trail Design Application",
   "main": "server.js",
   "scripts": {

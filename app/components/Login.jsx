@@ -28,7 +28,7 @@ export class Login extends BaseComponent {
 
     if (xmlHTTP.status === 200) {
       console.log('Successful account creation');
-      dispatch(actions.login(xmlHTTP.getResponseHeader('x-auth')));
+      dispatch(actions.login(xmlHTTP.getResponseHeader('x-auth'), JSON.parse(xmlHTTP.responseText)._id, this.createEmail.value));
     } else {
       console.log('Error creating account', xmlHTTP);
     }

@@ -1,3 +1,26 @@
+nav {
+    width: 100%;
+    height: 52px;
+    overflow: hidden;
+    @include transition($hide-ui-transition, $hide-ui-transition-func, $hide-ui-transition-delay);
+}
+
+nav.minified-header {
+    left: 0;
+    top: 0;
+    width: 180px;
+    margin-right: 0;
+    border-bottom-right-radius: 5px;
+
+    #navbarui {
+        display: none;
+    }
+}
+
+.headerhidecontrols {
+    display: none;
+}
+
 .header-search {
     width: 45vw;
 
@@ -7,16 +30,11 @@
 }
 
 .form-group {
-  margin-left: 10px;
+    margin-left: 10px;
 }
 
 #centermap-checkbox {
-  padding-left: 15px;
-  padding-top: 15px;
-  padding-bottom: 0px;
-  // margin: none;
-  //
-  // a {
-  //   top: -35px;
-  // }
+    padding-left: 15px;
+    padding-top: 15px;
+    padding-bottom: 0;
 }

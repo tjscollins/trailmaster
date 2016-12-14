@@ -21,14 +21,22 @@ export class Controls extends BaseComponent {
     //this._bind(...local methods) from BaseComponent
   }
   hide() {
-    if ($('#hidecontrols').hasClass('fa-arrow-left')) {
+    if ($('.hidecontrols').hasClass('fa-arrow-left')) {
+      //hide UI
       $('div.controls').addClass('hide-left');
-      $('#hidecontrols').removeClass('fa-arrow-left');
-      $('#hidecontrols').addClass('fa-arrow-right');
+      $('.hidecontrols').removeClass('fa-arrow-left');
+      $('.hidecontrols').addClass('fa-arrow-right');
+      $('#Header').addClass('minified-header');
+      $('.headerhidecontrols').css('display', 'inline-block');
+      // $('.mapviewer').css('top', '0');
     } else {
+      //show UI
       $('div.controls').removeClass('hide-left');
-      $('#hidecontrols').removeClass('fa-arrow-right');
-      $('#hidecontrols').addClass('fa-arrow-left');
+      $('.hidecontrols').removeClass('fa-arrow-right');
+      $('.hidecontrols').addClass('fa-arrow-left');
+      $('#Header').removeClass('minified-header');
+      $('.headerhidecontrols').css('display', 'none');
+      // $('.mapviewer').css('top', '50px');
     }
   }
   render() {
@@ -43,7 +51,7 @@ export class Controls extends BaseComponent {
                     Points of Interest
                   </a>
                 </h3>
-                <i onClick={this.hide} id="hidecontrols" className="fa fa-2x fa-arrow-left" aria-hidden="true"/>
+                <i onClick={this.hide} className="hidecontrols fa fa-2x fa-arrow-left" aria-hidden="true"/>
               </div>
 
               <div id="collapseOne" className="collapse in" role="tabpanel" aria-labelledby="headingOne">

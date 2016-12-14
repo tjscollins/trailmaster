@@ -1,13 +1,10 @@
 div.controls.hide-left {
-    height: 36px;
+    // height: 36px;
     overflow: hidden;
-    left: -240px;
-    .panel-heading {
-      background-color: transparentize(#73B6E6, 0.25);
-    }
+    left: -$phone-controls-width;
     @include for-tablet-landscape-up {
-        left: -365px;
-        height: 50px;
+        left: -$controls-width;
+        // height: 50px;
     }
 }
 
@@ -16,9 +13,7 @@ div.controls {
     top: 50px;
     left: 0;
     overflow: auto;
-    transition: left 1s, height 1s;
-    transition-timing-function: ease-in-out;
-    transition-delay: 0.125s;
+    @include transition($hide-ui-transition, $hide-ui-transition-func, $hide-ui-transition-delay);
     border: $controls-border;
     background-color: $controls-bg-color;
     @include for-phone-only {
@@ -62,7 +57,7 @@ div.controls {
             margin-top: 5px;
         }
 
-        #hidecontrols {
+        .hidecontrols {
             position: absolute;
             top: 10px;
             left: 345px;

@@ -62,13 +62,33 @@ export class Header extends BaseComponent {
           </li>
         )];
   }
+  hide() {
+    if ($('.hidecontrols').hasClass('fa-arrow-left')) {
+      //hide UI
+      $('div.controls').addClass('hide-left');
+      $('.hidecontrols').removeClass('fa-arrow-left');
+      $('.hidecontrols').addClass('fa-arrow-right');
+      $('#Header').addClass('minified-header');
+      $('.headerhidecontrols').css('display', 'inline-block');
+      // $('.mapviewer').css('top', '0');
+    } else {
+      //show UI
+      $('div.controls').removeClass('hide-left');
+      $('.hidecontrols').removeClass('fa-arrow-right');
+      $('.hidecontrols').addClass('fa-arrow-left');
+      $('#Header').removeClass('minified-header');
+      $('.headerhidecontrols').css('display', 'none');
+      // $('.mapviewer').css('top', '50px');
+    }
+  }
   render() {
     return (
-      <nav className="navbar navbar-default navbar-fixed-top">
+      <nav id="Header" className="navbar navbar-default navbar-fixed-top">
         <div className="container-fluid">
           <div className="navbar-header">
-            <a className="navbar-brand" href="#">
-              <i className="fa fa-compass" aria-hidden="true"/>TrailMaster</a>
+            <a className="navbar-brand" href="#" onClick={this.hide}>
+              <i className="fa fa-compass" aria-hidden="true"/>TrailMaster &nbsp;
+              <i className="headerhidecontrols fa fa-arrow-right" aria-hidden="true"/></a>
             <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
               <span className="sr-only">Toggle navigation</span>
               <span className="icon-bar"/>
@@ -77,7 +97,7 @@ export class Header extends BaseComponent {
             </button>
           </div>
 
-          <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <div className="collapse navbar-collapse" id="navbarui">
             <ul className="nav navbar-nav navbar-left">
               {this.manageLogin()}
             </ul>

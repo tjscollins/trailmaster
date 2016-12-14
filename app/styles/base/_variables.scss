@@ -13,4 +13,8 @@ $controls-border: none; //1px solid black;
 $controls-bg-color: #fbfbfb;
 $mapviewer-border: none;//1px solid black;
 
+$hide-ui-transition: left 0.5s, width 0.5s;
+$hide-ui-transition-func: ease-in-out;
+$hide-ui-transition-delay: 0s;
+
 //Bootstrap Resets
