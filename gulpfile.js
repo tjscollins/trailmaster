@@ -88,7 +88,7 @@ gulp.task('JSX', function() {
     }))
     .pipe(sourcemaps.init())
     .pipe(webpack(require('./webpack.config.js')))
-    .pipe(uglify())
+    // .pipe(uglify())
     .pipe(concat('bundle.js'))
     .pipe(sourcemaps.write())
     .pipe(gulp.dest(DIST_PATH))

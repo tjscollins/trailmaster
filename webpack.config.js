@@ -15,7 +15,24 @@ module.exports = {
   externals: {
     jquery: 'jQuery'
   },
-  plugins: [new webpack.ProvidePlugin({'$': 'jquery', 'jQuery': 'jquery', 'jquery': 'jquery'})],
+  plugins: [
+    new webpack.ProvidePlugin({'$': 'jquery', 'jQuery': 'jquery', 'jquery': 'jquery'}),
+    new webpack
+      .optimize
+      .OccurenceOrderPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify('production')
+      }
+    }),
+    new webpack
+      .optimize
+      .UglifyJsPlugin({
+        compressor: {
+          warnings: false
+        }
+      })
+  ],
   output: {
     path: __dirname,
     filename: './public/bundle.js'
@@ -78,5 +95,5 @@ module.exports = {
   //     path.resolve(__dirname, './node_modules/bootstrap-sass/assets/stylesheets')
   //   ]
   // },
-  devtool: 'eval-source-map'
+  devtool: 'source-map'
 };
