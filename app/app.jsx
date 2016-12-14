@@ -52,7 +52,7 @@ store.subscribe(() => {});
 
 //Initialize User Location Monitoring
 var processGeolocation = (pos) => {
-  console.log('Successful location:', pos);
+  // console.log('Successful location:', pos);
   store.dispatch(actions.updatePOS(pos));
   if (store.getState().userLocation.trackingRoute)
     store.dispatch(actions.addToRouteList(pos));

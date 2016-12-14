@@ -2,6 +2,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import $ from 'jquery';
+import uuid from 'uuid';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
@@ -13,8 +14,8 @@ export class Header extends BaseComponent {
   constructor() {
     super();
     //this._bind(...local methods) from BaseComponent
-    this.handleCheckbox = this
-      .handleCheckbox
+    this.disableAutoCenter = this
+      .disableAutoCenter
       .bind(this);
     this.logout = this
       .logout
@@ -23,7 +24,7 @@ export class Header extends BaseComponent {
   createAccount() {
     $('#account-creator').modal('show');
   }
-  handleCheckbox() {
+  disableAutoCenter() {
     this
       .props
       .dispatch(actions.toggleMapCentering());
@@ -44,20 +45,20 @@ export class Header extends BaseComponent {
     var {userSession} = this.props;
     return userSession.xAuth
       ? [(
-          <li>
+          <li key={uuid()}>
             <a href="#">{userSession.email}</a>
           </li>
         ), (
-          <li>
+          <li key={uuid()}>
             <a href="#" onClick={this.logout}>Log out</a>
           </li>
         )]
       : [(
-          <li>
+          <li key={uuid()}>
             <a href="#" onClick={this.createAccount}>Create Account</a>
           </li>
         ), (
-          <li>
+          <li key={uuid()}>
             <a href="#" onClick={this.login}>Sign-in</a>
           </li>
         )];
@@ -82,34 +83,37 @@ export class Header extends BaseComponent {
     }
   }
   render() {
+    var {userLocation} = this.props;
+    var autoCenter = () => {
+      return userLocation.mapCentering
+        ? 'Disable Auto-Center'
+        : 'Enable Auto-Center';
+    };
     return (
       <nav id="Header" className="navbar navbar-default navbar-fixed-top">
-        <div className="container-fluid">
-          <div className="navbar-header">
-            <a className="navbar-brand" href="#" onClick={this.hide}>
-              <i className="fa fa-compass" aria-hidden="true"/>TrailMaster &nbsp;
-              <i className="headerhidecontrols fa fa-arrow-right" aria-hidden="true"/></a>
-            <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-              <span className="sr-only">Toggle navigation</span>
-              <span className="icon-bar"/>
-              <span className="icon-bar"/>
-              <span className="icon-bar"/>
-            </button>
-          </div>
+        <div className="navbar-header">
+          <a className="navbar-brand" href="#" onClick={this.hide}>
+            <i className="fa fa-compass" aria-hidden="true"/>TrailMaster &nbsp;
+            <i className="headerhidecontrols fa fa-arrow-right" aria-hidden="true"/></a>
+          <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarui" aria-expanded="false">
+            <span className="sr-only">Toggle navigation</span>
+            <span className="icon-bar"/>
+            <span className="icon-bar"/>
+            <span className="icon-bar"/>
+          </button>
+        </div>
 
-          <div className="collapse navbar-collapse" id="navbarui">
-            <ul className="nav navbar-nav navbar-left">
-              {this.manageLogin()}
-            </ul>
-            <ul className="nav navbar-nav navbar-right">
-              <li id="centermap-checkbox">
-                <input type="checkbox" onChange={this.handleCheckbox} ref="centerMap" checked={this.props.userLocation.mapCentering} value="centermap"/>
-              </li>
-              <li>
-                <a>Keep Map Centered</a>
-              </li>
-            </ul>
-          </div>
+        <div className="collapse navbar-collapse" id="navbarui">
+          <ul className="nav navbar-nav navbar-left">
+            {this.manageLogin()}
+          </ul>
+          <ul className="nav navbar-nav navbar-right">
+            <li>
+              <a onClick={this.disableAutoCenter} style={{
+                cursor: 'pointer'
+              }}>{autoCenter()}</a>
+            </li>
+          </ul>
         </div>
       </nav>
     );

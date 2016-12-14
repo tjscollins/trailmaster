@@ -52,9 +52,9 @@ class ListTrails extends BaseComponent {
       });
   }
   componentWillReceiveProps(nextProps) {
-    console.log('List Trails received new props');
+    // console.log('List Trails received new props');
     var {userSession, dispatch, trails} = nextProps;
-    console.log('Old Trails', this.props.trails, 'New Trails', nextProps.trails);
+    // console.log('Old Trails', this.props.trails, 'New Trails', nextProps.trails);
     var getData = (route, auth) => {
       var xmlHTTP = new XMLHttpRequest();
       xmlHTTP.open('GET', `/${route}`, false);

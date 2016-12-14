@@ -14,6 +14,7 @@ import AddRoutes from 'AddRoutes';
 import SearchTrails from 'SearchTrails';
 import ListTrails from 'ListTrails';
 import AddTrails from 'AddTrails';
+import Tools from 'Tools';
 
 export class Controls extends BaseComponent {
   constructor() {
@@ -48,7 +49,8 @@ export class Controls extends BaseComponent {
               <div className="panel-heading" role="tab" id="headingOne">
                 <h3 className="controls-title">
                   <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    Points of Interest
+                    <i className="fa fa-map-marker"/>
+                    &nbsp; Points of Interest
                   </a>
                 </h3>
                 <i onClick={this.hide} className="hidecontrols fa fa-2x fa-arrow-left" aria-hidden="true"/>
@@ -66,7 +68,8 @@ export class Controls extends BaseComponent {
               <div className="panel-heading" role="tab" id="headingTwo">
                 <h3 className="controls-title">
                   <a className="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    Routes
+                    <i className="fa fa-road" aria-hidden="true"/>
+                    &nbsp; Routes
                   </a>
                 </h3>
               </div>
@@ -82,7 +85,8 @@ export class Controls extends BaseComponent {
               <div className="panel-heading" role="tab" id="headingThree">
                 <h3 className="controls-title">
                   <a className="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                    Your Trails
+                    <i className="fa fa-tree" aria-hidden="true"/>
+                    &nbsp; Your Trails
                   </a>
                 </h3>
               </div>
@@ -91,6 +95,22 @@ export class Controls extends BaseComponent {
                   <AddTrails/>
                   <SearchTrails/>
                   <ListTrails/>
+                </div>
+              </div>
+            </div>
+
+            <div className="panel panel-primary">
+              <div className="panel-heading" role="tab" id="headingThree">
+                <h3 className="controls-title">
+                  <a className="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                    <i className="fa fa-wrench" aria-hidden="true"/>
+                    &nbsp; Tools
+                  </a>
+                </h3>
+              </div>
+              <div id="collapseFour" className="collapse" role="tabpanel" aria-labelledby="headingFour">
+                <div className="panel-body control-panel">
+                  <Tools/>
                 </div>
               </div>
             </div>

@@ -8,6 +8,8 @@ var sourcemaps = require('gulp-sourcemaps');
 var sass = require('gulp-sass');
 var webpack = require('gulp-webpack');
 var del = require('del');
+var spawn = require('child_process').spawn,
+  node;
 
 //File Paths
 const SRC_PATH = './app/';
@@ -15,6 +17,7 @@ const DIST_PATH = './public/';
 const HTML_PATH = SRC_PATH + 'html/'
 const SCRIPTS_PATH = SRC_PATH + '/**/*.jsx';
 const SCSS_PATH = SRC_PATH + 'styles/';
+const SERVER = './server';
 
 //SCSS
 //font-awesome source
@@ -53,13 +56,13 @@ var scss = { in: SCSS_PATH,
 };
 
 // copy bootstrap required fonts to dest
-gulp.task('fonts', function() {
+gulp.task('Fonts', function() {
   return gulp
     .src(fonts. in)
     .pipe(gulp.dest(fonts.out));
 });
 
-gulp.task('scss', ['fonts'], function() {
+gulp.task('SCSS', ['Fonts'], function() {
   return gulp
     .src(SCSS_PATH + 'app.scss')
     .pipe(plumber(function(err) {
@@ -75,8 +78,8 @@ gulp.task('scss', ['fonts'], function() {
 });
 
 // Scripts
-gulp.task('scripts', function() {
-  console.log('starting scripts task');
+gulp.task('JSX', function() {
+  // console.log('starting scripts task');
   return gulp
     .src(SRC_PATH + 'app.jsx')
     .pipe(plumber(function(err) {
@@ -92,12 +95,12 @@ gulp.task('scripts', function() {
     .pipe(livereload());
 });
 
-gulp.task('clean', function() {
+gulp.task('Clean', function() {
   return del.sync([DIST_PATH + '/**/']);
 });
 
-gulp.task('default', [
-  'scss', 'scripts'
+gulp.task('Default', [
+  'SCSS', 'JSX', 'Load-Server'
 ], function() {
   console.log('Starting default task');
   gulp
@@ -106,10 +109,22 @@ gulp.task('default', [
     .pipe(livereload());
 });
 
-gulp.task('watch', ['default'], function() {
-  require('./server/server.js');
+gulp.task('Load-Server', function() {
+  // console.log('Reloading the server');
+  if (node)
+    node.kill();
+  node = spawn('node', ['./server/server.js'], {stdio: 'inherit'});
   livereload.listen();
-  gulp.watch(SCRIPTS_PATH, ['scripts']);
-  gulp.watch(SCSS_PATH + '**/*.scss', ['scss']);
-  gulp.watch(HTML_PATH + '**/*.html', ['default']);
+  node.on('close', (code) => {
+    if (code === 8) {
+      gulp.log('Error detected, waiting for changes...');
+    }
+  });
+});
+
+gulp.task('watch', ['Default'], function() {
+  gulp.watch(SERVER + '**/*js', ['Load-Server']);
+  gulp.watch(SCRIPTS_PATH, ['JSX']);
+  gulp.watch(SCSS_PATH + '**/*.scss', ['SCSS']);
+  gulp.watch(HTML_PATH + '**/*.html', ['Default']);
 });

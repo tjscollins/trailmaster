@@ -1,6 +1,6 @@
 {
   "name": "trailmaster",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Hash Trail Design Application",
   "main": "server.js",
   "scripts": {
@@ -44,6 +44,7 @@
     "babel-preset-stage-0": "^6.16.0",
     "bootstrap": "^3.3.7",
     "bootstrap-webpack": "0.0.5",
+    "child_process": "^1.0.2",
     "css-loader": "^0.23.1",
     "deep-freeze-strict": "^1.1.1",
     "del": "^2.2.2",

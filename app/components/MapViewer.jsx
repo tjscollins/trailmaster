@@ -41,6 +41,7 @@ export class MapViewer extends BaseComponent {
     //Try loading interface
     map.addControl(new mapboxgl.GeolocateControl());
     map.addControl(new mapboxgl.NavigationControl());
+    map.addControl(new mapboxgl.ScaleControl({maxWidth: 120, unit: 'imperial'}));
 
     map.on('load', () => {
       //place userLocation
@@ -300,26 +301,6 @@ export class MapViewer extends BaseComponent {
         var neLng = bounds._ne.lng,
           neLat = bounds._ne.lat;
         if (newLong > swLng || newLong < neLng || newLat > neLat || newLat < swLat) {
-          // this
-          //   .map
-          //   .fitBounds([
-          //     [
-          //       oldLong < newLong
-          //         ? oldLong - 0.5
-          //         : newLong - 0.5,
-          //       oldLat < newLat
-          //         ? oldLat - 0.5
-          //         : newLat - 0.5
-          //     ],
-          //     [
-          //       oldLong > newLong
-          //         ? oldLong + 0.5
-          //         : newLong + 0.5,
-          //       oldLat > newLat
-          //         ? oldLat + 0.5
-          //         : newLat + 0.5
-          //     ]
-          //   ]);
           this
             .map
             .easeTo({
