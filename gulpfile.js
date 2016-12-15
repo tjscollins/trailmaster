@@ -99,7 +99,7 @@ gulp.task('Clean', function() {
   return del.sync([DIST_PATH + '/**/']);
 });
 
-gulp.task('Default', [
+gulp.task('default', [
   'SCSS', 'JSX', 'Load-Server'
 ], function() {
   console.log('Starting default task');
@@ -122,9 +122,9 @@ gulp.task('Load-Server', function() {
   });
 });
 
-gulp.task('watch', ['Default'], function() {
+gulp.task('watch', ['default'], function() {
   gulp.watch(SERVER + '**/*js', ['Load-Server']);
   gulp.watch(SCRIPTS_PATH, ['JSX']);
   gulp.watch(SCSS_PATH + '**/*.scss', ['SCSS']);
-  gulp.watch(HTML_PATH + '**/*.html', ['Default']);
+  gulp.watch(HTML_PATH + '**/*.html', ['default']);
 });
