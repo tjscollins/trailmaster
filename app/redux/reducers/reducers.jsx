@@ -162,9 +162,15 @@ export var mapReducer = (state = {
 export var searchTextReducer = (state = {
   POISearchText: '',
   RoutesSearchText: '',
-  trailSearchText: ''
+  trailSearchText: '',
+  updateSearchText: ''
 }, action) => {
   switch (action.type) {
+    case 'UPDATE_SEARCH_TEXT':
+      return {
+        ...state,
+        updateSearchText: action.updateSearchText
+      };
     case 'SET_POI_SEARCH_TEXT':
       return {
         ...state,

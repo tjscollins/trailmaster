@@ -8,6 +8,7 @@ import Controls from 'Controls';
 import MapViewer from 'MapViewer';
 import Login from 'Login';
 import Import from 'Import';
+import UpdatePOIorRoute from 'UpdatePOIorRoute';
 
 export class MainContainer extends BaseComponent {
   constructor() {
@@ -22,6 +23,7 @@ export class MainContainer extends BaseComponent {
         <MapViewer/>
         <Login/>
         <Import/>
+        <UpdatePOIorRoute/>
       </div>
     );
   }

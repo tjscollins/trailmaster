@@ -48,7 +48,7 @@ class AddRoutes extends BaseComponent {
     return (
       <div>
         <button className="btn btn-info form-control" onClick={this.modal} type="submit">
-          Add New Route
+          Track New Route
         </button>
         <div id="add-route-modal" className="modal fade">
           <div className="modal-dialog" role="document">
@@ -57,7 +57,7 @@ class AddRoutes extends BaseComponent {
                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 className="modal-title">Add New Route</h4>
+                <h4 className="modal-title">Track New Route</h4>
               </div>
               <div className="modal-body">
                 <form ref="addRoute">
@@ -67,7 +67,7 @@ class AddRoutes extends BaseComponent {
                 </form>
               </div>
               <div className="modal-footer">
-                <button onClick={this.tracking} type="submit" className="btn btn-secondary" data-dismiss="modal">Add Route</button>
+                <button onClick={this.tracking} type="submit" className="btn btn-secondary" data-dismiss="modal">Track Route</button>
               </div>
             </div>
           </div>

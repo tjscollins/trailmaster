@@ -11,8 +11,11 @@ class Tools extends BaseComponent {
     super();
     //this._bind(...local methods) from BaseComponent
   }
-  importKML() {
+  importData() {
     $('#import-route').modal('show');
+  }
+  updateMarker() {
+    $('#select-poi-route').modal('show');
   }
   render() {
     return (
@@ -39,12 +42,13 @@ class Tools extends BaseComponent {
         </div>
         <div style={{
           cursor: 'pointer'
-        }} onClick={this.importKML} className="row tool">
+        }} onClick={this.importData} className="row tool">
           <div className="col-xs-2">
             <i className="fa fa-upload"/>
           </div>
           <div className="col-xs-10">
-            <p>Import Existing KML or GPX as Route</p>
+            <p>Import Existing {/*KML or*/}
+              GPX File as Route</p>
           </div>
         </div>
         <div style={{

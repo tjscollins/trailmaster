@@ -5,13 +5,6 @@ module.exports = {
   entry: [
     'script!jquery/dist/jquery.min.js', 'script!bootstrap/dist/js/bootstrap.min.js', './app/app.jsx'
   ],
-  // node: {
-  //   console: 'empty',
-  //   fs: 'empty',
-  //   net: 'empty',
-  //   tls: 'empty',
-  //   module: 'empty'
-  // },
   externals: {
     jquery: 'jQuery'
   },
@@ -90,10 +83,6 @@ module.exports = {
       }
     ]
   },
-  // sassLoader: {
-  //   includePaths: [
-  //     path.resolve(__dirname, './node_modules/bootstrap-sass/assets/stylesheets')
-  //   ]
-  // },
   devtool: 'source-map'
+  // devtool: 'eval-source-map'
 };

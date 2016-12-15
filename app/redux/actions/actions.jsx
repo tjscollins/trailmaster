@@ -86,6 +86,10 @@ export var completeUpdateMap = () => {
 };
 
 //searchText actions
+export var setUpdateSearchText = (updateSearchText) => {
+  return {type: 'UPDATE_SEARCH_TEXT', updateSearchText}
+};
+
 export var setPOISearchText = (POISearchText) => {
   return {type: 'SET_POI_SEARCH_TEXT', POISearchText};
 };

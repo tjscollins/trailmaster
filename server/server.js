@@ -11,6 +11,9 @@ var {routeModel} = require('./db/models/route');
 var {trailModel} = require('./db/models/trail');
 var {userModel} = require('./db/models/user');
 var {authenticate} = require('./middleware/authenticate');
+var {spawn} = require('child_process');
+
+// var database = spawn('../../mongo/bin/mongod', ['--dbpath', '../../mongo-data']);
 
 //Create our app
 var app = express();
