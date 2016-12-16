@@ -79,6 +79,17 @@ app.delete('/users/me/token', authenticate, (req, res) => {
     });
 });
 
+app.get('/pois', (req, res) => {
+  poiModel
+    .find()
+    .then((pois) => {
+      res.send({pois});
+    }, (e) => {
+      res
+        .status(400)
+        .send(e);
+    });
+});
 app.post('/pois', (req, res) => {
   var poi = new poiModel(req.body);
   poi
@@ -91,18 +102,67 @@ app.post('/pois', (req, res) => {
         .send(e);
     });
 });
-app.get('/pois', (req, res) => {
+app.delete('/pois/:id', (req, res) => {
+  var id = req.params.id;
+  if (!ObjectID.isValid(id)) {
+    return res
+      .status(404)
+      .send();
+  }
+
   poiModel
+    .findByIdAndRemove(id)
+    .then((point) => {
+      if (!point) {
+        return res
+          .status(404)
+          .send();
+      }
+      res.send(point);
+    })
+    .catch((e) => {
+      res
+        .status(400)
+        .send();
+    });
+});
+app.patch('/pois/:id', (req, res) => {
+  var id = req.params.id;
+
+  if (!ObjectID.isValid(id)) {
+    return res
+      .status(404)
+      .send();
+  }
+
+  poiModel.findByIdAndUpdate(id, {
+    $set: req.body
+  }, {new: true}).then((point) => {
+    if (!point) {
+      return res
+        .status(404)
+        .send();
+    }
+
+    res.send(point);
+  }).catch((e) => {
+    res
+      .status(400)
+      .send();
+  });
+});
+
+app.get('/routes', (req, res) => {
+  routeModel
     .find()
-    .then((pois) => {
-      res.send({pois});
+    .then((routes) => {
+      res.send({routes});
     }, (e) => {
       res
         .status(400)
         .send(e);
     });
 });
-
 app.post('/routes', (req, res) => {
   var route = new routeModel(req.body);
   route
@@ -115,20 +175,70 @@ app.post('/routes', (req, res) => {
         .send(e);
     });
 });
-app.get('/routes', (req, res) => {
+
+app.delete('/routes/:id', (req, res) => {
+  var id = req.params.id;
+  if (!ObjectID.isValid(id)) {
+    return res
+      .status(404)
+      .send();
+  }
+
   routeModel
-    .find()
-    .then((routes) => {
-      res.send({routes});
+    .findByIdAndRemove(id)
+    .then((point) => {
+      if (!point) {
+        return res
+          .status(404)
+          .send();
+      }
+      res.send(point);
+    })
+    .catch((e) => {
+      res
+        .status(400)
+        .send();
+    });
+});
+app.patch('/routes/:id', (req, res) => {
+  var id = req.params.id;
+
+  if (!ObjectID.isValid(id)) {
+    return res
+      .status(404)
+      .send();
+  }
+
+  routeModel.findByIdAndUpdate(id, {
+    $set: req.body
+  }, {new: true}).then((point) => {
+    if (!point) {
+      return res
+        .status(404)
+        .send();
+    }
+
+    res.send(point);
+  }).catch((e) => {
+    res
+      .status(400)
+      .send();
+  });
+});
+
+app.get('/trails', authenticate, (req, res) => {
+  trailModel
+    .find({_creator: req.user._id})
+    .then((trails) => {
+      res.send({trails});
     }, (e) => {
       res
         .status(400)
         .send(e);
     });
 });
-
 app.post('/trails', authenticate, (req, res) => {
-  console.log('Received newTrail:', req.body);
+  // console.log('Received newTrail:', req.body);
   var trail = new trailModel({
     list: req.body.list,
     name: req.body.name,
@@ -140,17 +250,6 @@ app.post('/trails', authenticate, (req, res) => {
     .save()
     .then((doc) => {
       res.send(doc);
-    }, (e) => {
-      res
-        .status(400)
-        .send(e);
-    });
-});
-app.get('/trails', authenticate, (req, res) => {
-  trailModel
-    .find({_creator: req.user._id})
-    .then((trails) => {
-      res.send({trails});
     }, (e) => {
       res
         .status(400)

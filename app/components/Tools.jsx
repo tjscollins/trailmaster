@@ -20,16 +20,16 @@ class Tools extends BaseComponent {
   render() {
     return (
       <div className="">
-        <div style={{
+        {/* <div style={{
           cursor: 'pointer'
-        }} onClick={this.measure} className="row tool">
+          }} onClick={this.measure} className="row tool">
           <div className="col-xs-2">
-            <i className="fa fa-map-o"/>
+          <i className="fa fa-map-o"/>
           </div>
           <div className="col-xs-10">
-            <p>Measure Distance</p>
+          <p>Measure Distance</p>
           </div>
-        </div>
+        </div> */}
         <div style={{
           cursor: 'pointer'
         }} onClick={this.updateMarker} className="row tool">
@@ -47,20 +47,20 @@ class Tools extends BaseComponent {
             <i className="fa fa-upload"/>
           </div>
           <div className="col-xs-10">
-            <p>Import Existing {/*KML or*/}
+            <p>Import {/*KML or*/}
               GPX File as Route</p>
           </div>
         </div>
-        <div style={{
+        {/* <div style={{
           cursor: 'pointer'
-        }} onClick={this.updateMarker} className="row tool">
+          }} onClick={this.updateMarker} className="row tool">
           <div className="col-xs-2">
-            <i className="fa fa-pencil-square-o"/>
+          <i className="fa fa-pencil-square-o"/>
           </div>
           <div className="col-xs-10">
-            <p>Edit Existing Trail</p>
+          <p>Edit Existing Trail</p>
           </div>
-        </div>
+        </div> */}
       </div>
     );
   }

@@ -76,6 +76,10 @@ export var addRoute = (list, name, desc, cond, date) => {
   };
 };
 
+export var updateGeoJSON = (point) => {
+  return {type: 'UPDATE_GEO_JSON', point};
+};
+
 //map actions
 export var updateMap = () => {
   return {type: 'UPDATE_MAP'};

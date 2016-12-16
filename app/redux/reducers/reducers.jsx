@@ -193,26 +193,23 @@ export var searchTextReducer = (state = {
 
 export var geoJSONReducer = (state = initialGeoState, action) => {
   switch (action.type) {
-      // case 'TOGGLE_VISIBILITY':
-      //   return {
-      //     ...state,
-      //     features: state
-      //       .features
-      //       .map((point) => {
-      //         if (point._id === action.id) {
-      //           // console.log(action.id, point.properties.displayed);
-      //           return {
-      //             ...point,
-      //             properties: {
-      //               ...point.properties,
-      //               displayed: !point.properties.displayed
-      //             }
-      //           };
-      //         } else {
-      //           return point;
-      //         }
-      //       })
-      //   };
+    case 'UPDATE_GEO_JSON':
+      var {point} = action;
+      var unchangedFeatures = state
+        .features
+        .filter((data) => {
+          return data._id !== point._id;
+        });
+      point.geometry.type === 'Point'
+        ? modifyDataOnServer(`pois/${point._id}`, point)
+        : modifyDataOnServer(`routes/${point._id}`, point);
+      return {
+        ...state,
+        features: [
+          ...unchangedFeatures,
+          point
+        ]
+      };
     case 'ADD_POI':
       var {pos, name, desc, cond, date} = action;
       var newFeature = {
@@ -626,6 +623,16 @@ var month = (mo) => {
 var sendDataToServer = (route, data) => {
   var xmlHTTP = new XMLHttpRequest();
   xmlHTTP.open('POST', `/${route}`, true);
+  xmlHTTP.setRequestHeader('Content-type', 'application/json');
+  xmlHTTP.onload = () => {
+    console.log(xmlHTTP.responseText);
+  };
+  xmlHTTP.send(JSON.stringify(data));
+};
+
+var modifyDataOnServer = (route, data) => {
+  var xmlHTTP = new XMLHttpRequest();
+  xmlHTTP.open('PATCH', `/${route}`, true);
   xmlHTTP.setRequestHeader('Content-type', 'application/json');
   xmlHTTP.onload = () => {
     console.log(xmlHTTP.responseText);

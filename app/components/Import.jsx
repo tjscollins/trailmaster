@@ -50,7 +50,7 @@ export class Import extends BaseComponent {
       // gpx,
       // kml
     } = this.refs;
-    console.log(this.importedGeoJSON.features[0]);
+    // console.log(this.importedGeoJSON.features[0]);
     var {dispatch} = this.props;
     var routeList = this
       .importedGeoJSON
@@ -77,11 +77,11 @@ export class Import extends BaseComponent {
                 <span aria-hidden="true">&times;</span>
               </button>
               <h4 className="modal-title">Import Route from {/*KML or*/}
-              GPX file</h4>
+                GPX file</h4>
             </div>
             <div className="modal-body">
               <p>Instructions:</p>
-              <p>Fill out name, descriotion, and current known condition of the route. Paste the contents from your KML or GPX file into the box below. Based on the map view of the route, you can delete/trim the series of GPS coordinates from your data until only the section you want remains</p>
+              <p>Fill out name, description, and current known condition of the route. Paste the contents from your {/*KML or */}GPX file into the box below. Based on the map view of the route, you can delete/trim the series of GPS coordinates from your data until only the section you want remains</p>
               <form onSubmit={this
                 .importData
                 .bind(this)} onChange={this.formChange} id="importform" ref="importform">

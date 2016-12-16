@@ -119,6 +119,71 @@ describe('GET /pois', () => {
   });
 });
 
+describe('DELETE /pois/:id', () => {
+  it('should remove a poi', (done) => {
+    var hexId = pois[1]
+      ._id
+      .toHexString();
+
+    request(app)
+      .delete(`/pois/${hexId}`)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body._id).toBe(hexId);
+      })
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        }
+
+        poiModel
+          .findById(hexId)
+          .then((poi) => {
+            expect(poi).toNotExist();
+            done();
+          })
+          .catch((e) => done(e));
+      });
+  });
+
+  it('should return 404 if poi not found', (done) => {
+    var hexId = new ObjectID().toHexString();
+
+    request(app)
+      .delete(`/pois/${hexId}`)
+      .expect(404)
+      .end(done);
+  });
+
+  it('should return 404 if object id is invalid', (done) => {
+    request(app)
+      .delete('/pois/123abc')
+      .expect(404)
+      .end(done);
+  });
+});
+
+describe('PATCH /pois/:id', () => {
+  it('should update the poi', (done) => {
+    var hexId = pois[0]
+      ._id
+      .toHexString();
+    const newGeometry = Object.assign({}, pois[0].geometry, {
+      coordinates: [100, -25]
+    });
+    const newPOI = Object.assign({}, pois[0], {geometry: newGeometry});
+
+    request(app)
+      .patch(`/pois/${hexId}`)
+      .send(newPOI)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.geometry.coordinates).toEqual([100, -25]);
+      })
+      .end(done);
+  });
+});
+
 describe('POST /routes', () => {
   it('should create a new ROUTE', (done) => {
     var route = {
