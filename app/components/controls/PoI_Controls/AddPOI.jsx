@@ -24,7 +24,7 @@ class AddPOI extends BaseComponent {
     var {dispatch, userLocation} = this.props;
     var {name, desc, cond} = this.refs;
     var date = new Date();
-    console.log('Received position, adding new POI', name.value, userLocation);
+    // console.log('Received position, adding new POI', name.value, userLocation);
     dispatch(actions.addPOI(userLocation, name.value, desc.value, cond.value, date));
     dispatch(actions.updateMap());
   }

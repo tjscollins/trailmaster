@@ -64,6 +64,7 @@ export class Controls extends BaseComponent {
                 </div>
               </div>
             </div>
+
             <div className="panel panel-primary">
               <div className="panel-heading" role="tab" id="headingTwo">
                 <h3 className="controls-title">
@@ -73,6 +74,7 @@ export class Controls extends BaseComponent {
                   </a>
                 </h3>
               </div>
+
               <div id="collapseTwo" className="collapse" role="tabpanel" aria-labelledby="headingTwo">
                 <div className="panel-body control-panel">
                   <AddRoutes/>
@@ -81,6 +83,7 @@ export class Controls extends BaseComponent {
                 </div>
               </div>
             </div>
+
             <div className="panel panel-primary">
               <div className="panel-heading" role="tab" id="headingThree">
                 <h3 className="controls-title">
@@ -100,7 +103,7 @@ export class Controls extends BaseComponent {
             </div>
 
             <div className="panel panel-primary">
-              <div className="panel-heading" role="tab" id="headingThree">
+              <div className="panel-heading" role="tab" id="headingFour">
                 <h3 className="controls-title">
                   <a className="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
                     <i className="fa fa-wrench" aria-hidden="true"/>

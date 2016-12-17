@@ -236,8 +236,7 @@ export var geoJSONReducer = (state = initialGeoState, action) => {
           ]
         }
       };
-      sendDataToServer('pois', newFeature);
-      newFeature._id = uuid();
+      newFeature = sendDataToServer('pois', newFeature);
       return {
         ...state,
         features: [
@@ -264,8 +263,7 @@ export var geoJSONReducer = (state = initialGeoState, action) => {
           coordinates: [...list]
         }
       };
-      sendDataToServer('routes', newFeature);
-      newFeature._id = uuid();
+      newFeature = sendDataToServer('routes', newFeature);
       return {
         ...state,
         features: [
@@ -626,12 +624,13 @@ var month = (mo) => {
 
 var sendDataToServer = (route, data) => {
   var xmlHTTP = new XMLHttpRequest();
-  xmlHTTP.open('POST', `/${route}`, true);
+  xmlHTTP.open('POST', `/${route}`, false);
   xmlHTTP.setRequestHeader('Content-type', 'application/json');
   xmlHTTP.onload = () => {
     console.log(xmlHTTP.responseText);
   };
   xmlHTTP.send(JSON.stringify(data));
+  return JSON.parse(xmlHTTP.responseText);
 };
 
 var modifyDataOnServer = (route, data) => {
