@@ -200,9 +200,13 @@ export var geoJSONReducer = (state = initialGeoState, action) => {
         .filter((data) => {
           return data._id !== point._id;
         });
-      point.geometry.type === 'Point'
-        ? modifyDataOnServer(`pois/${point._id}`, point)
-        : modifyDataOnServer(`routes/${point._id}`, point);
+      console.log('Updated', point);
+      if (point.geometry.type === 'Point') {
+        console.log('Updating POI');
+        modifyDataOnServer(`pois/${point._id}`, point)
+      } else if (point.geometry.type === 'LineString') {
+        modifyDataOnServer(`routes/${point._id}`, point)
+      }
       return {
         ...state,
         features: [
