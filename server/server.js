@@ -78,6 +78,26 @@ app.delete('/users/me/token', authenticate, (req, res) => {
         .send();
     });
 });
+app.post('/users/rest', (req, res) => {
+  var email = _.pick(req.body, ['email']);
+
+  userModel
+    .findByCredentials(email)
+    .then((user) => {
+      return user
+        .generateAuthToken()
+        .then((token) => {
+          res
+            .header('x-auth', token)
+            .send(user);
+        });
+    })
+    .catch((e) => {
+      res
+        .status(400)
+        .send();
+    });
+});
 
 app.get('/pois', (req, res) => {
   poiModel

@@ -32,7 +32,11 @@ var userSchema = new mongoose.Schema({
         required: true
       }
     }
-  ]
+  ],
+  resetRequests: {
+    type: Array,
+    required: false
+  }
 });
 
 userSchema.methods.toJSON = function() {
@@ -106,6 +110,18 @@ userSchema.statics.findByCredentials = function(email, password) {
           }
         });
       });
+    });
+};
+
+userSchema.statics.resetPassword = function(email) {
+  var User = this;
+  return User
+    .findOne({email})
+    .then((user) => {
+      var time = new Date();
+      user
+        .resetRequests
+        .push({ID: '1', time, userID: user._id});
     });
 };
 

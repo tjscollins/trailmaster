@@ -1,6 +1,7 @@
 /*----------Modules----------*/
 import React from 'react';
 import {connect} from 'react-redux';
+import $ from 'jquery';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
@@ -27,11 +28,14 @@ export class Login extends BaseComponent {
     xmlHTTP.send(JSON.stringify({email: this.refs.createEmail.value, password: this.refs.createPassword.value}));
 
     if (xmlHTTP.status === 200) {
-      console.log('Successful account creation');
+      // console.log('Successful account creation');
       dispatch(actions.login(xmlHTTP.getResponseHeader('x-auth'), JSON.parse(xmlHTTP.responseText)._id, this.createEmail.value));
     } else {
       console.log('Error creating account', xmlHTTP);
     }
+  }
+  forgotPassword() {
+    $('#pw-recovery').modal('show');
   }
   login() {
     var {dispatch} = this.props;
@@ -78,7 +82,7 @@ export class Login extends BaseComponent {
                 }}>
                   <a href="#">Forgot Password?</a>
                 </div>
-                <button onClick={this.login} type="submit" className="btn btn-secondary" data-dismiss="modal">Login</button>
+                <button onClick={this.forgotPassword} type="submit" className="btn btn-secondary" data-dismiss="modal">Login</button>
               </div>
             </div>
           </div>

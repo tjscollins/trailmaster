@@ -83,7 +83,7 @@ export class Controls extends BaseComponent {
                 </div>
               </div>
             </div>
-
+            
             <div className="panel panel-primary">
               <div className="panel-heading" role="tab" id="headingThree">
                 <h3 className="controls-title">
