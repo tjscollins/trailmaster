@@ -155,7 +155,66 @@ describe('redux', () => {
 
   //reducers
   describe('reducers', () => {
+    describe('userSessionReducer', () => {
+      it('should LOGIN', () => {
+        var action = {
+          type: 'LOGIN',
+          xAuth: 'xAuth',
+          userId: 'userId',
+          email: 'email'
+        };
+        var state = {};
+        var res = reducers.userSessionReducer(df(state), df(action));
+        expect(res.xAuth).toBe(action.xAuth);
+        expect(res.userId).toBe(res.userId);
+        expect(res.email).toBe(res.email);
+      });
+
+      it('should LOGOUT', () => {
+        var action = {
+          type: 'LOGOUT'
+        };
+
+        var state = {
+          xAuth: 'xAuth',
+          userId: 'userId',
+          email: 'email'
+        };
+        var state = {};
+        var res = reducers.userSessionReducer(df(state), df(action));
+        expect(res.xAuth).toNotExist();
+        expect(res.userId).toNotExist();
+        expect(res.email).toBe(res.email);
+      });
+
+      it('should TOGGLE VISIBILITY of listed items', () => {
+        var action1 = {
+          type: 'TOGGLE_VISIBILITY',
+          id: 123
+        };
+        var action2 = {
+          type: 'TOGGLE_VISIBILITY',
+          id: 10
+        };
+        var state = {
+          visibleFeatures: [10, 1]
+        };
+
+        var res = reducers.userSessionReducer(df(state), df(action1));
+        expect(res.visibleFeatures.length).toBe(3);
+        expect(res.visibleFeatures[2]).toBe(123);
+        res = reducers.userSessionReducer(df(res), df(action2));
+        expect(res.visibleFeatures.length).toBe(2);
+        expect(res.visibleFeatures[1]).toBe(123);
+      });
+    });
+
     describe('trailsReducer', () => {
+      it('should DISPLAY TRAILS', () => {
+        var state = {
+          myTrails: []
+        };
+      });
       it('should SAVE a TRAIL', () => {
         var action = {
           type: 'SAVE_TRAIL',
@@ -313,6 +372,7 @@ describe('redux', () => {
 
       });
     });
+
     describe('userLocationReducer', () => {
       it('should UPDATE the user\'s POS', () => {
         var action = {
@@ -465,24 +525,24 @@ describe('redux', () => {
     });
 
     describe('geoJSONReducer', () => {
-      it('should toggle visibility of POI', () => {
-        var action = {
-          type: 'TOGGLE_VISIBILITY',
-          id: '123'
-        };
-        var geoJSON = {
-          features: [
-            {
-              '_id': '123',
-              properties: {
-                'displayed': true
-              }
-            }
-          ]
-        };
-        var res = reducers.geoJSONReducer(df(geoJSON), df(action));
-        expect(res.features[0].properties.displayed).toBe(false);
-      });
+      // it('should toggle visibility of POI', () => {
+      //   var action = {
+      //     type: 'TOGGLE_VISIBILITY',
+      //     id: '123'
+      //   };
+      //   var geoJSON = {
+      //     features: [
+      //       {
+      //         '_id': '123',
+      //         properties: {
+      //           'displayed': true
+      //         }
+      //       }
+      //     ]
+      //   };
+      //   var res = reducers.geoJSONReducer(df(geoJSON), df(action));
+      //   expect(res.features[0].properties.displayed).toBe(false);
+      // });
 
       it('should ADD new POIs to the store', () => {
         var action = {
