@@ -4,6 +4,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const _ = require('lodash');
 const {ObjectID} = require('mongodb');
+const nodemailer = require('nodemailer');
+var mg = require('nodemailer-mailgun-transport');
 
 var {mongoose} = require('./db/mongoose');
 var {poiModel} = require('./db/models/poi');
@@ -11,7 +13,10 @@ var {routeModel} = require('./db/models/route');
 var {trailModel} = require('./db/models/trail');
 var {userModel} = require('./db/models/user');
 var {authenticate} = require('./middleware/authenticate');
-var {spawn} = require('child_process');
+const bcrypt = require('bcryptjs');
+var path = require('path');
+
+// var {spawn} = require('child_process');
 
 // var database = spawn('../../mongo/bin/mongod', ['--dbpath', '../../mongo-data']);
 
@@ -22,7 +27,7 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
 app.post('/users', (req, res) => {
-  var body = _.pick(req.body, ['email', 'password'])
+  var body = _.pick(req.body, ['email', 'password']);
   var user = new userModel(body);
 
   user
@@ -78,25 +83,83 @@ app.delete('/users/me/token', authenticate, (req, res) => {
         .send();
     });
 });
-app.post('/users/rest', (req, res) => {
-  var email = _.pick(req.body, ['email']);
-
+app.post('/users/reset', (req, res) => {
+  var data = _.pick(req.body, ['email']);
+  var url = 'http://' + req.get('host') + '/users/reset';
   userModel
-    .findByCredentials(email)
-    .then((user) => {
-      return user
-        .generateAuthToken()
-        .then((token) => {
-          res
-            .header('x-auth', token)
-            .send(user);
-        });
+    .resetPassword(data.email)
+    .then((reqID) => {
+      var auth = {
+        auth: {
+          api_key: 'key-52c28f88d00577e50d1d461a6e5dec02',
+          domain: 'sandboxafdc137d09ce43908b52e0fa5730076a.mailgun.org'
+        }
+      };
+      var nodemailerMailgun = nodemailer.createTransport(mg(auth));
+      var message = {
+        from: '"Trailmaster Admin" <tjscollins@gmail.com>',
+        to: `${data.email}`,
+        subject: 'Password Recovery',
+        text: 'Fix Your Password Here',
+        html: `<a href=\"${url}/${reqID}-${encodeURI(data.email)}\">Reset Password</a>`
+      };
+      nodemailerMailgun.sendMail(message, function(err, info) {
+        if (err) {
+          console.log('Error: ' + err);
+        } else {
+          console.log('Response: ' + info);
+        }
+      });
+      res
+        .status(200)
+        .send();
     })
     .catch((e) => {
       res
         .status(400)
-        .send();
+        .send(e);
     });
+});
+app.get('/users/reset/:reqID-:email', (req, res) => {
+  var {reqID, email} = req.params;
+  userModel
+    .find({email})
+    .then((user) => {
+      if (!user) {
+        return Promise.reject();
+      }
+      // console.log(user[0].resetRequests);
+      user[0]
+        .resetRequests
+        .forEach((request, i) => {
+          var currentTime = new Date().getTime();
+          var interval = currentTime - request.time;
+          if (interval < 86400000 && interval > 0) {
+            //Compare Timely resetRequests with reqID Hash
+            bcrypt
+              .compare(reqID, request.reqID)
+              .then((ans) => {
+                if (ans)
+                  res.redirect(301, `/users/resetform/${user[0]._id}`);
+                }
+              );
+          } else {
+            //Remove Old resetRequests
+            // console.log(request.time);
+            // console.log(user[0]._id, request.reqID);
+            // user[0].update({
+            //   $pull: {
+            //     resetRequests: {
+            //       reqID: request.reqID
+            //     }
+            //   }
+            // });
+          }
+        });
+    });
+});
+app.get('/users/resetform/:id', (req, res) => {
+  res.sendFile(path.join(__dirname + '/../restricted/password-reset.html'));
 });
 
 app.get('/pois', (req, res) => {

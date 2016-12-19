@@ -30,6 +30,8 @@
     "mapbox-gl": "^0.28.0",
     "mongodb": "^2.2.15",
     "mongoose": "^4.7.2",
+    "nodemailer": "^2.7.0",
+    "nodemailer-mailgun-transport": "^1.2.2",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-redux": "^4.4.6",

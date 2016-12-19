@@ -3,6 +3,7 @@ const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const bcrypt = require('bcryptjs');
+const {ObjectID} = require('mongodb');
 
 var userSchema = new mongoose.Schema({
   email: {
@@ -67,7 +68,6 @@ userSchema.methods.generateAuthToken = function() {
 
 userSchema.methods.removeToken = function(token) {
   var user = this;
-
   return user.update({
     $pull: {
       tokens: {
@@ -118,11 +118,43 @@ userSchema.statics.resetPassword = function(email) {
   return User
     .findOne({email})
     .then((user) => {
-      var time = new Date();
-      user
-        .resetRequests
-        .push({ID: '1', time, userID: user._id});
+      // console.log('Tried to find', user);
+      if (!user) {
+        return Promise.reject();
+      }
+      var time = new Date().getTime();
+      var reqID = new ObjectID();
+      var _id = user._id;
+
+      // console.log('Running hash algo');
+      return new Promise((resolve, reject) => {
+        bcrypt.hash(reqID.toHexString(), 10).then((hash) => {
+          console.log('Hashed reqID', hash);
+          User.update({
+            email
+          }, {
+            $push: {
+              resetRequests: {
+                reqID: hash,
+                time,
+                _id
+              }
+            }
+          }).then((res) => {
+            console.log('Success', res);
+          }, (er) => {
+            console.log('Fail', er);
+          });
+          resolve(reqID);
+        }, (err) => {
+          console.log('Error hashing reqId', err);
+        });
+      });
     });
+};
+
+userSchema.statics.findAndResetPW = function(reqID) {
+  // bcrypt.compare(reqID,)
 };
 
 userSchema.pre('save', function(next) {
