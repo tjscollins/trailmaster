@@ -9,6 +9,7 @@ import MapViewer from 'MapViewer';
 import Login from 'Login';
 import Import from 'Import';
 import UpdatePOIorRoute from 'UpdatePOIorRoute';
+import PasswordRecovery from 'PasswordRecovery';
 
 export class MainContainer extends BaseComponent {
   constructor() {
@@ -24,6 +25,7 @@ export class MainContainer extends BaseComponent {
         <Login/>
         <Import/>
         <UpdatePOIorRoute/>
+        <PasswordRecovery/>
       </div>
     );
   }

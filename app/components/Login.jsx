@@ -35,6 +35,7 @@ export class Login extends BaseComponent {
     }
   }
   forgotPassword() {
+    $('#login-modal').modal('hide');
     $('#pw-recovery').modal('show');
   }
   login() {
@@ -80,9 +81,9 @@ export class Login extends BaseComponent {
                 <div style={{
                   float: 'left'
                 }}>
-                  <a href="#">Forgot Password?</a>
+                  <a onClick={this.forgotPassword} href="#">Forgot Password?</a>
                 </div>
-                <button onClick={this.forgotPassword} type="submit" className="btn btn-secondary" data-dismiss="modal">Login</button>
+                <button onClick={this.login} type="submit" className="btn btn-secondary" data-dismiss="modal">Login</button>
               </div>
             </div>
           </div>

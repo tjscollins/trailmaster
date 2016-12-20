@@ -5,20 +5,16 @@ const bodyParser = require('body-parser');
 const _ = require('lodash');
 const {ObjectID} = require('mongodb');
 const nodemailer = require('nodemailer');
-var mg = require('nodemailer-mailgun-transport');
-
-var {mongoose} = require('./db/mongoose');
-var {poiModel} = require('./db/models/poi');
-var {routeModel} = require('./db/models/route');
-var {trailModel} = require('./db/models/trail');
-var {userModel} = require('./db/models/user');
-var {authenticate} = require('./middleware/authenticate');
+const mg = require('nodemailer-mailgun-transport');
 const bcrypt = require('bcryptjs');
-var path = require('path');
+const path = require('path');
 
-// var {spawn} = require('child_process');
-
-// var database = spawn('../../mongo/bin/mongod', ['--dbpath', '../../mongo-data']);
+const {mongoose} = require('./db/mongoose');
+const {poiModel} = require('./db/models/poi');
+const {routeModel} = require('./db/models/route');
+const {trailModel} = require('./db/models/trail');
+const {userModel} = require('./db/models/user');
+const {authenticate} = require('./middleware/authenticate');
 
 //Create our app
 var app = express();
@@ -45,6 +41,24 @@ app.post('/users', (req, res) => {
         .status(400)
         .send(e);
     });
+});
+
+app.patch('/users/password', (req, res) => {
+  var body = _.pick(req.body, ['id', 'password']);
+  bcrypt
+    .hash(body.password, 10)
+    .then(hash => {
+      userModel.update({
+        _id: body.id
+      }, {
+        password: hash
+      }, (err, raw) => {
+        if (err)
+          console.log('Error patching password', err);
+        }
+      );
+    });
+
 });
 app.get('/users/me', authenticate, (req, res) => {
   res.send(req.user);
@@ -128,7 +142,6 @@ app.get('/users/reset/:reqID-:email', (req, res) => {
       if (!user) {
         return Promise.reject();
       }
-      // console.log(user[0].resetRequests);
       user[0]
         .resetRequests
         .forEach((request, i) => {

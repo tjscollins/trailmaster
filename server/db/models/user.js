@@ -77,6 +77,17 @@ userSchema.methods.removeToken = function(token) {
   });
 };
 
+userSchema.methods.changePassword = function(password) {
+  var user = this;
+
+  console.log('Setting password', password);
+  return user.update({
+    $set: {
+      password: password
+    }
+  });
+};
+
 userSchema.statics.findByToken = function(token) {
   var User = this;
   var decoded;
@@ -171,6 +182,17 @@ userSchema.pre('save', function(next) {
     next();
   }
 });
+
+// userSchema.post('update', function() {
+//   var user = this;
+//   if (user.isModified('password')) {
+//     bcrypt.genSalt(10, (err, salt) => {
+//       bcrypt.hash(user.password, salt, (err, hash) => {
+//         user.password = hash;
+//       });
+//     });
+//   }
+// });
 
 var userModel = mongoose.model('User', userSchema);
 

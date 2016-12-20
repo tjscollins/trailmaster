@@ -19,7 +19,7 @@ export class PasswordRecovery extends BaseComponent {
       var resetPasswordRequest = new XMLHttpRequest();
       resetPasswordRequest.open('POST', '/users/reset', true);
       resetPasswordRequest.setRequestHeader('Content-type', 'application/json');
-      resetPasswordRequest.send(JSON.stringify({email}));
+      resetPasswordRequest.send(JSON.stringify({email: email.value}));
     }
   }
   render() {
@@ -40,7 +40,9 @@ export class PasswordRecovery extends BaseComponent {
                 </form>
               </div>
               <div className="modal-footer">
-                <button onClick={this.resetPassword} type="submit" className="btn btn-secondary" data-dismiss="modal">Reset Password</button>
+                <button onClick={this
+                  .resetPassword
+                  .bind(this)} type="submit" className="btn btn-secondary" data-dismiss="modal">Reset Password</button>
               </div>
             </div>
           </div>
@@ -49,3 +51,5 @@ export class PasswordRecovery extends BaseComponent {
     );
   }
 }
+
+export default PasswordRecovery;
