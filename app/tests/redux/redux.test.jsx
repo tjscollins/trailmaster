@@ -4,6 +4,12 @@ import df from 'deep-freeze-strict';
 
 import * as actions from 'actions';
 import * as reducers from 'reducers';
+// var http = require('http'),
+//   mockserver = require('mockserver');
+//
+// http
+//   .createServer(mockserver('app/api/mocks'))
+//   .listen('3000');
 
 describe('redux', () => {
 
@@ -210,11 +216,31 @@ describe('redux', () => {
     });
 
     describe('trailsReducer', () => {
-      it('should DISPLAY TRAILS', () => {
+      it('should DISPLAY TRAILS belonging to the logged in user', () => {
+        var action = {
+          type: 'DISPLAY_TRAILS',
+          trails: [1, 2, 3]
+        };
         var state = {
           myTrails: []
         };
+
+        var res = reducers.trailsReducer(df(state), df(action));
+        expect(res.myTrails.length).toBe(3);
+        expect(res.myTrails[0]).toBe(1);
       });
+
+      it('should CLEAR currently displayed TRAILS', () => {
+        var action = {
+          type: 'CLEAR_TRAILS'
+        };
+        var state = {
+          myTrails: [1, 2, 3]
+        };
+        var res = reducers.trailsReducer(df(state), df(action));
+        expect(res.myTrails.length).toBe(0);
+      });
+
       it('should SAVE a TRAIL', () => {
         var action = {
           type: 'SAVE_TRAIL',
@@ -497,6 +523,19 @@ describe('redux', () => {
     });
 
     describe('searchTextReducer', () => {
+      it('should set updateSearchText', () => {
+        var action = {
+          type: 'UPDATE_SEARCH_TEXT',
+          updateSearchText: 'search'
+        };
+        var state = {
+          updateSearchText: ''
+        };
+
+        var res = reducers.searchTextReducer(df(state), df(action));
+        expect(res.updateSearchText).toEqual(action.updateSearchText);
+      });
+
       it('should set POISearchText', () => {
         var action = {
           type: 'SET_POI_SEARCH_TEXT',
@@ -522,29 +561,24 @@ describe('redux', () => {
         var res = reducers.searchTextReducer(df(state), df(action));
         expect(res.RoutesSearchText).toEqual(action.RoutesSearchText);
       });
+
+      it('should set trailSearchText', () => {
+        var action = {
+          type: 'SET_TRAIL_SEARCH_TEXT',
+          trailSearchText: 'search'
+        };
+        var state = {
+          trailSearchText: ''
+        };
+
+        var res = reducers.searchTextReducer(df(state), df(action));
+        expect(res.trailSearchText).toEqual(action.trailSearchText);
+      });
     });
 
     describe('geoJSONReducer', () => {
-      // it('should toggle visibility of POI', () => {
-      //   var action = {
-      //     type: 'TOGGLE_VISIBILITY',
-      //     id: '123'
-      //   };
-      //   var geoJSON = {
-      //     features: [
-      //       {
-      //         '_id': '123',
-      //         properties: {
-      //           'displayed': true
-      //         }
-      //       }
-      //     ]
-      //   };
-      //   var res = reducers.geoJSONReducer(df(geoJSON), df(action));
-      //   expect(res.features[0].properties.displayed).toBe(false);
-      // });
 
-      it('should ADD new POIs to the store', () => {
+      it('should ADD new POIs to the store', (done) => {
         var action = {
           type: 'ADD_POI',
           pos: {
@@ -562,6 +596,8 @@ describe('redux', () => {
           type: 'FeatureCollection',
           features: []
         };
+
+        //Need a Mock Server as geoJSONReducer depends on sending data to server and getting a response
 
         var res = reducers.geoJSONReducer(df(state), df(action));
         expect(res.features.length).toBe(1);

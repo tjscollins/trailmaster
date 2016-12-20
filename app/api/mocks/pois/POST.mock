@@ -1,0 +1,23 @@
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{
+  "type": "Feature",
+  "properties": {
+    "marker-color": "#7e7e7e",
+    "marker-size": "medium",
+    "marker-symbol": "",
+    "name": "Test Point",
+    "desc": "Description",
+    "condition": "Condition",
+    "last": "Dec 2016",
+    "displayed": false
+  },
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      -215,
+      15
+    ]
+  }
+}
