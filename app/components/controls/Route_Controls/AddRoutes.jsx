@@ -2,6 +2,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import $ from 'jquery';
+import {month} from 'TrailmasterAPI';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
@@ -37,12 +38,39 @@ class AddRoutes extends BaseComponent {
     dispatch(actions.stopTrackingRoute());
     console.log('Adding Route', name.value, userLocation.routeList);
     if (userLocation.routeList.length > 0) {
-      dispatch(actions.addRoute(userLocation.routeList, name.value, desc.value, cond.value, date));
+      var newFeature = {
+        type: 'Feature',
+        properties: {
+          stroke: '#555555',
+          'stroke-width': 2,
+          'stroke-opacity': 1,
+          name: name.value,
+          desc: desc.value,
+          condition: cond,
+          last: `${month(date.getMonth())} ${date.getFullYear()}`,
+          displayed: false
+        },
+        geometry: {
+          type: 'LineString',
+          coordinates: [...userLocation.routeList]
+        }
+      };
+      $.ajax({
+        url: '/routes',
+        type: 'post',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        dataType: 'json',
+        data: JSON.stringify(newFeature)
+      }).done((data) => {
+        dispatch(actions.addRoute(data));
+        dispatch(actions.clearRouteList());
+        dispatch(actions.updateMap());
+      });
     } else {
       console.error('No Route added due to lack of routeList');
     }
-    dispatch(actions.clearRouteList());
-    dispatch(actions.updateMap());
   }
   render() {
     return (

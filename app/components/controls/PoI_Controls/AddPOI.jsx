@@ -2,6 +2,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import $ from 'jquery';
+import {month} from 'TrailmasterAPI';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
@@ -24,9 +25,38 @@ class AddPOI extends BaseComponent {
     var {dispatch, userLocation} = this.props;
     var {name, desc, cond} = this.refs;
     var date = new Date();
-    // console.log('Received position, adding new POI', name.value, userLocation);
-    dispatch(actions.addPOI(userLocation, name.value, desc.value, cond.value, date));
-    dispatch(actions.updateMap());
+    var newFeature = {
+      type: 'Feature',
+      properties: {
+        'marker-color': '#7e7e7e',
+        'marker-size': 'medium',
+        'marker-symbol': '',
+        name: name.value,
+        desc: desc.value,
+        condition: cond.value,
+        last: `${month(date.getMonth())} ${date.getFullYear()}`,
+        displayed: false
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [
+          userLocation.coords.longitude - 360,
+          userLocation.coords.latitude
+        ]
+      }
+    };
+    $.ajax({
+      url: '/pois',
+      type: 'post',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      dataType: 'json',
+      data: JSON.stringify(newFeature)
+    }).done((data) => {
+      dispatch(actions.addPOI(data));
+      dispatch(actions.updateMap());
+    });
   }
   render() {
     return (

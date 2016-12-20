@@ -18,16 +18,6 @@ var getData = (route) => {
   return xmlHTTP.responseText;
 };
 
-var sendData = (route, data) => {
-  var xmlHTTP = new XMLHttpRequest();
-  xmlHTTP.open('POST', `/${route}`, true);
-  xmlHTTP.setRequestHeader('Content-type', 'appliction/json');
-  xmlHTTP.onload = () => {
-    console.log(xmlHTTP.responseText);
-  };
-  xmlHTTP.send(JSON.stringify(data));
-};
-
 var initialState = {
   geoJSON: {
     type: 'FeatureCollection',
@@ -40,23 +30,17 @@ var initialState = {
     ...JSON.parse(sessionStorage.getItem('trailmaster-login')),
     visibleFeatures: []
   }
-  // trails: {
-  //   myTrails: JSON
-  //     .parse(getData('trails'))
-  //     .trails
-  // }
 };
+
 var store = configure(initialState);
 
 store.subscribe(() => {});
 
 //Initialize User Location Monitoring
 var processGeolocation = (pos) => {
-  // console.log('Successful location:', pos);
   store.dispatch(actions.updatePOS(pos));
   if (store.getState().userLocation.trackingRoute)
     store.dispatch(actions.addToRouteList(pos));
-    // store.dispatch(actions.updateMap());
   };
 
 var geolocationError = (err) => {
@@ -77,11 +61,3 @@ ReactDOM.render(
   <Provider store={store}>
   <MainContainer/>
 </Provider>, document.getElementById('app'));
-
-function getDB(err, db) {
-  if (err) {
-    return console.log('Unable to connect to MongoDB server', err);
-  }
-  console.log('Connected to MongoDB server');
-
-}

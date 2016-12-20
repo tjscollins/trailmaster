@@ -54,26 +54,12 @@ export var addToRouteList = (position) => {
 };
 
 //geoJSON actions
-export var addPOI = (pos, name, desc, cond, date) => {
-  return {
-    type: 'ADD_POI',
-    pos,
-    name,
-    desc,
-    cond,
-    date
-  };
+export var addPOI = (feature) => {
+  return {type: 'ADD_POI', feature};
 };
 
-export var addRoute = (list, name, desc, cond, date) => {
-  return {
-    type: 'ADD_ROUTE',
-    list,
-    name,
-    desc,
-    cond,
-    date
-  };
+export var addRoute = (feature) => {
+  return {type: 'ADD_ROUTE', feature};
 };
 
 export var updateGeoJSON = (point) => {

@@ -1,5 +1,6 @@
 // import {geoJSON} from 'geoJSON';
 import uuid from 'uuid';
+import $ from 'jquery';
 
 export var userSessionReducer = (state = {
   visibleFeatures: []
@@ -92,7 +93,7 @@ export var trailsReducer = (state = {
 export var userLocationReducer = (state = {
   trackingRoute: false,
   routeList: [],
-  mapCentering: true,
+  mapCentering: false,
   coords: {
     latitude: 15,
     longitude: 145
@@ -200,13 +201,6 @@ export var geoJSONReducer = (state = initialGeoState, action) => {
         .filter((data) => {
           return data._id !== point._id;
         });
-      console.log('Updated', point);
-      if (point.geometry.type === 'Point') {
-        console.log('Updating POI');
-        modifyDataOnServer(`pois/${point._id}`, point)
-      } else if (point.geometry.type === 'LineString') {
-        modifyDataOnServer(`routes/${point._id}`, point)
-      }
       return {
         ...state,
         features: [
@@ -215,60 +209,21 @@ export var geoJSONReducer = (state = initialGeoState, action) => {
         ]
       };
     case 'ADD_POI':
-      var {pos, name, desc, cond, date} = action;
-      var newFeature = {
-        type: 'Feature',
-        properties: {
-          'marker-color': '#7e7e7e',
-          'marker-size': 'medium',
-          'marker-symbol': '',
-          name,
-          desc,
-          condition: cond,
-          last: `${month(date.getMonth())} ${date.getFullYear()}`,
-          displayed: false
-        },
-        geometry: {
-          type: 'Point',
-          coordinates: [
-            pos.coords.longitude - 360,
-            pos.coords.latitude
-          ]
-        }
-      };
-      newFeature = sendDataToServer('pois', newFeature);
+      var {feature} = action;
       return {
         ...state,
         features: [
           ...state.features,
-          newFeature
+          feature
         ]
       };
     case 'ADD_ROUTE':
-      var {list, name, desc, cond, date} = action;
-      var newFeature = {
-        type: 'Feature',
-        properties: {
-          stroke: '#555555',
-          'stroke-width': 2,
-          'stroke-opacity': 1,
-          name,
-          desc,
-          condition: cond,
-          last: `${month(date.getMonth())} ${date.getFullYear()}`,
-          displayed: false
-        },
-        geometry: {
-          type: 'LineString',
-          coordinates: [...list]
-        }
-      };
-      newFeature = sendDataToServer('routes', newFeature);
+      var {feature} = action;
       return {
         ...state,
         features: [
           ...state.features,
-          newFeature
+          feature
         ]
       };
     default:

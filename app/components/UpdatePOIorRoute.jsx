@@ -39,8 +39,22 @@ class UpdatePOIorRoute extends BaseComponent {
       .state
       .map
       .remove();
-    dispatch(actions.updateGeoJSON(this.state.point));
-    dispatch(actions.updateMap());
+    var type = this.state.point.geometry.type === 'Point'
+      ? 'pois'
+      : 'routes';
+    $.ajax({
+      url: `/${type}/${this.state.point._id}`,
+      type: 'patch',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      dataType: 'json',
+      data: JSON.stringify(this.state.point)
+    }).done((data) => {
+      dispatch(actions.updateGeoJSON(this.state.point));
+      dispatch(actions.updateMap());
+    });
+
   }
   listData() {
     var {searchText, geoJSON} = this.props;
