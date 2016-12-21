@@ -57,6 +57,9 @@ app.patch('/users/password', (req, res) => {
           console.log('Error patching password', err);
         }
       );
+    })
+    .then(() => {
+      res.redirect(303, '/');
     });
 
 });

@@ -16,10 +16,15 @@ export class PasswordRecovery extends BaseComponent {
   resetPassword() {
     var {email} = this.refs;
     if (validator.isEmail(email.value)) {
+      console.log('Sending Password Reset Email');
       var resetPasswordRequest = new XMLHttpRequest();
       resetPasswordRequest.open('POST', '/users/reset', true);
       resetPasswordRequest.setRequestHeader('Content-type', 'application/json');
       resetPasswordRequest.send(JSON.stringify({email: email.value}));
+      resetPasswordRequest.onload = () => {
+        console.log(resetPasswordRequest);
+      };
+      this.refs.email.value = '';
     }
   }
   render() {
