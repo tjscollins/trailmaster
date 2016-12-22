@@ -44,12 +44,12 @@ app.post('/users', (req, res) => {
 });
 
 app.patch('/users/password', (req, res) => {
-  var body = _.pick(req.body, ['id', 'password']);
+  var body = _.pick(req.body, ['email', 'password']);
   bcrypt
     .hash(body.password, 10)
     .then(hash => {
       userModel.update({
-        _id: body.id
+        email: body.email
       }, {
         password: hash
       }, (err, raw) => {
@@ -61,8 +61,8 @@ app.patch('/users/password', (req, res) => {
     .then(() => {
       res.redirect(303, '/');
     });
-
 });
+
 app.get('/users/me', authenticate, (req, res) => {
   res.send(req.user);
 });
@@ -109,7 +109,7 @@ app.post('/users/reset', (req, res) => {
       var auth = {
         auth: {
           api_key: 'key-52c28f88d00577e50d1d461a6e5dec02',
-          domain: 'sandboxafdc137d09ce43908b52e0fa5730076a.mailgun.org'
+          domain: 'mg.tjscollins.me'
         }
       };
       var nodemailerMailgun = nodemailer.createTransport(mg(auth));
@@ -118,13 +118,13 @@ app.post('/users/reset', (req, res) => {
         to: `${data.email}`,
         subject: 'Password Recovery',
         text: 'Fix Your Password Here',
-        html: `<a href=\"${url}/${reqID}-${encodeURI(data.email)}\">Reset Password</a>`
+        html: `<p>The following is a single-use link to reset your password.</p><p>It will only work for 24 hours</p><a href=\"${url}/${reqID}-${encodeURI(data.email)}\">Reset Password</a>`
       };
       nodemailerMailgun.sendMail(message, function(err, info) {
         if (err) {
           console.log('Error: ' + err);
         } else {
-          console.log('Response: ' + info);
+          // console.log('Response: ' + info);
         }
       });
       res
@@ -139,43 +139,37 @@ app.post('/users/reset', (req, res) => {
 });
 app.get('/users/reset/:reqID-:email', (req, res) => {
   var {reqID, email} = req.params;
+  var toRemove = [],
+    toUse = -1;
+  var invalid = true;
   userModel
     .find({email})
     .then((user) => {
-      if (!user) {
-        return Promise.reject();
+      if (!user.length) {
+        return Promise.reject('No such user');
       }
-      user[0]
+      var remainingRequests = user[0]
         .resetRequests
-        .forEach((request, i) => {
+        .filter((request, i) => {
           var currentTime = new Date().getTime();
           var interval = currentTime - request.time;
-          if (interval < 86400000 && interval > 0) {
-            //Compare Timely resetRequests with reqID Hash
-            bcrypt
-              .compare(reqID, request.reqID)
-              .then((ans) => {
-                if (ans)
-                  res.redirect(301, `/users/resetform/${user[0]._id}`);
-                }
-              );
-          } else {
-            //Remove Old resetRequests
-            // console.log(request.time);
-            // console.log(user[0]._id, request.reqID);
-            // user[0].update({
-            //   $pull: {
-            //     resetRequests: {
-            //       reqID: request.reqID
-            //     }
-            //   }
-            // });
+          if (bcrypt.compare(reqID, request.reqID)) {
+            invalid = false;
+            toUse = i;
+            res.setHeader('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+            res.sendFile(path.join(__dirname, '/../restricted/password-reset.html'));
           }
+          return toUse !== i && interval > 0 && interval < 86400000;
         });
+      if (invalid) {
+        res.sendStatus(403);
+      }
+      userModel.update({
+        email: email
+      }, {resetRequests: remainingRequests}).then((user) => {
+        // console.log(user);
+      });
     });
-});
-app.get('/users/resetform/:id', (req, res) => {
-  res.sendFile(path.join(__dirname + '/../restricted/password-reset.html'));
 });
 
 app.get('/pois', (req, res) => {
@@ -359,7 +353,7 @@ app.post('/trails', authenticate, (req, res) => {
 app.use(express.static('public'));
 
 app.listen(PORT, function() {
-  console.log('Express server is up on port ' + PORT);
+  // console.log('Express server is up on port ' + PORT);
 });
 
 module.exports = {

@@ -19,6 +19,9 @@ export class Login extends BaseComponent {
     this.create = this
       .create
       .bind(this);
+    this.state = {
+      wrongPassword: ''
+    };
   }
   create() {
     var {dispatch} = this.props;
@@ -55,8 +58,14 @@ export class Login extends BaseComponent {
       dispatch(actions.login(response.getResponseHeader('x-auth'), JSON.parse(response.responseText)._id, email.value));
       this.refs.email.value = '';
       this.refs.password.value = '';
+      $('#login-modal').modal('hide');
+      $('.wrong-password').css('color', 'white');
     } else {
       console.log('Login error', response);
+      $('.wrong-password').css('color', 'red');
+      setTimeout(() => {
+        $('.wrong-password').css('color', 'white');
+      }, 1500);
     }
   }
   render() {
@@ -72,9 +81,12 @@ export class Login extends BaseComponent {
                 <h4 className="modal-title">Login</h4>
               </div>
               <div className="modal-body">
-                <form ref="loginForm">
+                <form ref="loginForm" onSubmit={this.login}>
                   <input className="form-control" ref="email" type="text" placeholder="Email"/>
                   <input className="form-control" ref="password" type="password" placeholder="Password"/>
+                  <button type="submit" style={{
+                    display: 'none'
+                  }}/>
                 </form>
               </div>
               <div className="modal-footer">
@@ -83,7 +95,10 @@ export class Login extends BaseComponent {
                 }}>
                   <a onClick={this.forgotPassword} href="#">Forgot Password?</a>
                 </div>
-                <button onClick={this.login} type="submit" className="btn btn-secondary" data-dismiss="modal">Login</button>
+                <div className="wrong-password">
+                  <p>Incorrect email or password</p>
+                </div>
+                <button onClick={this.login} type="submit" className="btn btn-secondary">Login</button>
               </div>
             </div>
           </div>

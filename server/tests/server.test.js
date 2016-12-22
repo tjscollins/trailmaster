@@ -2,6 +2,8 @@
 const expect = require('expect');
 const request = require('supertest');
 const {ObjectID} = require('mongodb');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const {app} = require('./../server.js');
 const {poiModel} = require('./../db/models/poi');
@@ -542,6 +544,103 @@ describe('DELETE /users/me/token', () => {
             done();
           })
           .catch((e) => done(e));
+      });
+  });
+});
+
+describe('PATCH /users/password', () => {
+  it('should update the hash of a user\'s password to match a new password', (done) => {
+    var email = 'tjscollins@gmail.com';
+    var newPass = 'hamsterdance2';
+    request(app)
+      .patch('/users/password')
+      .send({email, password: newPass})
+      .expect(303)
+      .end(err => {
+        if (err) {
+          return done(err);
+        }
+        userModel
+          .find({email})
+          .then((user) => {
+            if (!user) {
+              return Promise.reject();
+            }
+            bcrypt
+              .compare(newPass, user[0].password)
+              .then((ans) => {
+                // console.log(ans);
+                expect(ans).toEqual(true);
+                done();
+              }, err => done(err));
+          });
+      });
+  });
+});
+
+describe('POST /users/reset', () => {
+  it('should generate a resetRequest and send an email with a password RESET link if there is a valid user email', (done) => {
+    var email = 'tjscollins@gmail.com';
+    request(app)
+      .post('/users/reset')
+      .send({email})
+      .expect(200)
+      .end(err => {
+        if (err) {
+          return done(err);
+        }
+        userModel
+          .find({email})
+          .then((user) => {
+            if (!user) {
+              return Promise.reject();
+            }
+            expect(user[0].resetRequests).toExist();
+            expect(user[0].resetRequests.length).toBe(1);
+            done();
+          }, err => done(err));
+      });
+  });
+
+  it('should NOT generate a resetRequest and send an email with a password RESET link if there is a valid user email', (done) => {
+    var email = 'tjmail.com';
+    request(app)
+      .post('/users/reset')
+      .send({email})
+      .expect(400)
+      .end(err => {
+        done();
+      });
+  });
+});
+
+describe('GET /users/reset/:reqID-:email', () => {
+  it('should send the reset page if there is a valid reset request for that user', (done) => {
+    var route = '/users/reset/585b6cd587dd7e1b8323d8d7-test@test.test';
+    request(app)
+      .get(route)
+      .expect(200)
+      .expect((res) => {
+        expect(res.headers['cache-control']).toEqual('no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+        expect(res.headers['content-type']).toEqual('text/html; charset=UTF-8');
+        expect(res.body).toExist();
+      })
+      .end((err, res) => {
+        err
+          ? done(err)
+          : done();
+      });
+  });
+
+  it('should NOT send the reset page if there is NOT a valid reset request for that user', (done) => {
+    var route = '/users/reset/585b6cd587dd7e1b8323d8d7-ria@example.com';
+    request(app)
+      .get(route)
+      .expect(403)
+      .end((err, res) => {
+        err
+          ? done(err)
+          : done();
       });
   });
 });

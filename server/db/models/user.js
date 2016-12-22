@@ -80,7 +80,7 @@ userSchema.methods.removeToken = function(token) {
 userSchema.methods.changePassword = function(password) {
   var user = this;
 
-  console.log('Setting password', password);
+  // console.log('Setting password', password);
   return user.update({
     $set: {
       password: password
@@ -140,7 +140,7 @@ userSchema.statics.resetPassword = function(email) {
       // console.log('Running hash algo');
       return new Promise((resolve, reject) => {
         bcrypt.hash(reqID.toHexString(), 10).then((hash) => {
-          console.log('Hashed reqID', hash);
+          // console.log('Hashed reqID', hash);
           User.update({
             email
           }, {
@@ -152,9 +152,9 @@ userSchema.statics.resetPassword = function(email) {
               }
             }
           }).then((res) => {
-            console.log('Success', res);
+            // console.log('Success', res);
           }, (er) => {
-            console.log('Fail', er);
+            // console.log('Fail', er);
           });
           resolve(reqID);
         }, (err) => {

@@ -4,9 +4,12 @@ const {routeModel} = require('./../../db/models/route');
 const {trailModel} = require('./../../db/models/trail');
 const {userModel} = require('./../../db/models/user');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 const userOneID = new ObjectID();
 const userTwoID = new ObjectID();
+const userThreeID = new ObjectID();
+const hashID = bcrypt.hashSync('585b6cd587dd7e1b8323d8d7', bcrypt.genSaltSync(10));
 const users = [
   {
     _id: userOneID,
@@ -25,6 +28,26 @@ const users = [
     _id: userTwoID,
     email: 'ria@example.com',
     password: 'userTwoPass'
+  }, {
+    _id: userThreeID,
+    email: 'test@test.test',
+    password: 'testingtest',
+    tokens: [
+      {
+        access: 'auth',
+        token: jwt.sign({
+          _id: userThreeID,
+          access: 'auth'
+        }, 'abc123').toString()
+      }
+    ],
+    resetRequests: [
+      {
+        _id: userThreeID,
+        time: new Date().getTime(),
+        reqID: hashID
+      }
+    ]
   }
 ];
 
@@ -198,8 +221,9 @@ const populateUsers = (done) => {
     .then(() => {
       var userOne = new userModel(users[0]).save();
       var userTwo = new userModel(users[1]).save();
+      var userThree = new userModel(users[2]).save();
 
-      return Promise.all([userOne, userTwo]);
+      return Promise.all([userOne, userTwo, userThree]);
     })
     .then(() => done());
 };
