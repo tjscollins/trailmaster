@@ -100,7 +100,7 @@ gulp.task('Clean', function() {
 });
 
 gulp.task('default', [
-  'SCSS', 'JSX', 'Load-Server'
+  'SCSS', 'JSX'
 ], function() {
   console.log('Starting default task');
   gulp
