@@ -1,6 +1,6 @@
 {
   "name": "trailmaster",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Hash Trail Design Application",
   "main": "server.js",
   "scripts": {
@@ -10,6 +10,16 @@
   },
   "engines": {
     "node": "7.1.0"
+  },
+  "babel": {
+    "env": {
+      "production": {
+        "plugins": [
+          "transform-react-constant-elements",
+          "transform-react-inline-elements"
+        ]
+      }
+    }
   },
   "author": "Tyler Collins",
   "license": "MIT",
@@ -67,13 +77,14 @@
     "gulp-autoprefixer": "^3.1.1",
     "gulp-babel": "^6.1.2",
     "gulp-concat": "^2.6.1",
+    "gulp-env": "^0.4.0",
     "gulp-imagemin": "^3.1.1",
     "gulp-livereload": "^3.8.1",
     "gulp-minify-css": "^1.2.4",
+    "gulp-nodemon": "^2.2.1",
     "gulp-plumber": "^1.1.0",
     "gulp-sass": "^2.3.2",
     "gulp-sourcemaps": "^1.9.1",
-    "gulp-uglify": "^2.0.0",
     "gulp-webpack": "^1.5.0",
     "imports-loader": "^0.6.5",
     "jquery": "^2.2.1",

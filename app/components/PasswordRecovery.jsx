@@ -47,8 +47,9 @@ export class PasswordRecovery extends BaseComponent {
               <div className="modal-footer">
                 <p style={{
                   float: 'left',
-                  'font-size': '12px'
-                }}>Submitting will send a link to reset your password to your email</p>
+                  fontSize: '12px'
+                }}>
+                  Submitting will send a link to reset your password to your email</p>
                 <button onClick={this
                   .resetPassword
                   .bind(this)} type="submit" className="btn btn-secondary" data-dismiss="modal">Request Password Reset Link</button>
