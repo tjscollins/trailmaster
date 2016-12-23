@@ -23,28 +23,15 @@ const PORT = process.env.PORT || 3000;
 //Create our app
 var app = express();
 
-function requireHTTPS(req, res, next) {
-  if (!req.secure) {
-    var domain = 'https://' + req.get('host');
-    if (process.env.SSL_PORT) {
-      domain = domain.replace(/:\d+$/, '');
-      domain += ':' + process.env.SSL_PORT;
-    }
-    return res.redirect(domain + req.url);
-  }
-  next();
-}
-
-// app.use(requireHTTPS);
 app.use(bodyParser.json());
 
 app.get('*', function(req, res, next) {
-  if (req.headers['x-forwarded-proto'] != 'https')
+  if (process.env.NODE_ENV === 'production' && req.headers['x-forwarded-proto'] !== 'https') {
     res.redirect('https://' + req.host + req.url)
-  else
+  } else {
     next()/* Continue to other routes if we're not redirecting */
   }
-)
+});
 
 app.post('/users', (req, res) => {
   var body = _.pick(req.body, ['email', 'password']);
