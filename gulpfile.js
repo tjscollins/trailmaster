@@ -122,7 +122,9 @@ gulp.task('Load-Server', function() {
   });
 });
 
-gulp.task('watch', ['default'], function() {
+gulp.task('watch', [
+  'default', 'Load-Server'
+], function() {
   gulp.watch(SERVER + '**/*js', ['Load-Server']);
   gulp.watch(SCRIPTS_PATH, ['JSX']);
   gulp.watch(SCSS_PATH + '**/*.scss', ['SCSS']);
