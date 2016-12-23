@@ -350,6 +350,10 @@ app.post('/trails', authenticate, (req, res) => {
     });
 });
 
+app.get('/.well-known/acme-challenge/5G3Ae8ZVgZtrdsZ7HlRSdbSlefDAzfKGUgPpmkDz9ug', (req, res) => {
+  res.send('5G3Ae8ZVgZtrdsZ7HlRSdbSlefDAzfKGUgPpmkDz9ug.5A1vRSNapmxWVK-btSOEA-sr7TjQbgicaFQ2AVObiK8');
+});
+
 app.use(express.static('public'));
 
 app.listen(PORT, function() {
