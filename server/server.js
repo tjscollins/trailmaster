@@ -1,5 +1,7 @@
 require('./config/config');
 
+const fs = require('fs');
+const https = require('https');
 const express = require('express');
 const bodyParser = require('body-parser');
 const _ = require('lodash');
@@ -16,10 +18,24 @@ const {trailModel} = require('./db/models/trail');
 const {userModel} = require('./db/models/user');
 const {authenticate} = require('./middleware/authenticate');
 
-//Create our app
-var app = express();
 const PORT = process.env.PORT || 3000;
 
+//Create our app
+var app = express();
+
+function requireHTTPS(req, res, next) {
+  if (!req.secure) {
+    var domain = 'https://' + req.get('host');
+    if (process.env.SSL_PORT) {
+      domain = domain.replace(/:\d+$/, '');
+      domain += ':' + process.env.SSL_PORT;
+    }
+    return res.redirect(domain + req.url);
+  }
+  next();
+}
+
+app.use(requireHTTPS);
 app.use(bodyParser.json());
 
 app.post('/users', (req, res) => {
@@ -356,9 +372,18 @@ app.post('/trails', authenticate, (req, res) => {
 
 app.use(express.static('public'));
 
-app.listen(PORT, function() {
-  // console.log('Express server is up on port ' + PORT);
-});
+var serverOptions = process.env.NODE_ENV !== 'production'
+  ? {
+    key: fs.readFileSync('key.txt'),
+    cert: fs.readFileSync('crt.txt')
+  }
+  : {};
+
+https
+  .createServer(serverOptions, app)
+  .listen(process.env.SSL_PORT);
+
+app.listen(PORT);
 
 module.exports = {
   app
