@@ -38,10 +38,10 @@ class ListPOI extends BaseComponent {
       });
   }
   display(id) {
-    //Display point on map
-    var {dispatch} = this.props;
     return () => {
-      dispatch(actions.toggleVisibility(id));
+      this
+        .props
+        .dispatch(actions.toggleVisibility(id));
     };
   }
   displayStyle(id) {

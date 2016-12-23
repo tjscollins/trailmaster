@@ -1,3 +1,4 @@
+<<<<<<< 5e3f5acbc44633d89cd2abb3a8eee462900db02a
 var gulp = require('gulp');
 var livereload = require('gulp-livereload');
 var concat = require('gulp-concat');
@@ -9,29 +10,44 @@ var webpack = require('gulp-webpack');
 var del = require('del');
 var spawn = require('child_process').spawn,
   node;
+=======
+const gulp = require('gulp');
+const livereload = require('gulp-livereload');
+const concat = require('gulp-concat');
+const autoprefixer = require('gulp-autoprefixer');
+const plumber = require('gulp-plumber');
+const sourcemaps = require('gulp-sourcemaps');
+const sass = require('gulp-sass');
+const webpack = require('gulp-webpack');
+const env = require('gulp-env');
+const nodemon = require('gulp-nodemon');
+const del = require('del');
+
+//Set Environment Variables
+env({file: '.env.json'});
+>>>>>>> Improved task runner setup
 
 //File Paths
 const SRC_PATH = './app/';
 const DIST_PATH = './public/';
-const HTML_PATH = SRC_PATH + 'html/'
+const HTML_PATH = SRC_PATH + 'html/';
 const SCRIPTS_PATH = SRC_PATH + '/**/*.jsx';
 const SCSS_PATH = SRC_PATH + 'styles/';
-const SERVER = './server';
 
 //SCSS
 //font-awesome source
-var fontAwesome = { in: 'node_modules/font-awesome/'
+const fontAwesome = { in: 'node_modules/font-awesome/'
 };
 // Bootstrap scss source
-var bootstrapSass = { in: './node_modules/bootstrap-sass/'
+const bootstrapSass = { in: './node_modules/bootstrap-sass/'
 };
 
 //Mapbox-gl css
-var mapboxgl = { in: './node_modules/mapbox-gl/dist/'
+const mapboxgl = { in: './node_modules/mapbox-gl/dist/'
 };
 
 // fonts
-var fonts = { in: [
+const fonts = { in: [
     SRC_PATH + 'fonts/*.*',
     bootstrapSass. in + 'assets/fonts/**/*',
     fontAwesome. in + 'fonts/**/*'
@@ -39,7 +55,7 @@ var fonts = { in: [
   out: DIST_PATH + 'fonts/'
 };
 
-var scss = { in: SCSS_PATH,
+const scss = { in: SCSS_PATH,
   out: DIST_PATH,
   watch: SRC_PATH + 'scss/**/*.scss',
   sassOpts: {
@@ -61,6 +77,13 @@ gulp.task('Fonts', function() {
     .pipe(gulp.dest(fonts.out));
 });
 
+gulp.task('HTML', function() {
+  return gulp
+    .src(HTML_PATH + 'index.html')
+    .pipe(gulp.dest(DIST_PATH))
+    .pipe(livereload());
+});
+
 gulp.task('SCSS', ['Fonts'], function() {
   return gulp
     .src(SCSS_PATH + 'app.scss')
@@ -78,7 +101,6 @@ gulp.task('SCSS', ['Fonts'], function() {
 
 // Scripts
 gulp.task('JSX', function() {
-  // console.log('starting scripts task');
   return gulp
     .src(SRC_PATH + 'app.jsx')
     .pipe(plumber(function(err) {
@@ -87,7 +109,6 @@ gulp.task('JSX', function() {
     }))
     .pipe(sourcemaps.init())
     .pipe(webpack(require('./webpack.config.js')))
-    // .pipe(uglify())
     .pipe(concat('bundle.js'))
     .pipe(sourcemaps.write())
     .pipe(gulp.dest(DIST_PATH))
@@ -99,33 +120,26 @@ gulp.task('Clean', function() {
 });
 
 gulp.task('default', [
-  'SCSS', 'JSX'
+  'HTML', 'SCSS', 'JSX'
 ], function() {
-  console.log('Starting default task');
-  gulp
-    .src(HTML_PATH + 'index.html')
-    .pipe(gulp.dest(DIST_PATH))
-    .pipe(livereload());
+  return;
 });
 
 gulp.task('Load-Server', function() {
-  // console.log('Reloading the server');
-  if (node)
-    node.kill();
-  node = spawn('node', ['./server/server.js'], {stdio: 'inherit'});
-  livereload.listen();
-  node.on('close', (code) => {
-    if (code === 8) {
-      gulp.log('Error detected, waiting for changes...');
-    }
-  });
+  nodemon({script: './server/server.js', ext: 'js json', ignore: './public/bundle.js'})
+    .on('restart', function() {
+      // gulp
+      //   .src('./public/bundle.js')
+      //   .pipe(livereload())
+      //   .pipe(notify('Reloading page, please wait...'));
+    });
 });
 
 gulp.task('watch', [
   'default', 'Load-Server'
 ], function() {
-  gulp.watch(SERVER + '**/*js', ['Load-Server']);
+  livereload.listen();
+  gulp.watch(HTML_PATH + '**/*.html', ['HTML']);
   gulp.watch(SCRIPTS_PATH, ['JSX']);
   gulp.watch(SCSS_PATH + '**/*.scss', ['SCSS']);
-  gulp.watch(HTML_PATH + '**/*.html', ['default']);
 });

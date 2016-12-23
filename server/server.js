@@ -361,22 +361,7 @@ app.post('/trails', authenticate, (req, res) => {
     });
 });
 
-// app.get('/.well-known/acme-challenge/5G3Ae8ZVgZtrdsZ7HlRSdbSlefDAzfKGUgPpmkDz9ug', (req, res) => {
-//   res.send('5G3Ae8ZVgZtrdsZ7HlRSdbSlefDAzfKGUgPpmkDz9ug.5A1vRSNapmxWVK-btSOEA-sr7TjQbgicaFQ2AVObiK8');
-// });
-
 app.use(express.static('public'));
-
-var serverOptions = process.env.NODE_ENV !== 'production'
-  ? {
-    key: fs.readFileSync('key.txt'),
-    cert: fs.readFileSync('crt.txt')
-  }
-  : {};
-
-// https
-//   .createServer(serverOptions, app)
-//   .listen(process.env.SSL_PORT);
 
 app.listen(PORT);
 
