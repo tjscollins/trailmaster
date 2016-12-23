@@ -35,8 +35,16 @@ function requireHTTPS(req, res, next) {
   next();
 }
 
-app.use(requireHTTPS);
+// app.use(requireHTTPS);
 app.use(bodyParser.json());
+
+app.get('*', function(req, res, next) {
+  if (req.headers['x-forwarded-proto'] != 'https')
+    res.redirect('https://' + req.host + req.url)
+  else
+    next()/* Continue to other routes if we're not redirecting */
+  }
+)
 
 app.post('/users', (req, res) => {
   var body = _.pick(req.body, ['email', 'password']);
