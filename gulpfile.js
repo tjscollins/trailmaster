@@ -112,13 +112,7 @@ gulp.task('default', [
 });
 
 gulp.task('Load-Server', function() {
-  nodemon({script: './server/server.js', ext: 'js json', ignore: './public/bundle.js'})
-    .on('restart', function() {
-      // gulp
-      //   .src('./public/bundle.js')
-      //   .pipe(livereload())
-      //   .pipe(notify('Reloading page, please wait...'));
-    });
+  nodemon({script: './server/server.js', ext: 'js json', ignore: './public/bundle.js'});
 });
 
 gulp.task('watch', [

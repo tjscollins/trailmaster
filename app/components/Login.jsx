@@ -98,7 +98,7 @@ export class Login extends BaseComponent {
                 <div className="wrong-password">
                   <p>Incorrect email or password</p>
                 </div>
-                <button onClick={this.login} type="submit" className="btn btn-secondary">Login</button>
+                <button onClick={this.login} type="submit" className="btn btn-primary">Login</button>
               </div>
             </div>
           </div>
@@ -122,7 +122,7 @@ export class Login extends BaseComponent {
               <div className="modal-footer">
 
                 <div>
-                  <button onClick={this.create} type="submit" className="btn btn-secondary" data-dismiss="modal">Create</button>
+                  <button onClick={this.create} type="submit" className="btn btn-primary" data-dismiss="modal">Create</button>
                 </div>
               </div>
             </div>
