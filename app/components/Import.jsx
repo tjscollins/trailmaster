@@ -50,7 +50,6 @@ export class Import extends BaseComponent {
       // gpx,
       // kml
     } = this.refs;
-    // console.log(this.importedGeoJSON.features[0]);
     var {dispatch} = this.props;
     var routeList = this
       .importedGeoJSON
@@ -67,7 +66,6 @@ export class Import extends BaseComponent {
     dispatch(actions.updateMap());
   }
   render() {
-    console.log(this.dataType);
     return (
       <div id="import-route" className="modal fade">
         <div className="modal-dialog" role="document">
@@ -95,7 +93,7 @@ export class Import extends BaseComponent {
                 <div className="form-check">
                   <label className="form-check-label">
                     Data Type: &nbsp;
-                    <input type="radio" name="data-type" ref="gpx" value="gpx" checked={this.state.dataType === 'gpx'}/>
+                    <input type="radio" name="data-type" ref="gpx" value="gpx" defaultChecked={this.state.dataType === 'gpx'}/>
                     GPX &nbsp; {/* <input type="radio" name="data-type" ref="kml" value="kml" checked={this.state.dataType === 'kml'}/>
                     KML */}
                   </label>

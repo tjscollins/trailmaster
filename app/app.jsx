@@ -7,57 +7,66 @@ import {Provider} from 'react-redux';
 import {configure} from 'configureStore';
 import * as actions from 'actions';
 
+/*----------Modules----------*/
+import $ from 'jquery';
+
 /*----------Components----------*/
 import MainContainer from 'MainContainer';
 
 /*----------Configure Redux Store----------*/
-var getData = (route) => {
-  var xmlHTTP = new XMLHttpRequest();
-  xmlHTTP.open('GET', `/${route}`, false);
-  xmlHTTP.send(null);
-  return xmlHTTP.responseText;
-};
+Promise.all([
+  $.get('/routes'),
+  $.get('/pois')
+]).then(res => {
+  initialize(res);
+}).catch(err => {
+  console.log('Error fetching data', err);
+});
 
-var initialState = {
-  geoJSON: {
-    type: 'FeatureCollection',
-    features: JSON
-      .parse(getData('routes'))
-      .routes
-      .concat(JSON.parse(getData('pois')).pois)
-  },
-  userSession: {
-    ...JSON.parse(sessionStorage.getItem('trailmaster-login')),
-    visibleFeatures: []
-  }
-};
-
-var store = configure(initialState);
-
-store.subscribe(() => {});
-
-//Initialize User Location Monitoring
-var processGeolocation = (pos) => {
-  store.dispatch(actions.updatePOS(pos));
-  if (store.getState().userLocation.trackingRoute)
-    store.dispatch(actions.addToRouteList(pos));
+const initialize = (geoJSON) => {
+  var features = geoJSON.reduce((acc, curr) => {
+    var allObjects = [];
+    for (var array in curr) {
+      allObjects = allObjects.concat(curr[array]);
+    }
+    return acc.concat(allObjects);
+  }, []);
+  const initialState = {
+    geoJSON: {
+      type: 'FeatureCollection',
+      features
+    },
+    userSession: {
+      ...JSON.parse(sessionStorage.getItem('trailmaster-login')),
+      visibleFeatures: []
+    }
   };
 
-var geolocationError = (err) => {
-  console.error('Error tracking user position', err);
+  var store = configure(initialState);
+
+  //Initialize User Location Monitoring
+  var processGeolocation = (pos) => {
+    store.dispatch(actions.updatePOS(pos));
+    if (store.getState().userLocation.trackingRoute)
+      store.dispatch(actions.addToRouteList(pos));
+    };
+
+  var geolocationError = (err) => {
+    console.error('Error tracking user position', err);
+  };
+
+  var watchId = navigator
+    .geolocation
+    .watchPosition(processGeolocation,
+    // Optional settings below
+    geolocationError, {
+      timeout: 60000,
+      enableHighAccuracy: true,
+      maximumAge: Infinity
+    });
+
+  ReactDOM.render(
+    <Provider store={store}>
+    <MainContainer/>
+  </Provider>, document.getElementById('app'));
 };
-
-var watchId = navigator
-  .geolocation
-  .watchPosition(processGeolocation,
-  // Optional settings below
-  geolocationError, {
-    timeout: 60000,
-    enableHighAccuracy: true,
-    maximumAge: Infinity
-  });
-
-ReactDOM.render(
-  <Provider store={store}>
-  <MainContainer/>
-</Provider>, document.getElementById('app'));
