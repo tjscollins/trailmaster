@@ -52,7 +52,17 @@ export class Import extends BaseComponent {
         }
       ]
     };
+<<<<<<< 92d915d4b716e198c754fb2846298d6167b8ee4e
     this.setState({importedGeoJSON: newGeoJSON});
+=======
+    console.log(this.state.importedGeoJSON);
+    console.log(newGeoJSON);
+    this.setState({importedGeoJSON: newGeoJSON});
+    // this.importedGeoJSON.features[0].properties.name = name.value;
+    // this.importedGeoJSON.features[0].properties.desc = desc.value;
+    // this.importedGeoJSON.features[0].properties.cond = cond.value;
+    // console.log(this.importedGeoJSON);
+>>>>>>> Critical bugfix for Import.jsx
   }
   dataEntry() {
     var {data} = this.refs;
@@ -60,6 +70,10 @@ export class Import extends BaseComponent {
     var importedGeoJSON = this.state.dataType === 'kml'
       ? toGeoJSON.kml(dataDOM)
       : toGeoJSON.gpx(dataDOM);
+<<<<<<< 92d915d4b716e198c754fb2846298d6167b8ee4e
+=======
+    console.log(importedGeoJSON);
+>>>>>>> Critical bugfix for Import.jsx
     this.setState({importedGeoJSON: importedGeoJSON});
   }
   importData() {
@@ -70,6 +84,7 @@ export class Import extends BaseComponent {
       // kml
     } = this.refs;
     var {dispatch} = this.props;
+    console.log(this.state.importedGeoJSON);
     var routeList = this
       .state
       .importedGeoJSON
