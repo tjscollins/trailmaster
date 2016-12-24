@@ -3,6 +3,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import toGeoJSON from '@mapbox/togeojson';
 import {DOMParser} from 'xmldom';
+import {month} from 'TrailmasterAPI';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
@@ -18,7 +19,10 @@ export class Import extends BaseComponent {
       .formChange
       .bind(this);
     this.state = {
-      dataType: 'gpx'
+      dataType: 'gpx',
+      importedGeoJSON: {
+        features: [{}]
+      }
     };
   }
   formChange(e) {
@@ -28,20 +32,42 @@ export class Import extends BaseComponent {
       gpx,
       kml
     } = this.refs;
+    var {features} = this.state.importedGeoJSON;
+    if (Object.keys(features[0]).length === 0)
+      return;
     if (e.target === gpx || e.target === kml) {
       this.setState({dataType: e.target.value});
     }
-    this.importedGeoJSON.features[0].properties.name = name.value;
-    this.importedGeoJSON.features[0].properties.desc = desc.value;
-    this.importedGeoJSON.features[0].properties.cond = cond.value;
-    console.log(this.importedGeoJSON);
+    var newGeoJSON = {
+      ...this.state.importedGeoJSON,
+      features: [
+        {
+          ...features[0],
+          properties: {
+            ...features[0].properties,
+            name: name.value,
+            desc: desc.value,
+            cond: cond.value
+          }
+        }
+      ]
+    };
+    console.log(this.state.importedGeoJSON);
+    console.log(newGeoJSON);
+    this.setState({importedGeoJSON: newGeoJSON});
+    // this.importedGeoJSON.features[0].properties.name = name.value;
+    // this.importedGeoJSON.features[0].properties.desc = desc.value;
+    // this.importedGeoJSON.features[0].properties.cond = cond.value;
+    // console.log(this.importedGeoJSON);
   }
   dataEntry() {
     var {data} = this.refs;
     var dataDOM = new DOMParser().parseFromString(data.value);
-    this.importedGeoJSON = this.state.dataType === 'kml'
+    var importedGeoJSON = this.state.dataType === 'kml'
       ? toGeoJSON.kml(dataDOM)
       : toGeoJSON.gpx(dataDOM);
+    console.log(importedGeoJSON);
+    this.setState({importedGeoJSON: importedGeoJSON});
   }
   importData() {
     var {
@@ -51,7 +77,9 @@ export class Import extends BaseComponent {
       // kml
     } = this.refs;
     var {dispatch} = this.props;
+    console.log(this.state.importedGeoJSON);
     var routeList = this
+      .state
       .importedGeoJSON
       .features[0]
       .geometry
@@ -62,8 +90,36 @@ export class Import extends BaseComponent {
           point[1]
         ];
       });
-    dispatch(actions.addRoute(routeList, name.value, desc.value, cond.value, new Date()));
-    dispatch(actions.updateMap());
+    var date = new Date();
+    var newFeature = {
+      type: 'Feature',
+      properties: {
+        stroke: '#555555',
+        'stroke-width': 2,
+        'stroke-opacity': 1,
+        name: name.value,
+        desc: desc.value,
+        condition: cond.value,
+        last: `${month(date.getMonth())} ${date.getFullYear()}`,
+        displayed: false
+      },
+      geometry: {
+        type: 'LineString',
+        coordinates: [...routeList]
+      }
+    };
+    $.ajax({
+      url: '/routes',
+      type: 'post',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      dataType: 'json',
+      data: JSON.stringify(newFeature)
+    }).done((data) => {
+      dispatch(actions.addRoute(data));
+      dispatch(actions.updateMap());
+    });
   }
   render() {
     return (
@@ -101,7 +157,6 @@ export class Import extends BaseComponent {
               </form>
             </div>
             <div className="modal-footer">
-
               <button onClick={this
                 .importData
                 .bind(this)} type="submit" className="btn btn-secondary" data-dismiss="modal">Import</button>
