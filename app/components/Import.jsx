@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import toGeoJSON from '@mapbox/togeojson';
 import {DOMParser} from 'xmldom';
 import {month} from 'TrailmasterAPI';
+import $ from 'jquery';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
@@ -52,6 +53,7 @@ export class Import extends BaseComponent {
         }
       ]
     };
+<<<<<<< 3cc81e7ab95625d9693ec6ff92d3815a5f2992ac
 <<<<<<< 92d915d4b716e198c754fb2846298d6167b8ee4e
     this.setState({importedGeoJSON: newGeoJSON});
 =======
@@ -63,6 +65,9 @@ export class Import extends BaseComponent {
     // this.importedGeoJSON.features[0].properties.cond = cond.value;
     // console.log(this.importedGeoJSON);
 >>>>>>> Critical bugfix for Import.jsx
+=======
+    this.setState({importedGeoJSON: newGeoJSON});
+>>>>>>> Adjusted formatting for several modals
   }
   dataEntry() {
     var {data} = this.refs;
@@ -70,10 +75,13 @@ export class Import extends BaseComponent {
     var importedGeoJSON = this.state.dataType === 'kml'
       ? toGeoJSON.kml(dataDOM)
       : toGeoJSON.gpx(dataDOM);
+<<<<<<< 3cc81e7ab95625d9693ec6ff92d3815a5f2992ac
 <<<<<<< 92d915d4b716e198c754fb2846298d6167b8ee4e
 =======
     console.log(importedGeoJSON);
 >>>>>>> Critical bugfix for Import.jsx
+=======
+>>>>>>> Adjusted formatting for several modals
     this.setState({importedGeoJSON: importedGeoJSON});
   }
   importData() {
@@ -84,7 +92,6 @@ export class Import extends BaseComponent {
       // kml
     } = this.refs;
     var {dispatch} = this.props;
-    console.log(this.state.importedGeoJSON);
     var routeList = this
       .state
       .importedGeoJSON
