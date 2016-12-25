@@ -15,10 +15,7 @@ import * as actions from 'actions';
 export class Import extends BaseComponent {
   constructor() {
     super();
-    this.importedGeoJSON = {};
-    this.formChange = this
-      .formChange
-      .bind(this);
+    this._bind('formChange');
     this.state = {
       dataType: 'gpx',
       importedGeoJSON: {

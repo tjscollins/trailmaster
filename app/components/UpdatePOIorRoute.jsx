@@ -13,10 +13,14 @@ class UpdatePOIorRoute extends BaseComponent {
   constructor() {
     super();
     //this._bind(...local methods) from BaseComponent
+    this._bind('formChange', 'deleteLast', 'deleteFirst', 'deleteTen', 'deleteHund', 'quickDelete', 'undoDelete');
     this.state = {
       id: null,
       point: null,
-      map: null
+      map: null,
+      del: 'first',
+      deleteN: 10,
+      deletes: []
     };
   }
   formChange() {
@@ -55,6 +59,92 @@ class UpdatePOIorRoute extends BaseComponent {
       dispatch(actions.updateMap());
     });
 
+  }
+  deleteLast() {
+    this.setState({del: 'last'});
+  }
+  deleteFirst() {
+    this.setState({del: 'first'});
+  }
+  deleteTen() {
+    this.setState({deleteN: 10});
+  }
+  deleteHund() {
+    this.setState({deleteN: 100});
+  }
+  quickDelete(e) {
+    e.preventDefault();
+    var {del, deleteN, point} = this.state;
+    var {coordinates} = point.geometry;
+    if (del === 'first') {
+      var newCoords = coordinates.slice(deleteN);
+      this.setState({
+        point: {
+          ...this.state.point,
+          geometry: {
+            ...point.geometry,
+            coordinates: newCoords
+          }
+        },
+        deletes: [
+          ...this.state.deletes, {
+            side: 'first',
+            coords: coordinates.slice(0, deleteN)
+          }
+        ]
+      });
+    } else if (del === 'last') {
+      var newCoords = coordinates.slice(0, coordinates.length - deleteN);
+      this.setState({
+        point: {
+          ...this.state.point,
+          geometry: {
+            ...point.geometry,
+            coordinates: newCoords
+          }
+        },
+        deletes: [
+          ...this.state.deletes, {
+            side: 'last',
+            coords: coordinates.slice(coordinates.length - deleteN)
+          }
+        ]
+      });
+    }
+  }
+  undoDelete(e) {
+    e.preventDefault();
+    var {deletes, point} = this.state;
+    var mostRecent = deletes.pop();
+    if (mostRecent.side === 'first') {
+      this.setState({
+        point: {
+          ...this.state.point,
+          geometry: {
+            ...point.geometry,
+            coordinates: [
+              ...mostRecent.coords,
+              ...point.geometry.coordinates
+            ]
+          }
+        },
+        deletes
+      });
+    } else if (mostRecent.side === 'last') {
+      this.setState({
+        point: {
+          ...this.state.point,
+          geometry: {
+            ...point.geometry,
+            coordinates: [
+              ...point.geometry.coordinates,
+              ...mostRecent.coords
+            ]
+          }
+        },
+        deletes
+      });
+    }
   }
   listData() {
     var {searchText, geoJSON} = this.props;
@@ -163,7 +253,6 @@ class UpdatePOIorRoute extends BaseComponent {
           default:
             throw new Error(`Unknown feature type ${layerType}`);
         }
-        // console.log(layerType, layout);
         map.addLayer({'id': 'preview', 'type': layerType, 'source': 'preview', 'layout': layout});
         this.setState({map});
       });
@@ -227,13 +316,70 @@ class UpdatePOIorRoute extends BaseComponent {
                 <p>Instructions:</p>
                 <p>Make changes to the geoJSON data for the selected POI or Route and view them in the preview map. When you are satisfied with your changes, click save.</p>
 
-                <form onChange={this
-                  .formChange
-                  .bind(this)} id="updateform" ref="updateform">
-                  <input className="form-control" ref="name" type="text" value={name}/>
-                  <input className="form-control" ref="desc" type="text" value={desc}/>
-                  <input className="form-control" ref="cond" type="text" value={condition}/>
-                  <textarea className="form-control" ref="geometry" rows="10" wrap="soft" required value={JSON.stringify(geometry, null, 2)}/>
+                <form onChange={this.formChange} id="updateform" ref="updateform" className="form-horizontal">
+                  <div className="form-group">
+                    <label for="name" className="col-xs-2 control-label">Name</label>
+                    <div className="col-xs-10">
+                      <input className="form-control" id="name" ref="name" type="text" value={name}/>
+                    </div>
+                  </div>
+                  <div className="form-group ">
+                    <label for="desc" className="col-xs-2 control-label">Description</label>
+                    <div className="col-xs-10">
+                      <input className="form-control" id="desc" ref="desc" type="text" value={desc}/>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label for="cond" className="col-xs-2 control-label">Condition</label>
+                    <div className="col-xs-10">
+                      <input className="form-control" id="cond" ref="cond" type="text" value={condition}/>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <div className="col-xs-8">
+                      <textarea className="form-control col-xs-8" ref="geometry" rows="10" wrap="soft" required value={JSON.stringify(geometry, null, 2)}/>
+                    </div>
+
+                    <div className="col-xs-4">
+                      <button onClick={this.quickDelete} className="btn btn-secondary">Quick Delete</button>
+                      <br/>
+                      <br/>
+                      <div className="form-check">
+                        <div className="form-inline col-xs-6">
+                          <label className="form-check-label">
+                            <input onChange={this.deleteFirst} type="radio" name="delete-type" ref="first" value="first" checked={this.state.del === 'first'}/>
+                            &nbsp; First
+                          </label>
+                        </div>
+
+                        <div className="col-xs-6">
+                          <label className="form-check-label">
+                            <input onChange={this.deleteLast} type="radio" name="delete-type" ref="last" value="last" checked={this.state.del === 'last'}/>
+                            &nbsp; Last
+                          </label>
+                        </div>
+                      </div>
+                      <div className="form-check">
+                        <div className="col-xs-6">
+                          <label className="form-check-label">
+                            <input onChange={this.deleteTen} type="radio" name="deleteN" ref="ten" value="ten" checked={this.state.deleteN === 10}/>
+                            &nbsp; 10
+                          </label>
+                        </div>
+                        <div className="col-xs-6">
+                          <label className="form-check-label">
+                            <input onChange={this.deleteHund} type="radio" name="deleteN" ref="hund" value="hund" checked={this.state.deleteN === 100}/>
+                            &nbsp; 100
+                          </label>
+                          <br/>
+                          <br/>
+                        </div>
+                      </div>
+
+                      <button onClick={this.undoDelete} className="btn btn-secondary">Undo Delete</button>
+                    </div>
+
+                  </div>
 
                 </form>
 
