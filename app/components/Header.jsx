@@ -14,12 +14,7 @@ export class Header extends BaseComponent {
   constructor() {
     super();
     //this._bind(...local methods) from BaseComponent
-    this.disableAutoCenter = this
-      .disableAutoCenter
-      .bind(this);
-    this.logout = this
-      .logout
-      .bind(this);
+    this._bind('disableAutoCenter', 'logout');
   }
   createAccount() {
     $('#account-creator').modal('show');
