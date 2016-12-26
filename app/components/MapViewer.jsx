@@ -13,9 +13,6 @@ import * as actions from 'actions';
 export class MapViewer extends BaseComponent {
   constructor() {
     super();
-    // _bind(...methods) {
-    //   methods.forEach((method) => this[method] = this[method].bind(this));
-    // } inherited from BaseComponent
     this.map = false;
     this.layerIDs = []; // Will contain a list of layers to filter against.
   }
