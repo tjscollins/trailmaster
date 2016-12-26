@@ -50,6 +50,7 @@ export class Import extends BaseComponent {
         }
       ]
     };
+<<<<<<< HEAD
 <<<<<<< 3cc81e7ab95625d9693ec6ff92d3815a5f2992ac
 <<<<<<< 92d915d4b716e198c754fb2846298d6167b8ee4e
     this.setState({importedGeoJSON: newGeoJSON});
@@ -65,6 +66,9 @@ export class Import extends BaseComponent {
 =======
     this.setState({importedGeoJSON: newGeoJSON});
 >>>>>>> Adjusted formatting for several modals
+=======
+    this.setState({importedGeoJSON: newGeoJSON});
+>>>>>>> 4fd3d8e9c0a33b501900a3d700b1e43964fdbb57
   }
   dataEntry() {
     var {data} = this.refs;
@@ -72,6 +76,7 @@ export class Import extends BaseComponent {
     var importedGeoJSON = this.state.dataType === 'kml'
       ? toGeoJSON.kml(dataDOM)
       : toGeoJSON.gpx(dataDOM);
+<<<<<<< HEAD
 <<<<<<< 3cc81e7ab95625d9693ec6ff92d3815a5f2992ac
 <<<<<<< 92d915d4b716e198c754fb2846298d6167b8ee4e
 =======
@@ -79,6 +84,8 @@ export class Import extends BaseComponent {
 >>>>>>> Critical bugfix for Import.jsx
 =======
 >>>>>>> Adjusted formatting for several modals
+=======
+>>>>>>> 4fd3d8e9c0a33b501900a3d700b1e43964fdbb57
     this.setState({importedGeoJSON: importedGeoJSON});
   }
   importData() {

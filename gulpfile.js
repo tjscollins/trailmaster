@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <<<<<<< 5e3f5acbc44633d89cd2abb3a8eee462900db02a
 var gulp = require('gulp');
 var livereload = require('gulp-livereload');
@@ -11,6 +12,8 @@ var del = require('del');
 var spawn = require('child_process').spawn,
   node;
 =======
+=======
+>>>>>>> 4fd3d8e9c0a33b501900a3d700b1e43964fdbb57
 const gulp = require('gulp');
 const livereload = require('gulp-livereload');
 const concat = require('gulp-concat');
@@ -25,7 +28,10 @@ const del = require('del');
 
 //Set Environment Variables
 env({file: '.env.json'});
+<<<<<<< HEAD
 >>>>>>> Improved task runner setup
+=======
+>>>>>>> 4fd3d8e9c0a33b501900a3d700b1e43964fdbb57
 
 //File Paths
 const SRC_PATH = './app/';
