@@ -27,7 +27,10 @@ class UpdatePOIorRoute extends BaseComponent {
     this.setState({
       point: {
         ...this.state.point,
-        geometry: JSON.parse(this.refs.geometry.value),
+        geometry: {
+          ...this.state.point.geometry,
+          coordinates: JSON.parse(this.refs.geometry.value)
+        },
         properties: {
           ...this.state.point.properties,
           name: this.refs.name.value,
@@ -203,7 +206,6 @@ class UpdatePOIorRoute extends BaseComponent {
 
       map.on('load', () => {
         //place userLocation
-        console.log(point);
         map.addSource('preview', {
           type: 'geojson',
           data: {
@@ -337,11 +339,13 @@ class UpdatePOIorRoute extends BaseComponent {
                   </div>
                   <div className="form-group">
                     <div className="col-xs-8">
-                      <textarea className="form-control col-xs-8" ref="geometry" rows="10" wrap="soft" required value={JSON.stringify(geometry, null, 2)}/>
+                      <textarea id="edit-json-coordinates" className="form-control col-xs-8" ref="geometry" rows="10" wrap="soft" required value={JSON.stringify(geometry
+                        ? geometry.coordinates
+                        : null, null, 2)}/>
                     </div>
 
                     <div className="col-xs-4">
-                      <button onClick={this.quickDelete} className="btn btn-secondary">Quick Delete</button>
+                      <button onClick={this.quickDelete} className="btn btn-default form-control">Quick Delete</button>
                       <br/>
                       <br/>
                       <div className="form-check">
@@ -376,20 +380,18 @@ class UpdatePOIorRoute extends BaseComponent {
                         </div>
                       </div>
 
-                      <button onClick={this.undoDelete} className="btn btn-secondary">Undo Delete</button>
+                      <button onClick={this.undoDelete} className="btn btn-default form-control">Undo Delete</button>
                     </div>
-
                   </div>
-
                 </form>
 
                 <div id="preview-map"></div>
               </div>
               <div className="modal-footer">
-
+                <button className="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <button onClick={this
                   .formSubmit
-                  .bind(this)} type="submit" className="btn btn-secondary" data-dismiss="modal">Save</button>
+                  .bind(this)} type="submit" className="btn btn-primary" data-dismiss="modal">Save</button>
               </div>
             </div>
           </div>
@@ -399,4 +401,4 @@ class UpdatePOIorRoute extends BaseComponent {
   }
 }
 
-export default connect(state => state)(UpdatePOIorRoute);
+export default connect(state => state)(UpdatePOIorRoute);;

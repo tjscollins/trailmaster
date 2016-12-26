@@ -2,15 +2,14 @@
   text-align: left;
   padding-top: 5px;
   margin-bottom: 5px;
-  // border: 1px solid black;
 
-  .col-xs-2 {
-    // border: 1px solid black;
-    // padding: 0px;
-  }
+}
+
+.modal.fade {
+  overflow: auto;
 }
 
 #preview-map {
-  width: 100%;
+  width: 570px;
   height: 300px;
 }

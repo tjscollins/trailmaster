@@ -50,7 +50,7 @@ export class PasswordRecovery extends BaseComponent {
                   fontSize: '12px',
                   paddingTop: '10px'
                 }}>
-                  Submitting will send a link to reset your password to your email</p>
+                Submitting will send a link to reset your password to your email</p>
                 <button onClick={this
                   .resetPassword
                   .bind(this)} type="submit" className="btn btn-warning" data-dismiss="modal">Request Password Reset Link</button>
