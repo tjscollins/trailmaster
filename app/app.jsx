@@ -46,7 +46,9 @@ const initialize = (geoJSON) => {
 
   //Initialize User Location Monitoring
   var processGeolocation = (pos) => {
+    console.log('Position found', pos);
     store.dispatch(actions.updatePOS(pos));
+    store.dispatch(actions.updateMap());
     if (store.getState().userLocation.trackingRoute)
       store.dispatch(actions.addToRouteList(pos));
     };
