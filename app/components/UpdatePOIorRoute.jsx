@@ -13,7 +13,7 @@ class UpdatePOIorRoute extends BaseComponent {
   constructor() {
     super();
     //this._bind(...local methods) from BaseComponent
-    this._bind('formChange', 'deleteLast', 'deleteFirst', 'deleteTen', 'deleteHund', 'quickDelete', 'undoDelete');
+    this._bind('formChange', 'deleteLast', 'deleteFirst', 'deleteTen', 'deleteHund', 'quickDelete', 'undoDelete', 'isRoute');
     this.state = {
       id: null,
       point: null,
@@ -22,6 +22,17 @@ class UpdatePOIorRoute extends BaseComponent {
       deleteN: 10,
       deletes: []
     };
+  }
+  isRoute() {
+    var {point} = this.state;
+    if (point) {
+      return point.geometry.type === 'Point'
+        ? {
+          display: 'none'
+        }
+        : {}
+    };
+    return {};
   }
   formChange() {
     this.setState({
@@ -344,7 +355,7 @@ class UpdatePOIorRoute extends BaseComponent {
                         : null, null, 2)}/>
                     </div>
 
-                    <div className="col-xs-4">
+                    <div style={this.isRoute()} className="col-xs-4">
                       <button onClick={this.quickDelete} className="btn btn-default form-control">Quick Delete</button>
                       <br/>
                       <br/>
