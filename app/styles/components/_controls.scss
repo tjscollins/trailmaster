@@ -1,101 +1,105 @@
-input {
-  margin-bottom: 5px;
-}
-
-div.controls.hide-left {
-    // height: 36px;
-    overflow: hidden;
-    left: -$phone-controls-width;
-    @include for-tablet-landscape-up {
-        left: -$controls-width;
-        // height: 50px;
-    }
-}
-
-div.controls {
+div {
+  &.controls {
+    // Positioning
     position: absolute;
     top: 50px;
     left: 0;
-    overflow: auto;
-    @include transition($hide-ui-transition, $hide-ui-transition-func, $hide-ui-transition-delay);
-    border: $controls-border;
-    background-color: $controls-bg-color;
-    @include for-phone-only {
-        width: $phone-controls-width;
-        height: 87vh;
 
-        .list-box {
-            font-size: $phone-controls-font-size;
-        }
+    // Display and Sizing
+    overflow: auto;
+    @include for-phone-only {
+      width: $phone-controls-width;
+      height: 87vh;
     }
     @include for-tablet-portrait-up {
-        width: $phone-controls-width;
-        height: 95vh;
-
-        .list-box {
-            font-size: $phone-controls-font-size;
-        }
+      width: $phone-controls-width;
+      height: 95vh;
     }
     @include for-tablet-landscape-up {
-        width: $controls-width;
-        height: 95vh;
+      width: $controls-width;
+      height: 95vh;
+    }
 
-        .list-box {
-            font-size: $controls-font-size;
-        }
+    //  Other
+    background-color: $controls-bg-color;
+    border: $controls-border;
+    @include custom-transition($hide-ui-transition, $hide-ui-transition-func, $hide-ui-transition-delay);
+
+    &.hide-left {
+      // Positioning
+      left: -$phone-controls-width;
+      @include for-tablet-landscape-up {
+        left: -$controls-width;
+      }
+
+      // Display and Sizing
+      overflow: hidden;
     }
 
     .panel {
-        margin: 0;
+      // Positioning
+
+      // Display and Sizing
+      margin: 0;
+
+      // Other
+      border: none;
+
+      .panel-heading {
+        border-radius: 0;
         border: none;
 
-        .panel-heading {
-            border-radius: 0;
-            border: none;
-            transition: background-color 3s;
-            h3.controls-title {
-              text-align: left;
-            }
+        h3.controls-title {
+          // Positioning
+
+          // Display and Sizing
+          margin: 5px;
+          @include for-phone-only {
+            margin: 0;
+            font-size: $phone-controls-font-size + 0.5rem;
+          }
+
+          // Other
+          text-align: left;
+
+          a {
+            color: white;
+          }
+        }
+      }
+
+      .hidecontrols {
+        // Positioning
+        position: absolute;
+        top: 10px;
+        left: 345px;
+        @include for-phone-only {
+          top: 5px;
+          left: $phone-controls-width - 55px;
         }
 
+        //Display and Sizing
+        padding-left: 25px;
 
-        .list-box {
-            margin-top: 5px;
+        //Other
+        cursor: pointer;
+      }
+
+      .list-box {
+        margin: $list-box-margin;
+        font-size: $phone-controls-font-size;
+        @include for-tablet-landscape-up {
+          font-size: $controls-font-size;
         }
+      }
 
-        .hidecontrols {
-            position: absolute;
-            top: 10px;
-            left: 345px;
-            padding-left: 25px;
-            cursor: pointer;
-            @include for-phone-only {
-                top: 5px;
-                left: $phone-controls-width - 55px;
-            }
-        }
-
-        h3 {
-            margin: 5px;
-            text-align: center;
-            @include for-phone-only {
-                margin: 0;
-                font-size: $phone-controls-font-size + 0.5rem;
-            }
-
-            a {
-                color: white;
-            }
-        }
+      .search-box {
+        margin-top: 10px;
+      }
     }
+  }
 }
 
-table.list-box {
-    th {
-        text-align: center;
-    }
-}
-
-.search-box {
-    margin-top: 10px;
+input {
+  margin-bottom: 5px;
 }

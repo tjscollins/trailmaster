@@ -1,20 +1,8 @@
-@mixin for-screen-max($width) {
-  @media only screen and (max-width: $width) {
-    @content;
-  }
-}
-
-@mixin for-screen-min($width) {
-  @media only screen and (min-width: $width) {
-    @content;
-  }
-}
-
 @function map-width($non-map-width) {
   @return 100%-$non-map-width;
 }
 
-@mixin transition($transition, $function, $delay) {
+@mixin custom-transition($transition, $function, $delay) {
   transition: $transition;
   transition-timing-function: $function;
   transition-delay:$delay;
