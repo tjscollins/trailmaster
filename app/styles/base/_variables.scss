@@ -1,24 +1,25 @@
-//Colors
-
-//Button Colors
-
-//Parameters
+/*----------Controls Variables----------*/
 $phone-controls-width: 275px;
 $phone-controls-font-size: 1rem;
 
 $controls-width: 400px;
 $controls-font-size: 1.5rem;
 
-$controls-border: none; //1px solid black;
+$controls-border: none;
 $controls-bg-color: #fbfbfb;
-$mapviewer-border: none;//1px solid black;
 
 $hide-ui-transition: left 0.5s, width 0.5s, height 0.5s;
 $hide-ui-transition-func: ease-in-out;
 $hide-ui-transition-delay: 0s;
 
+$list-box-margin: 25px 0px 0px 0px;
+
+
+/*----------Mapviewer Variables----------*/
+$mapviewer-border: none;
+
+/*----------Modal Variables----------*/
+//Login Variables
 $wrong-pword-trans: color 0.5s;
 $wrong-pword-func: ease-in-out;
-$wrong-pword-delay: 0.125s
-
-//Bootstrap Resets
+$wrong-pword-delay: 0.125s;

@@ -1,0 +1,18 @@
+.modal.fade {
+  overflow: auto;
+}
+
+#preview-map {
+  height: 300px;
+  width: 570px;
+}
+
+.wrong-password {
+  //Position
+  float: left;
+  //Display and Sizing
+  margin-left: 15px;
+  //Other
+  color: white;
+  @include custom-transition($wrong-pword-trans, $wrong-pword-func, $wrong-pword-delay)
+}

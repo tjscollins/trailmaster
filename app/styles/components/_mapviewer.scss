@@ -1,19 +1,20 @@
-div.mapviewer {
+div {
+  &.mapviewer {
+    //Position
     position: absolute;
     z-index: -1;
-    top: 0px;
+    top: 0;
     left: 0;
+
+    //Display and Sizing
     width: 100vw;
     height: 100vh;
+
+    //Other
     border: $mapviewer-border;
-    @include for-phone-only {
-
-    }
-    @include for-tablet-landscape-up {
-
-    }
 
     .mapboxgl-ctrl-top-right {
       top: 50px;
     }
+  }
 }
