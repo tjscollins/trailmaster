@@ -13,10 +13,7 @@ import * as actions from 'actions';
 class AddPOI extends BaseComponent {
   constructor() {
     super();
-    //this._bind(...local methods) from BaseComponent
-    this.submit = this
-      .submit
-      .bind(this);
+    this._bind('submit');
   }
   modal() {
     $('#add-poi-modal').modal('show');

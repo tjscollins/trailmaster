@@ -12,30 +12,6 @@ import * as actions from 'actions';
 class ListPOI extends BaseComponent {
   constructor() {
     super();
-    //this._bind(...local methods) from BaseComponent
-  }
-  listPoints() {
-    var {searchText, geoJSON} = this.props;
-    var {POISearchText} = searchText;
-    return geoJSON
-      .features
-      .filter((point) => {
-        return point.geometry.type === 'Point';
-      })
-      .map((point) => {
-        var id = point._id;
-        var {name, desc, condition, last} = point.properties;
-        return name.match(new RegExp(POISearchText, 'i'))
-          ? (
-            <tr onClick={this.display(id)} id={id} style={this.displayStyle(id)} className="point-of-interest" key={id}>
-              <td>{name}</td>
-              <td>{desc}</td>
-              <td>{condition}</td>
-              <td>{last}</td>
-            </tr>
-          )
-          : null;
-      });
   }
   display(id) {
     return () => {
@@ -62,6 +38,29 @@ class ListPOI extends BaseComponent {
         fontWeight: 'normal',
         cursor: 'pointer'
       };
+  }
+  listPoints() {
+    var {searchText, geoJSON} = this.props;
+    var {POISearchText} = searchText;
+    return geoJSON
+      .features
+      .filter((point) => {
+        return point.geometry.type === 'Point';
+      })
+      .map((point) => {
+        var id = point._id;
+        var {name, desc, condition, last} = point.properties;
+        return name.match(new RegExp(POISearchText, 'i'))
+          ? (
+            <tr onClick={this.display(id)} id={id} style={this.displayStyle(id)} className="point-of-interest" key={id}>
+              <td>{name}</td>
+              <td>{desc}</td>
+              <td>{condition}</td>
+              <td>{last}</td>
+            </tr>
+          )
+          : null;
+      });
   }
   render() {
     return (

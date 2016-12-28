@@ -15,13 +15,21 @@ import * as actions from 'actions';
 export class Import extends BaseComponent {
   constructor() {
     super();
-    this._bind('formChange');
+    this._bind('dataEntry', 'formChange', 'importData');
     this.state = {
       dataType: 'gpx',
       importedGeoJSON: {
         features: [{}]
       }
     };
+  }
+  dataEntry() {
+    var {data} = this.refs;
+    var dataDOM = new DOMParser().parseFromString(data.value);
+    var importedGeoJSON = this.state.dataType === 'kml'
+      ? toGeoJSON.kml(dataDOM)
+      : toGeoJSON.gpx(dataDOM);
+    this.setState({importedGeoJSON: importedGeoJSON});
   }
   formChange(e) {
     var {
@@ -51,14 +59,6 @@ export class Import extends BaseComponent {
       ]
     };
     this.setState({importedGeoJSON: newGeoJSON});
-  }
-  dataEntry() {
-    var {data} = this.refs;
-    var dataDOM = new DOMParser().parseFromString(data.value);
-    var importedGeoJSON = this.state.dataType === 'kml'
-      ? toGeoJSON.kml(dataDOM)
-      : toGeoJSON.gpx(dataDOM);
-    this.setState({importedGeoJSON: importedGeoJSON});
   }
   importData() {
     var {
@@ -126,15 +126,11 @@ export class Import extends BaseComponent {
             <div className="modal-body">
               <p>Instructions:</p>
               <p>Fill out name, description, and current known condition of the route. Paste the contents from your {/*KML or */}GPX file into the box below. Based on the map view of the route, you can delete/trim the series of GPS coordinates from your data until only the section you want remains</p>
-              <form onSubmit={this
-                .importData
-                .bind(this)} onChange={this.formChange} id="importform" ref="importform">
+              <form onSubmit={this.importData} onChange={this.formChange} id="importform" ref="importform">
                 <input className="form-control" ref="name" type="text" placeholder="Name"/>
                 <input className="form-control" ref="desc" type="text" placeholder="Description"/>
                 <input className="form-control" ref="cond" type="text" placeholder="Condition"/>
-                <textarea onChange={this
-                  .dataEntry
-                  .bind(this)} className="form-control" ref="data" rows="10" wrap="soft" required placeholder="Paste Route Data Here"/>
+                <textarea onChange={this.dataEntry} className="form-control" ref="data" rows="10" wrap="soft" required placeholder="Paste Route Data Here"/>
 
                 <div className="form-check">
                   <label className="form-check-label">
@@ -147,9 +143,7 @@ export class Import extends BaseComponent {
               </form>
             </div>
             <div className="modal-footer">
-              <button onClick={this
-                .importData
-                .bind(this)} type="submit" className="btn btn-secondary" data-dismiss="modal">Import</button>
+              <button onClick={this.importData} type="submit" className="btn btn-secondary" data-dismiss="modal">Import</button>
             </div>
           </div>
         </div>

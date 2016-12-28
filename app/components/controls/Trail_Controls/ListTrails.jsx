@@ -12,7 +12,32 @@ import * as actions from 'actions';
 class ListTrails extends BaseComponent {
   constructor() {
     super();
-    //this._bind(...local methods) from BaseComponent
+  }
+  componentWillReceiveProps(nextProps) {
+    var {userSession, dispatch, trails} = nextProps;
+    if (userSession.xAuth) {
+      //get trails
+      var getTrails = $.ajax({
+        url: 'trails',
+        type: 'get',
+        beforeSend: function(request) {
+          request.setRequestHeader('x-auth', userSession.xAuth);
+        }
+      });
+
+      getTrails.done((res, status, jqXHR) => {
+        var newTrails = JSON
+          .parse(jqXHR.responseText)
+          .trails;
+        if (newTrails.length !== trails.myTrails.length) {
+          dispatch(actions.displayTrails(newTrails));
+        }
+      });
+
+      getTrails.fail((jqXHR, status, err) => {
+        console.log(`Error retrieving user's trails ${err}`, jqXHR);
+      });
+    }
   }
   display(id) {
     var {dispatch, trails} = this.props;
@@ -21,7 +46,6 @@ class ListTrails extends BaseComponent {
       var trail = myTrails.filter((item) => {
         return item._id === id;
       });
-      // console.log(trail);
       if (trail.length > 0) {
         trail[0]
           .list
@@ -51,32 +75,6 @@ class ListTrails extends BaseComponent {
           )
           : null;
       });
-  }
-  componentWillReceiveProps(nextProps) {
-    var {userSession, dispatch, trails} = nextProps;
-    if (userSession.xAuth) {
-      //get trails
-      var getTrails = $.ajax({
-        url: 'trails',
-        type: 'get',
-        beforeSend: function(request) {
-          request.setRequestHeader('x-auth', userSession.xAuth);
-        }
-      });
-
-      getTrails.done((res, status, jqXHR) => {
-        var newTrails = JSON
-          .parse(jqXHR.responseText)
-          .trails;
-        if (newTrails.length !== trails.myTrails.length) {
-          dispatch(actions.displayTrails(newTrails));
-        }
-      });
-
-      getTrails.fail((jqXHR, status, err) => {
-        console.log(`Error retrieving user's trails ${err}`, jqXHR);
-      });
-    }
   }
   render() {
     return (
