@@ -10,7 +10,7 @@ import BaseComponent from 'BaseComponent';
 /*----------Redux----------*/
 import * as actions from 'actions';
 
-class AddRoutes extends BaseComponent {
+export class AddRoutes extends BaseComponent {
   constructor() {
     super();
     this._bind('tracking', 'stopTracking');

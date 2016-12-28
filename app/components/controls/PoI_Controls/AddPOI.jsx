@@ -10,7 +10,7 @@ import BaseComponent from 'BaseComponent';
 /*----------Redux----------*/
 import * as actions from 'actions';
 
-class AddPOI extends BaseComponent {
+export class AddPOI extends BaseComponent {
   constructor() {
     super();
     this._bind('submit');

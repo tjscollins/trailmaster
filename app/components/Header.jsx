@@ -78,6 +78,7 @@ export class Header extends BaseComponent {
     $('#login-modal').modal('show');
   }
   toggleAutoCenter() {
+    console.log('Click!');
     this
       .props
       .dispatch(actions.toggleMapCentering());
@@ -109,7 +110,7 @@ export class Header extends BaseComponent {
           </ul>
           <ul className="nav navbar-nav navbar-right">
             <li>
-              <a onClick={this.toggleAutoCenter} style={{
+              <a className="autocenter" onClick={this.toggleAutoCenter} style={{
                 cursor: 'pointer'
               }}>{autoCenter()}</a>
             </li>

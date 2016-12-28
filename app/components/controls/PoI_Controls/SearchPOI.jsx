@@ -8,7 +8,7 @@ import BaseComponent from 'BaseComponent';
 /*----------Redux Store----------*/
 import * as actions from 'actions';
 
-class SearchPOI extends BaseComponent {
+export class SearchPOI extends BaseComponent {
   constructor() {
     super();
   }

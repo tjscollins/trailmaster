@@ -12,7 +12,7 @@ import {month} from 'TrailmasterAPI';
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
 
-class AddTrails extends BaseComponent {
+export class AddTrails extends BaseComponent {
   constructor() {
     super();
     this._bind('submit', 'fillRoads');

@@ -9,7 +9,7 @@ import BaseComponent from 'BaseComponent';
 /*----------Redux----------*/
 import * as actions from 'actions';
 
-class ListTrails extends BaseComponent {
+export class ListTrails extends BaseComponent {
   constructor() {
     super();
   }

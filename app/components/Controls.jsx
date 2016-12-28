@@ -1,6 +1,5 @@
 /*----------Modules----------*/
 import React from 'react';
-import {connect} from 'react-redux';
 import $ from 'jquery';
 
 /*----------Components----------*/
@@ -21,7 +20,7 @@ export class Controls extends BaseComponent {
     super();
   }
   hide() {
-    if ($('.hidecontrols').hasClass('fa-arrow-left')) {
+    if ($('#hide-arrow').hasClass('fa-arrow-left')) {
       //hide UI
       $('div.controls').addClass('hide-left');
       $('.hidecontrols').removeClass('fa-arrow-left');
@@ -50,7 +49,7 @@ export class Controls extends BaseComponent {
                     &nbsp; Points of Interest
                   </a>
                 </h3>
-                <i onClick={this.hide} className="hidecontrols fa fa-2x fa-arrow-left" aria-hidden="true"/>
+                <i onClick={this.hide} id="hide-arrow" className="hidecontrols fa fa-2x fa-arrow-left" aria-hidden="true"/>
               </div>
 
               <div id="collapseOne" className="collapse in" role="tabpanel" aria-labelledby="headingOne">
@@ -121,4 +120,4 @@ export class Controls extends BaseComponent {
   }
 }
 
-export default connect(state => state)(Controls);
+export default Controls;

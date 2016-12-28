@@ -9,7 +9,7 @@ import BaseComponent from 'BaseComponent';
 /*----------Redux----------*/
 import * as actions from 'actions';
 
-class ListPOI extends BaseComponent {
+export class ListPOI extends BaseComponent {
   constructor() {
     super();
   }
