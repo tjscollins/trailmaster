@@ -6,7 +6,7 @@ import $ from 'jquery';
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
 
-class Tools extends BaseComponent {
+export class Tools extends BaseComponent {
   constructor() {
     super();
     //this._bind(...local methods) from BaseComponent
