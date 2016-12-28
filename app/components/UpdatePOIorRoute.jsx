@@ -9,7 +9,7 @@ import BaseComponent from 'BaseComponent';
 
 import * as actions from 'actions';
 
-class UpdatePOIorRoute extends BaseComponent {
+export class UpdatePOIorRoute extends BaseComponent {
   constructor() {
     super();
     //this._bind(...local methods) from BaseComponent
