@@ -3,6 +3,9 @@ import uuid from 'uuid';
 import $ from 'jquery';
 
 export var userSessionReducer = (state = {
+  xAuth: '',
+  email: '',
+  _id: '',
   visibleFeatures: []
 }, action) => {
   switch (action.type) {

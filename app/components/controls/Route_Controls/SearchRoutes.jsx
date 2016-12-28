@@ -8,7 +8,7 @@ import BaseComponent from 'BaseComponent';
 /*----------Redux Store----------*/
 import * as actions from 'actions';
 
-class SearchRoutes extends BaseComponent {
+export class SearchRoutes extends BaseComponent {
   constructor() {
     super();
   }

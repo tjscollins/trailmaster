@@ -8,7 +8,7 @@ import BaseComponent from 'BaseComponent';
 /*----------Redux----------*/
 import * as actions from 'actions';
 
-class ListRoutes extends BaseComponent {
+export class ListRoutes extends BaseComponent {
   constructor() {
     super();
   }

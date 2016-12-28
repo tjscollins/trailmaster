@@ -8,7 +8,7 @@ import BaseComponent from 'BaseComponent';
 /*----------Redux Store----------*/
 import * as actions from 'actions';
 
-class SearchTrails extends BaseComponent {
+export class SearchTrails extends BaseComponent {
   constructor() {
     super();
   }
