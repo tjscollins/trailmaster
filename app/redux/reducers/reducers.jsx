@@ -26,7 +26,8 @@ export var userSessionReducer = (state = {
       return {
         ...state,
         xAuth: '',
-        _id: ''
+        _id: '',
+        email: ''
       };
     case 'TOGGLE_VISIBILITY':
       return state
@@ -575,25 +576,4 @@ var month = (mo) => {
     default:
       return mo;
   }
-};
-
-var sendDataToServer = (route, data) => {
-  var xmlHTTP = new XMLHttpRequest();
-  xmlHTTP.open('POST', `/${route}`, false);
-  xmlHTTP.setRequestHeader('Content-type', 'application/json');
-  xmlHTTP.onload = () => {
-    console.log(xmlHTTP.responseText);
-  };
-  xmlHTTP.send(JSON.stringify(data));
-  return JSON.parse(xmlHTTP.responseText);
-};
-
-var modifyDataOnServer = (route, data) => {
-  var xmlHTTP = new XMLHttpRequest();
-  xmlHTTP.open('PATCH', `/${route}`, true);
-  xmlHTTP.setRequestHeader('Content-type', 'application/json');
-  xmlHTTP.onload = () => {
-    console.log(xmlHTTP.responseText);
-  };
-  xmlHTTP.send(JSON.stringify(data));
 };

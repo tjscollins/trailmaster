@@ -13,7 +13,6 @@ import * as actions from 'actions';
 export class Header extends BaseComponent {
   constructor() {
     super();
-    //this._bind(...local methods) from BaseComponent
     this._bind('disableAutoCenter', 'logout');
   }
   createAccount() {
@@ -29,12 +28,20 @@ export class Header extends BaseComponent {
   }
   logout() {
     var {dispatch, userSession} = this.props;
-    var xmlHTTP = new XMLHttpRequest();
-    xmlHTTP.open('DELETE', '/users/me/token', false);
-    xmlHTTP.setRequestHeader('x-auth', userSession.xAuth);
-    xmlHTTP.send(null);
-    dispatch(actions.logout());
-    dispatch(actions.clearTrails());
+    $.ajax({
+      url: '/users/me/token',
+      type: 'DELETE',
+      beforeSend: function(request) {
+        request.setRequestHeader('x-auth', userSession.xAuth);
+      },
+      success: function(result) {
+        dispatch(actions.logout());
+        dispatch(actions.clearTrails());
+      },
+      error: function(jqXHR, status, err) {
+        console.log(`Error logging out: ${err}`, jqXHR);
+      }
+    });
   }
   manageLogin() {
     var {userSession} = this.props;
@@ -66,7 +73,6 @@ export class Header extends BaseComponent {
       $('.hidecontrols').addClass('fa-arrow-right');
       $('#Header').addClass('minified-header');
       $('.headerhidecontrols').css('display', 'inline-block');
-      // $('.mapviewer').css('top', '0');
     } else {
       //show UI
       $('div.controls').removeClass('hide-left');
@@ -74,7 +80,6 @@ export class Header extends BaseComponent {
       $('.hidecontrols').addClass('fa-arrow-left');
       $('#Header').removeClass('minified-header');
       $('.headerhidecontrols').css('display', 'none');
-      // $('.mapviewer').css('top', '50px');
     }
   }
   render() {

@@ -2,7 +2,6 @@
 import React from 'react';
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
 import {connect} from 'react-redux';
-// import {createMap} from 'TrailmasterAPI';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
@@ -13,8 +12,9 @@ import * as actions from 'actions';
 export class MapViewer extends BaseComponent {
   constructor() {
     super();
+    this._bind('createMap');
     this.map = false;
-    this.layerIDs = []; // Will contain a list of layers to filter against.
+    this.layerIDs = [];
   }
   createMap(props) {
     //Passing props as arg to allow choice of nextProps or current props as appropriate
@@ -24,7 +24,7 @@ export class MapViewer extends BaseComponent {
     var layerIDs = [];
     var filterPOI = document.getElementById('poi-searchText');
     var filterRoutes = document.getElementById('routes-searchText');
-    mapboxgl.accessToken = 'pk.eyJ1IjoidGpzY29sbGlucyIsImEiOiJjaXdhZjl4b3AwM2h5MzNwbzZ0eDg0YWZsIn0.uR5NCLn73_X2M9PxDO_4KA';
+    mapboxgl.accessToken = this.props.map.accessToken;
     var map = new mapboxgl.Map({
       container: 'mapviewer',
       style: 'mapbox://styles/mapbox/outdoors-v9',
@@ -123,8 +123,6 @@ export class MapViewer extends BaseComponent {
                 'line-cap': 'round',
                 'visibility': 'none'
               };
-              // console.log('Creating map layer', layerID, layerType);
-              // console.log(`Creating map layer: ${layerID} label`, 'symbol');
               map.addLayer({
                 'id': `${layerID} label`,
                 'type': 'symbol',
@@ -246,7 +244,7 @@ export class MapViewer extends BaseComponent {
           if (this.shouldDisplay(name, searchPOI, nextProps) && layerIDs[i][1] === 'symbol') {
             map.setLayoutProperty(name, 'visibility', 'visible');
           } else if (this.shouldDisplay(name, searchRoutes, nextProps) && layerIDs[i][1] !== 'symbol') {
-            console.log('Displaying', name);
+            // console.log('Displaying', name);
             map.setLayoutProperty(name, 'visibility', 'visible');
             map.setLayoutProperty(name + ' label', 'visibility', 'visible');
           } else {
@@ -257,7 +255,7 @@ export class MapViewer extends BaseComponent {
           }
       });
     if (nextProps.map.update) {
-      console.log('Re-generating map');
+      // console.log('Re-generating map');
       map.remove();
       this.map = this.createMap(nextProps);
       dispatch(actions.completeUpdateMap());
