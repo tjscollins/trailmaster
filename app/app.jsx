@@ -32,6 +32,9 @@ const initialize = (geoJSON) => {
     return acc.concat(allObjects);
   }, []);
   const initialState = {
+    map: {
+      accessToken: 'pk.eyJ1IjoidGpzY29sbGlucyIsImEiOiJjaXdhZjl4b3AwM2h5MzNwbzZ0eDg0YWZsIn0.uR5NCLn73_X2M9PxDO_4KA'
+    },
     geoJSON: {
       type: 'FeatureCollection',
       features
@@ -46,7 +49,7 @@ const initialize = (geoJSON) => {
 
   //Initialize User Location Monitoring
   var processGeolocation = (pos) => {
-    console.log('Position found', pos);
+    // console.log('Position found', pos);
     store.dispatch(actions.updatePOS(pos));
     store.dispatch(actions.updateMap());
     if (store.getState().userLocation.trackingRoute)

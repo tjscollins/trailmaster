@@ -1,6 +1,7 @@
 /*----------Modules----------*/
 import React from 'react';
 import {connect} from 'react-redux';
+import $ from 'jquery';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
@@ -52,25 +53,29 @@ class ListTrails extends BaseComponent {
       });
   }
   componentWillReceiveProps(nextProps) {
-    // console.log('List Trails received new props');
     var {userSession, dispatch, trails} = nextProps;
-    // console.log('Old Trails', this.props.trails, 'New Trails', nextProps.trails);
-    var getData = (route, auth) => {
-      var xmlHTTP = new XMLHttpRequest();
-      xmlHTTP.open('GET', `/${route}`, false);
-      xmlHTTP.setRequestHeader('x-auth', auth);
-      xmlHTTP.send(null);
-      return xmlHTTP.responseText;
-    };
-
     if (userSession.xAuth) {
       //get trails
-      var newTrails = JSON
-        .parse(getData('trails', userSession.xAuth))
-        .trails;
-      if (newTrails.length !== trails.myTrails.length) {
-        dispatch(actions.displayTrails(newTrails));
-      }
+      var getTrails = $.ajax({
+        url: 'trails',
+        type: 'get',
+        beforeSend: function(request) {
+          request.setRequestHeader('x-auth', userSession.xAuth);
+        }
+      });
+
+      getTrails.done((res, status, jqXHR) => {
+        var newTrails = JSON
+          .parse(jqXHR.responseText)
+          .trails;
+        if (newTrails.length !== trails.myTrails.length) {
+          dispatch(actions.displayTrails(newTrails));
+        }
+      });
+
+      getTrails.fail((jqXHR, status, err) => {
+        console.log(`Error retrieving user's trails ${err}`, jqXHR);
+      });
     }
   }
   render() {

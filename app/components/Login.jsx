@@ -12,30 +12,29 @@ import * as actions from 'actions';
 export class Login extends BaseComponent {
   constructor() {
     super();
-    //this._bind(...local methods) from BaseComponent
-    this.login = this
-      .login
-      .bind(this);
-    this.create = this
-      .create
-      .bind(this);
+    this._bind('login', 'create');
     this.state = {
       wrongPassword: ''
     };
   }
   create() {
     var {dispatch} = this.props;
-    var xmlHTTP = new XMLHttpRequest();
-    xmlHTTP.open('POST', '/users', false);
-    xmlHTTP.setRequestHeader('Content-type', 'application/json');
-    xmlHTTP.send(JSON.stringify({email: this.refs.createEmail.value, password: this.refs.createPassword.value}));
+    var createAccountRequest = $.ajax({
+      url: '/users',
+      type: 'post',
+      beforeSend: function(request) {
+        request.setRequestHeader('Content-type', 'application/json');
+      },
+      data: JSON.stringify({email: this.refs.createEmail.value, password: this.refs.createPassword.value})
+    });
 
-    if (xmlHTTP.status === 200) {
-      // console.log('Successful account creation');
-      dispatch(actions.login(xmlHTTP.getResponseHeader('x-auth'), JSON.parse(xmlHTTP.responseText)._id, this.createEmail.value));
-    } else {
-      console.log('Error creating account', xmlHTTP);
-    }
+    createAccountRequest.done((res, status, jqXHR) => {
+      dispatch(actions.login(jqXHR.getResponseHeader('x-auth'), JSON.parse(jqXHR.responseText)._id, this.refs.createEmail.value));
+    });
+
+    createAccountRequest.fail((jqXHR, status, err) => {
+      console.log(`Error creating account: ${err}`, jqXHR);
+    });
   }
   forgotPassword() {
     $('#login-modal').modal('hide');
@@ -44,29 +43,30 @@ export class Login extends BaseComponent {
   login() {
     var {dispatch} = this.props;
     var {password, email} = this.refs;
-    var sendLoginRequest = (login) => {
-      var xmlHTTP = new XMLHttpRequest();
-      xmlHTTP.open('POST', '/users/login', false);
-      xmlHTTP.setRequestHeader('Content-type', 'application/json');
-      xmlHTTP.send(JSON.stringify(login));
-      return xmlHTTP;
-    };
-    var response = sendLoginRequest({email: email.value, password: password.value});
+    var loginRequest = $.ajax({
+      url: '/users/login',
+      type: 'post',
+      beforeSend: function(request) {
+        request.setRequestHeader('Content-type', 'application/json');
+      },
+      data: JSON.stringify({email: email.value, password: password.value})
+    });
 
-    if (response.status === 200) {
-      console.log('Successful login', response, response.getResponseHeader('x-auth'));
-      dispatch(actions.login(response.getResponseHeader('x-auth'), JSON.parse(response.responseText)._id, email.value));
+    loginRequest.done((res, status, jqXHR) => {
+      dispatch(actions.login(jqXHR.getResponseHeader('x-auth'), JSON.parse(jqXHR.responseText)._id, email.value));
       this.refs.email.value = '';
       this.refs.password.value = '';
       $('#login-modal').modal('hide');
       $('.wrong-password').css('color', 'white');
-    } else {
-      console.log('Login error', response);
+    });
+
+    loginRequest.fail((jqXHR, status, err) => {
+      console.log('Login error', jqXHR);
       $('.wrong-password').css('color', 'red');
       setTimeout(() => {
         $('.wrong-password').css('color', 'white');
       }, 1500);
-    }
+    });
   }
   render() {
     return (

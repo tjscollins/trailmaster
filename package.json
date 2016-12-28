@@ -28,6 +28,7 @@
     "url": "git@github.com:tjscollins/trailmaster.git"
   },
   "dependencies": {
+    "@mapbox/mapbox-gl-directions": "^3.0.3",
     "@mapbox/togeojson": "^0.16.0",
     "bcryptjs": "^2.4.0",
     "body-parser": "^1.15.2",
