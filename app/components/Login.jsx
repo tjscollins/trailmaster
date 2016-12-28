@@ -12,7 +12,7 @@ import * as actions from 'actions';
 export class Login extends BaseComponent {
   constructor() {
     super();
-    this._bind('login', 'create');
+    this._bind('create', 'login');
     this.state = {
       wrongPassword: ''
     };

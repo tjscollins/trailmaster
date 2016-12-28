@@ -19,7 +19,6 @@ import Tools from 'Tools';
 export class Controls extends BaseComponent {
   constructor() {
     super();
-    //this._bind(...local methods) from BaseComponent
   }
   hide() {
     if ($('.hidecontrols').hasClass('fa-arrow-left')) {
@@ -29,7 +28,6 @@ export class Controls extends BaseComponent {
       $('.hidecontrols').addClass('fa-arrow-right');
       $('#Header').addClass('minified-header');
       $('.headerhidecontrols').css('display', 'inline-block');
-      // $('.mapviewer').css('top', '0');
     } else {
       //show UI
       $('div.controls').removeClass('hide-left');
@@ -37,7 +35,6 @@ export class Controls extends BaseComponent {
       $('.hidecontrols').addClass('fa-arrow-left');
       $('#Header').removeClass('minified-header');
       $('.headerhidecontrols').css('display', 'none');
-      // $('.mapviewer').css('top', '50px');
     }
   }
   render() {

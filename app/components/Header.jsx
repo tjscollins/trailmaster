@@ -13,18 +13,24 @@ import * as actions from 'actions';
 export class Header extends BaseComponent {
   constructor() {
     super();
-    this._bind('disableAutoCenter', 'logout');
+    this._bind('logout', 'toggleAutoCenter');
   }
-  createAccount() {
-    $('#account-creator').modal('show');
-  }
-  disableAutoCenter() {
-    this
-      .props
-      .dispatch(actions.toggleMapCentering());
-  }
-  login() {
-    $('#login-modal').modal('show');
+  hide() {
+    if ($('.hidecontrols').hasClass('fa-arrow-left')) {
+      //hide UI
+      $('div.controls').addClass('hide-left');
+      $('.hidecontrols').removeClass('fa-arrow-left');
+      $('.hidecontrols').addClass('fa-arrow-right');
+      $('#Header').addClass('minified-header');
+      $('.headerhidecontrols').css('display', 'inline-block');
+    } else {
+      //show UI
+      $('div.controls').removeClass('hide-left');
+      $('.hidecontrols').removeClass('fa-arrow-right');
+      $('.hidecontrols').addClass('fa-arrow-left');
+      $('#Header').removeClass('minified-header');
+      $('.headerhidecontrols').css('display', 'none');
+    }
   }
   logout() {
     var {dispatch, userSession} = this.props;
@@ -43,7 +49,7 @@ export class Header extends BaseComponent {
       }
     });
   }
-  manageLogin() {
+  manageLoginDisplay() {
     var {userSession} = this.props;
     return userSession.xAuth
       ? [(
@@ -57,30 +63,24 @@ export class Header extends BaseComponent {
         )]
       : [(
           <li key={uuid()}>
-            <a href="#" onClick={this.createAccount}>Create Account</a>
+            <a href="#" onClick={this.showAccountCreator}>Create Account</a>
           </li>
         ), (
           <li key={uuid()}>
-            <a href="#" onClick={this.login}>Sign-in</a>
+            <a href="#" onClick={this.showLogin}>Sign-in</a>
           </li>
         )];
   }
-  hide() {
-    if ($('.hidecontrols').hasClass('fa-arrow-left')) {
-      //hide UI
-      $('div.controls').addClass('hide-left');
-      $('.hidecontrols').removeClass('fa-arrow-left');
-      $('.hidecontrols').addClass('fa-arrow-right');
-      $('#Header').addClass('minified-header');
-      $('.headerhidecontrols').css('display', 'inline-block');
-    } else {
-      //show UI
-      $('div.controls').removeClass('hide-left');
-      $('.hidecontrols').removeClass('fa-arrow-right');
-      $('.hidecontrols').addClass('fa-arrow-left');
-      $('#Header').removeClass('minified-header');
-      $('.headerhidecontrols').css('display', 'none');
-    }
+  showAccountCreator() {
+    $('#account-creator').modal('show');
+  }
+  showLogin() {
+    $('#login-modal').modal('show');
+  }
+  toggleAutoCenter() {
+    this
+      .props
+      .dispatch(actions.toggleMapCentering());
   }
   render() {
     var {userLocation} = this.props;
@@ -105,11 +105,11 @@ export class Header extends BaseComponent {
 
         <div className="collapse navbar-collapse" id="navbarui">
           <ul className="nav navbar-nav navbar-left">
-            {this.manageLogin()}
+            {this.manageLoginDisplay()}
           </ul>
           <ul className="nav navbar-nav navbar-right">
             <li>
-              <a onClick={this.disableAutoCenter} style={{
+              <a onClick={this.toggleAutoCenter} style={{
                 cursor: 'pointer'
               }}>{autoCenter()}</a>
             </li>

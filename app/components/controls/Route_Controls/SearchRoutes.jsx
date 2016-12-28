@@ -11,7 +11,6 @@ import * as actions from 'actions';
 class SearchRoutes extends BaseComponent {
   constructor() {
     super();
-    //this._bind(...local methods) from BaseComponent
   }
   render() {
     var {dispatch} = this.props;

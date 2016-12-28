@@ -13,30 +13,16 @@ import * as actions from 'actions';
 class AddRoutes extends BaseComponent {
   constructor() {
     super();
-    //this._bind(...local methods) from BaseComponent
-    this.tracking = this
-      .tracking
-      .bind(this);
-    this.stopTracking = this
-      .stopTracking
-      .bind(this);
+    this._bind('tracking', 'stopTracking');
   }
   modal() {
     $('#add-route-modal').modal('show');
   }
-  tracking() {
-    console.log('Started Tracking');
-    var {dispatch} = this.props;
-    dispatch(actions.trackRoute());
-    $('#tracking-modal').modal('show');
-  }
   stopTracking() {
-    console.log('Stopped Tracking');
     var {dispatch, userLocation} = this.props;
     var {name, desc, cond} = this.refs;
     var date = new Date();
     dispatch(actions.stopTrackingRoute());
-    console.log('Adding Route', name.value, userLocation.routeList);
     if (userLocation.routeList.length > 0) {
       var newFeature = {
         type: 'Feature',
@@ -71,6 +57,11 @@ class AddRoutes extends BaseComponent {
     } else {
       console.error('No Route added due to lack of routeList');
     }
+  }
+  tracking() {
+    var {dispatch} = this.props;
+    dispatch(actions.trackRoute());
+    $('#tracking-modal').modal('show');
   }
   render() {
     return (

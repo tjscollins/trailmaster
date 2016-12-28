@@ -15,11 +15,31 @@ import BaseComponent from 'BaseComponent';
 class AddTrails extends BaseComponent {
   constructor() {
     super();
-    //this._bind(...local methods) from BaseComponent
     this._bind('submit', 'fillRoads');
   }
-  saveTrail() {
-    $('#save-trail-modal').modal('show');
+  currentTrail() {
+    var {geoJSON, userSession} = this.props;
+    return geoJSON
+      .features
+      .filter((point) => {
+        return userSession
+          .visibleFeatures
+          .indexOf(point._id) > -1;
+      })
+      .map((point) => {
+        var id = point._id;
+        var {name, desc, condition, last} = point.properties;
+        return (
+          <tr onClick={this.remove(id)} id={id} className="point-of-interest" key={id} style={{
+            cursor: 'pointer'
+          }}>
+            <td>{name}</td>
+            <td>{desc}</td>
+            <td>{condition}</td>
+            <td>{last}</td>
+          </tr>
+        );
+      });
   }
   fillRoads(trail) {
     //Assume sorted in order -- need UI mechanism to do this
@@ -46,8 +66,16 @@ class AddTrails extends BaseComponent {
 
     //Return new list
   }
+  remove(id) {
+    var {dispatch} = this.props;
+    return () => {
+      dispatch(actions.toggleVisibility(id));
+    };
+  }
+  saveTrail() {
+    $('#save-trail-modal').modal('show');
+  }
   submit() {
-    // console.log('Submitting New Trail!');
     var {dispatch, geoJSON, userSession} = this.props;
     var {xAuth} = userSession;
     var {name, desc} = this.refs;
@@ -89,43 +117,13 @@ class AddTrails extends BaseComponent {
         error: (jqXHR, status, err) => {
           console.log(`Error fetching new trail: ${err}`, jqXHR);
         }
-      })
+      });
     });
 
     send.fail((jqXHR, status, err) => {
       console.log(`Error saving new trail: ${err}`, jqXHR);
     });
 
-  }
-  remove(id) {
-    var {dispatch} = this.props;
-    return () => {
-      dispatch(actions.toggleVisibility(id));
-    };
-  }
-  currentTrail() {
-    var {geoJSON, userSession} = this.props;
-    return geoJSON
-      .features
-      .filter((point) => {
-        return userSession
-          .visibleFeatures
-          .indexOf(point._id) > -1;
-      })
-      .map((point) => {
-        var id = point._id;
-        var {name, desc, condition, last} = point.properties;
-        return (
-          <tr onClick={this.remove(id)} id={id} className="point-of-interest" key={id} style={{
-            cursor: 'pointer'
-          }}>
-            <td>{name}</td>
-            <td>{desc}</td>
-            <td>{condition}</td>
-            <td>{last}</td>
-          </tr>
-        );
-      });
   }
   render() {
     return (

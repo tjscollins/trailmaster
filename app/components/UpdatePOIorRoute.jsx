@@ -23,16 +23,17 @@ class UpdatePOIorRoute extends BaseComponent {
       deletes: []
     };
   }
-  isRoute() {
-    var {point} = this.state;
-    if (point) {
-      return point.geometry.type === 'Point'
-        ? {
-          display: 'none'
-        }
-        : {}
-    };
-    return {};
+  deleteLast() {
+    this.setState({del: 'last'});
+  }
+  deleteFirst() {
+    this.setState({del: 'first'});
+  }
+  deleteTen() {
+    this.setState({deleteN: 10});
+  }
+  deleteHund() {
+    this.setState({deleteN: 100});
   }
   formChange() {
     this.setState({
@@ -74,17 +75,38 @@ class UpdatePOIorRoute extends BaseComponent {
     });
 
   }
-  deleteLast() {
-    this.setState({del: 'last'});
+  isRoute() {
+    var {point} = this.state;
+    if (point) {
+      return point.geometry.type === 'Point'
+        ? {
+          display: 'none'
+        }
+        : {};
+    }
+    return {};
   }
-  deleteFirst() {
-    this.setState({del: 'first'});
-  }
-  deleteTen() {
-    this.setState({deleteN: 10});
-  }
-  deleteHund() {
-    this.setState({deleteN: 100});
+  listData() {
+    var {searchText, geoJSON} = this.props;
+    var {updateSearchText} = searchText;
+    return geoJSON
+      .features
+      .map((point) => {
+        var id = point._id;
+        var {name, desc, condition, last} = point.properties;
+        return name.match(new RegExp(updateSearchText, 'i'))
+          ? (
+            <tr onClick={this.select(point, id)} id={id} style={{
+              cursor: 'pointer'
+            }} className="point-of-interest" key={id}>
+              <td>{name}</td>
+              <td>{desc}</td>
+              <td>{condition}</td>
+              <td>{last}</td>
+            </tr>
+          )
+          : null;
+      });
   }
   quickDelete(e) {
     e.preventDefault();
@@ -126,6 +148,19 @@ class UpdatePOIorRoute extends BaseComponent {
       });
     }
   }
+  select(point, id) {
+    return () => {
+      this.setState({id: id, point: point});
+      $('#select-poi-route').modal('hide');
+      $('#update-poi-route').modal('show');
+    };
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    //Don't re-render whole component when Preview Map updates
+    var {map} = this.state;
+    var shouldUpdate = (map === nextState.map);
+    return shouldUpdate;
+  }
   undoDelete(e) {
     e.preventDefault();
     var {deletes, point} = this.state;
@@ -160,41 +195,6 @@ class UpdatePOIorRoute extends BaseComponent {
       });
     }
   }
-  listData() {
-    var {searchText, geoJSON} = this.props;
-    var {updateSearchText} = searchText;
-    return geoJSON
-      .features
-      .map((point) => {
-        var id = point._id;
-        var {name, desc, condition, last} = point.properties;
-        return name.match(new RegExp(updateSearchText, 'i'))
-          ? (
-            <tr onClick={this.select(point, id)} id={id} style={{
-              cursor: 'pointer'
-            }} className="point-of-interest" key={id}>
-              <td>{name}</td>
-              <td>{desc}</td>
-              <td>{condition}</td>
-              <td>{last}</td>
-            </tr>
-          )
-          : null;
-      });
-  }
-  select(point, id) {
-    return () => {
-      this.setState({id: id, point: point});
-      $('#select-poi-route').modal('hide');
-      $('#update-poi-route').modal('show');
-    };
-  }
-  shouldComponentUpdate(nextProps, nextState) {
-    //Don't re-render whole component when Preview Map updates
-    var {map, point} = this.state;
-    var shouldUpdate = (map === nextState.map);
-    return shouldUpdate;
-  }
   render() {
     var {dispatch} = this.props;
     var {point} = this.state;
@@ -202,8 +202,12 @@ class UpdatePOIorRoute extends BaseComponent {
       var {properties, geometry} = point;
       var {name, desc, condition} = properties;
       mapboxgl.accessToken = 'pk.eyJ1IjoidGpzY29sbGlucyIsImEiOiJjaXdhZjl4b3AwM2h5MzNwbzZ0eDg0YWZsIn0.uR5NCLn73_X2M9PxDO_4KA';
-      if (this.state.map !== null)
-        this.state.map.remove();
+      if (this.state.map !== null) {
+        this
+          .state
+          .map
+          .remove();
+      }
       var map = new mapboxgl.Map({
         container: 'preview-map',
         style: 'mapbox://styles/mapbox/outdoors-v9',
@@ -331,19 +335,19 @@ class UpdatePOIorRoute extends BaseComponent {
 
                 <form onChange={this.formChange} id="updateform" ref="updateform" className="form-horizontal">
                   <div className="form-group">
-                    <label for="name" className="col-xs-2 control-label">Name</label>
+                    <label htmlFor="name" className="col-xs-2 control-label">Name</label>
                     <div className="col-xs-10">
                       <input className="form-control" id="name" ref="name" type="text" value={name}/>
                     </div>
                   </div>
                   <div className="form-group ">
-                    <label for="desc" className="col-xs-2 control-label">Description</label>
+                    <label htmlFor="desc" className="col-xs-2 control-label">Description</label>
                     <div className="col-xs-10">
                       <input className="form-control" id="desc" ref="desc" type="text" value={desc}/>
                     </div>
                   </div>
                   <div className="form-group">
-                    <label for="cond" className="col-xs-2 control-label">Condition</label>
+                    <label htmlFor="cond" className="col-xs-2 control-label">Condition</label>
                     <div className="col-xs-10">
                       <input className="form-control" id="cond" ref="cond" type="text" value={condition}/>
                     </div>
@@ -396,7 +400,7 @@ class UpdatePOIorRoute extends BaseComponent {
                   </div>
                 </form>
 
-                <div id="preview-map"></div>
+                <div id="preview-map"/>
               </div>
               <div className="modal-footer">
                 <button className="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -412,4 +416,4 @@ class UpdatePOIorRoute extends BaseComponent {
   }
 }
 
-export default connect(state => state)(UpdatePOIorRoute);;
+export default connect(state => state)(UpdatePOIorRoute);

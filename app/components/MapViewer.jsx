@@ -13,13 +13,16 @@ export class MapViewer extends BaseComponent {
   constructor() {
     super();
     this._bind('createMap');
+    this.state = {
+      map: false,
+      layerIDs: []
+    };
     this.map = false;
     this.layerIDs = [];
   }
   createMap(props) {
     //Passing props as arg to allow choice of nextProps or current props as appropriate
     var self = this;
-    var {layerIDs} = this;
     var {geoJSON, userLocation} = props;
     var layerIDs = [];
     var filterPOI = document.getElementById('poi-searchText');
@@ -212,8 +215,8 @@ export class MapViewer extends BaseComponent {
         });
       });
     });
-    this.layerIDs = layerIDs;
-    return map;
+    this.setState({map, layerIDs});
+    // return map;
   }
   shouldDisplay(layerName, search, props) {
     //Props should be passed in here to allow selection between current or nextProps as appropriate
@@ -229,7 +232,7 @@ export class MapViewer extends BaseComponent {
   }
   componentWillReceiveProps(nextProps) {
     var {dispatch, searchText} = nextProps;
-    var {map, layerIDs} = this;
+    var {map, layerIDs} = this.state;
     var searchPOI = new RegExp(searchText.POISearchText || '!!!!!!', 'i');
     var searchRoutes = new RegExp(searchText.RoutesSearchText || '!!!!!!', 'i');
     nextProps
@@ -257,15 +260,14 @@ export class MapViewer extends BaseComponent {
     if (nextProps.map.update) {
       // console.log('Re-generating map');
       map.remove();
-      this.map = this.createMap(nextProps);
+      this.createMap(nextProps);
       dispatch(actions.completeUpdateMap());
     } else if (nextProps.userLocation.mapCentering) {
-      // var oldLong = this.props.userLocation.coords.longitude
-      // var oldLat = this.props.userLocation.coords.latitude
       var newLong = nextProps.userLocation.coords.longitude;
       var newLat = nextProps.userLocation.coords.latitude;
       setTimeout(() => {
         this
+          .state
           .map
           .getSource('user')
           .setData({
@@ -289,6 +291,7 @@ export class MapViewer extends BaseComponent {
 
         //is New Position on Visible Map?
         var bounds = this
+          .state
           .map
           .getBounds();
         var swLng = bounds._sw.lng,
@@ -315,7 +318,7 @@ export class MapViewer extends BaseComponent {
   }
   componentDidMount() {
     var {dispatch} = this.props;
-    this.map = this.map || this.createMap(this.props);
+    this.state.map || this.createMap(this.props);
   }
   render() {
     return (<div id="mapviewer" className="mapviewer"/>);

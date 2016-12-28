@@ -11,30 +11,6 @@ import * as actions from 'actions';
 class ListRoutes extends BaseComponent {
   constructor() {
     super();
-    //this._bind(...local methods) from BaseComponent
-  }
-  listRoutes() {
-    var {geoJSON} = this.props;
-    var {RoutesSearchText} = this.props.searchText;
-    return geoJSON
-      .features
-      .filter((point) => {
-        return point.geometry.type === 'LineString';
-      })
-      .map((point) => {
-        var id = point._id;
-        var {name, desc, condition, last} = point.properties;
-        return name.match(new RegExp(RoutesSearchText, 'i'))
-          ? (
-            <tr onClick={this.display(id)} id={id} style={this.displayStyle(id)} className="routes" key={id}>
-              <td>{name}</td>
-              <td>{desc}</td>
-              <td>{condition}</td>
-              <td>{last}</td>
-            </tr>
-          )
-          : null;
-      });
   }
   display(id) {
     //Display point on map
@@ -61,6 +37,29 @@ class ListRoutes extends BaseComponent {
         fontWeight: 'normal',
         cursor: 'pointer'
       };
+  }
+  listRoutes() {
+    var {geoJSON} = this.props;
+    var {RoutesSearchText} = this.props.searchText;
+    return geoJSON
+      .features
+      .filter((point) => {
+        return point.geometry.type === 'LineString';
+      })
+      .map((point) => {
+        var id = point._id;
+        var {name, desc, condition, last} = point.properties;
+        return name.match(new RegExp(RoutesSearchText, 'i'))
+          ? (
+            <tr onClick={this.display(id)} id={id} style={this.displayStyle(id)} className="routes" key={id}>
+              <td>{name}</td>
+              <td>{desc}</td>
+              <td>{condition}</td>
+              <td>{last}</td>
+            </tr>
+          )
+          : null;
+      });
   }
   render() {
     return (
