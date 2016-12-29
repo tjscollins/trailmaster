@@ -78,7 +78,6 @@ export class Header extends BaseComponent {
     $('#login-modal').modal('show');
   }
   toggleAutoCenter() {
-    console.log('Click!');
     this
       .props
       .dispatch(actions.toggleMapCentering());
