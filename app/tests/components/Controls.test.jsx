@@ -8,6 +8,7 @@ import ReactTestUtils from 'react-addons-test-utils';
 import {Provider} from 'react-redux';
 import {configure} from 'configureStore';
 import $ from 'jquery';
+var jQuery = $;
 
 /*----------Components----------*/
 import {Controls} from 'Controls';
@@ -26,24 +27,6 @@ import {Tools} from 'Tools';
 describe('Controls', () => {
   it('should exist', () => {
     expect(Controls).toExist();
-  });
-
-  it('should call HIDE method when the hide-arrow is clicked', () => {
-    var hideStub = sinon.stub(Controls.prototype, 'hide');
-    var store = configure({});
-    var provider = ReactTestUtils.renderIntoDocument(
-      <Provider store={store}><Controls/></Provider>
-    );
-    var controls = ReactTestUtils.scryRenderedComponentsWithType(provider, Controls)[0];
-    var hideArrow = ReactTestUtils.scryRenderedDOMComponentsWithClass(controls, 'fa-arrow-left')[0];
-
-    ReactTestUtils
-      .Simulate
-      .click(hideArrow);
-
-    sinon
-      .assert
-      .called(hideStub);
   });
 
   it('should render all controls components', () => {
@@ -77,4 +60,35 @@ describe('Controls', () => {
 
     expect(tools.length).toBe(1);
   });
+
+  it('should call Controls.hide method when the hide-arrow is clicked', () => {
+    var hideStub = sinon.stub(Controls.prototype, 'hide');
+    var store = configure({});
+    var provider = ReactTestUtils.renderIntoDocument(
+      <Provider store={store}><Controls/></Provider>
+    );
+    var hideArrow = ReactTestUtils.scryRenderedDOMComponentsWithClass(provider, 'fa-arrow-left')[0];
+    ReactTestUtils
+      .Simulate
+      .click(hideArrow);
+    sinon
+      .assert
+      .called(hideStub);
+    hideStub.restore();
+  });
+
+  // describe('Controls.hide()', () => {
+  //   it('should change the classes on #hide-arrow', () => {
+  //     //How to Mock jquery so this is testable?
+  //
+  //     var store = configure({});
+  //     var provider = ReactTestUtils.renderIntoDocument(
+  //       <Provider store={store}><Controls/></Provider>
+  //     );
+  //     var controls = ReactTestUtils.scryRenderedComponentsWithType(provider, Controls)[0];
+  //     controls.hide();
+  //     var div = ReactTestUtils.scryRenderedDOMComponentsWithClass(controls, 'controls')[0];
+  //     expect($(div).hasClass('hide-left')).toBe(true);
+  //   });
+  // });
 });

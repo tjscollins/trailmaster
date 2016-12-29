@@ -20,7 +20,9 @@ export class Controls extends BaseComponent {
     super();
   }
   hide() {
+    console.log('Controls.hide called');
     if ($('#hide-arrow').hasClass('fa-arrow-left')) {
+      console.log('Controls.hide() hiding');
       //hide UI
       $('div.controls').addClass('hide-left');
       $('.hidecontrols').removeClass('fa-arrow-left');
@@ -28,6 +30,7 @@ export class Controls extends BaseComponent {
       $('#Header').addClass('minified-header');
       $('.headerhidecontrols').css('display', 'inline-block');
     } else {
+      console.log('Controls.hide() revealing');
       //show UI
       $('div.controls').removeClass('hide-left');
       $('.hidecontrols').removeClass('fa-arrow-right');
