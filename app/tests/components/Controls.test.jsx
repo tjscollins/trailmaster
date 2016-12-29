@@ -1,4 +1,4 @@
-/*global describe it*/
+/*global describe it sinon*/
 
 /*----------Modules----------*/
 import expect from 'expect';
@@ -28,25 +28,23 @@ describe('Controls', () => {
     expect(Controls).toExist();
   });
 
-  // it('should HIDE when the hide-arrow is clicked', () => {
-  // var store = configure({});
-  // var provider = ReactTestUtils.renderIntoDocument(
-  //   <Provider store={store}><Controls/></Provider>
-  // );
-  // var controls = ReactTestUtils.scryRenderedComponentsWithType(provider, Controls)[0];
-  // var hideArrow = ReactTestUtils.scryRenderedDOMComponentsWithClass(controls, 'fa-arrow-left')[0];
-  //
-  // ReactTestUtils
-  //   .Simulate
-  //   .click(hideArrow);
-  //
-  // var unHideArrow = ReactTestUtils.scryRenderedDOMComponentsWithClass(controls, 'fa-arrow-right')[0];
-  // expect(unHideArrow).toExist();
-  // });
+  it('should call HIDE method when the hide-arrow is clicked', () => {
+    var hideStub = sinon.stub(Controls.prototype, 'hide');
+    var store = configure({});
+    var provider = ReactTestUtils.renderIntoDocument(
+      <Provider store={store}><Controls/></Provider>
+    );
+    var controls = ReactTestUtils.scryRenderedComponentsWithType(provider, Controls)[0];
+    var hideArrow = ReactTestUtils.scryRenderedDOMComponentsWithClass(controls, 'fa-arrow-left')[0];
 
-  // it('should UN-HIDE when the reveal-arrow is clicked', () => {
-  //   //
-  // });
+    ReactTestUtils
+      .Simulate
+      .click(hideArrow);
+
+    sinon
+      .assert
+      .called(hideStub);
+  });
 
   it('should render all controls components', () => {
     var store = configure({});
@@ -63,6 +61,7 @@ describe('Controls', () => {
     var addTrails = ReactTestUtils.scryRenderedComponentsWithType(controls, AddTrails);
     var listTrails = ReactTestUtils.scryRenderedComponentsWithType(controls, ListTrails);
     var searchTrails = ReactTestUtils.scryRenderedComponentsWithType(controls, SearchTrails);
+    var tools = ReactTestUtils.scryRenderedComponentsWithType(controls, Tools);
 
     expect(addPOI.length).toBe(1);
     expect(listPOI.length).toBe(1);
@@ -75,5 +74,7 @@ describe('Controls', () => {
     expect(addTrails.length).toBe(1);
     expect(listTrails.length).toBe(1);
     expect(searchTrails.length).toBe(1);
+
+    expect(tools.length).toBe(1);
   });
 });
