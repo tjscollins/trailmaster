@@ -22,7 +22,7 @@ module.exports = {
       .optimize
       .UglifyJsPlugin({
         compressor: {
-          warnings: false
+          warnings: true
         }
       })
   ],
