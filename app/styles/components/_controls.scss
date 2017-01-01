@@ -33,6 +33,20 @@ div {
       overflow: hidden;
     }
 
+    .current-trail-header {
+      text-align: center;
+      margin-bottom: -20px;
+    }
+
+    .delete-trail {
+      margin-top: 5px;
+    }
+
+    .list-trail-header {
+      @extend .current-trail-header;
+      margin-top: 25px;
+    }
+
     .panel {
       // Positioning
       // Display and Sizing

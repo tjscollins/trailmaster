@@ -95,6 +95,7 @@ export class Controls extends BaseComponent {
               <div id="collapseThree" className="collapse" role="tabpanel" aria-labelledby="headingThree">
                 <div className="panel-body control-panel">
                   <AddTrails/>
+                  <hr></hr>
                   <SearchTrails/>
                   <ListTrails/>
                 </div>

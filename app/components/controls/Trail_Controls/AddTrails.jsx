@@ -129,9 +129,10 @@ export class AddTrails extends BaseComponent {
     return (
       <div>
         <button onClick={this.saveTrail} className="btn btn-info form-control" type="submit">
-          Save Current Trail
+          Save Currently Displayed Trail
         </button>
-        <h4>Current Trail Includes:</h4>
+        <br/><br/>
+        <h4 className="current-trail-header">Currently Displayed Trail</h4>
         <table className="list-box table table-striped">
           <thead>
             <tr>
@@ -168,7 +169,7 @@ export class AddTrails extends BaseComponent {
                 </form>
               </div>
               <div className="modal-footer">
-                <button onClick={this.submit} type="submit" className="btn btn-secondary" data-dismiss="modal">Save Trail</button>
+                <button onClick={this.submit} type="submit" className="btn btn-primary" data-dismiss="modal">Save Trail</button>
               </div>
             </div>
           </div>

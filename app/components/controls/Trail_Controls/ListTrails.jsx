@@ -71,29 +71,56 @@ export class ListTrails extends BaseComponent {
               <td>{name}</td>
               <td>{desc}</td>
               <td>{date}</td>
+              <td>
+                <button className="btn btn-danger delete-trail" onClick={this.markForDelete(_id)}>
+                  <i className="fa fa-trash"></i>
+                </button>
+              </td>
             </tr>
           )
           : null;
       });
   }
+  markForDelete(id) {
+    var {userSession} = this.props;
+    return () => {
+      if (!userSession.xAuth) {
+        alert('You must sign-in in order to delete trails');
+        return;
+      }
+      if (confirm('Are you sure you want to delete this trail?')) {
+        $
+          .ajax({url: `/trails/${id}`, type: 'delete',})
+          .done((data) => {
+            window
+              .location
+              .reload(true);
+          });
+      }
+    };
+  }
   render() {
     return (
-      <table className="list-box table table-striped">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>
-              Description
-            </th>
-            <th>
-              Date Created
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {this.listTrails()}
-        </tbody>
-      </table>
+      <div>
+        <h4 className="list-trail-header">Your Saved Trails</h4>
+        <table className="list-box table table-striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>
+                Description
+              </th>
+              <th>
+                Date Created
+              </th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.listTrails()}
+          </tbody>
+        </table>
+      </div>
     );
   }
 }

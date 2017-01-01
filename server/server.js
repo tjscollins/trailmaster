@@ -53,7 +53,6 @@ app.post('/users', (req, res) => {
         .send(e);
     });
 });
-
 app.patch('/users/password', (req, res) => {
   var body = _.pick(req.body, ['email', 'password',]);
   bcrypt
@@ -73,7 +72,6 @@ app.patch('/users/password', (req, res) => {
       res.redirect(303, '/');
     });
 });
-
 app.get('/users/me', authenticate, (req, res) => {
   res.send(req.user);
 });
@@ -283,7 +281,6 @@ app.post('/routes', (req, res) => {
         .send(e);
     });
 });
-
 app.delete('/routes/:id', (req, res) => {
   var id = req.params.id;
   if (!ObjectID.isValid(id)) {
@@ -366,6 +363,30 @@ app.post('/trails', authenticate, (req, res) => {
       res
         .status(400)
         .send(e);
+    });
+});
+app.delete('/trails/:id', (req, res) => {
+  var id = req.params.id;
+  if (!ObjectID.isValid(id)) {
+    return res
+      .status(404)
+      .send();
+  }
+
+  trailModel
+    .findByIdAndRemove(id)
+    .then((trail) => {
+      if (!trail) {
+        return res
+          .status(404)
+          .send();
+      }
+      res.send(trail);
+    })
+    .catch((e) => {
+      res
+        .status(400)
+        .send();
     });
 });
 

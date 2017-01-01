@@ -433,7 +433,6 @@ describe('POST /trails', () => {
       });
   });
 });
-
 describe('GET /trails', () => {
 
   it('should GET all Trails', (done) => {
@@ -444,6 +443,46 @@ describe('GET /trails', () => {
       .expect((res) => {
         expect(res.body.trails.length).toBe(trails.length);
       })
+      .end(done);
+  });
+});
+describe('DELETE /trails/:id', () => {
+  it('should remove a trail', (done) => {
+    var hexId = trails[0]
+      ._id
+      .toHexString();
+
+    request(app)
+      .delete(`/trails/${hexId}`)
+      .expect(200)
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        }
+
+        trailModel
+          .findById(hexId)
+          .then((trail) => {
+            expect(trail).toNotExist();
+            done();
+          })
+          .catch((e) => done(e));
+      });
+  });
+
+  it('should return 404 if trail not found', (done) => {
+    var hexId = new ObjectID().toHexString();
+
+    request(app)
+      .delete(`/trails/${hexId}`)
+      .expect(404)
+      .end(done);
+  });
+
+  it('should return 404 if trail id is invalid', (done) => {
+    request(app)
+      .delete('/trails/123abc')
+      .expect(404)
       .end(done);
   });
 });

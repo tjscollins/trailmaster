@@ -116,8 +116,6 @@ export class UpdatePOIorRoute extends BaseComponent {
     var type = this.state.point.geometry.type === 'Point'
       ? 'pois'
       : 'routes';
-    console.log('Click!');
-    console.log('Marking: ', id);
     if (!userSession.xAuth) {
       alert('You must sign-in in order to delete items');
       return;
