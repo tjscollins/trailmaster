@@ -70,10 +70,10 @@ export class UpdatePOIorRoute extends BaseComponent {
       dataType: 'json',
       data: JSON.stringify(this.state.point)
     }).done((data) => {
-      dispatch(actions.updateGeoJSON(this.state.point));
-      dispatch(actions.updateMap());
+      window.location.reload(true);
+      // dispatch(actions.updateGeoJSON(this.state.point));
+      // dispatch(actions.updateMap());
     });
-
   }
   isRoute() {
     var {point} = this.state;

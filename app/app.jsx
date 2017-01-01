@@ -16,7 +16,7 @@ import MainContainer from 'MainContainer';
 /*----------Configure Redux Store----------*/
 Promise.all([
   $.get('/routes'),
-  $.get('/pois')
+  $.get('/pois'),
 ]).then(res => {
   initialize(res);
 }).catch(err => {
@@ -27,7 +27,12 @@ const initialize = (geoJSON) => {
   var features = geoJSON.reduce((acc, curr) => {
     var allObjects = [];
     for (var array in curr) {
-      allObjects = allObjects.concat(curr[array]);
+      // Guarding against geoJSON data with
+      // invalid coordinates by filtering it out
+      // Need a proper validator function
+      if (curr[array][0].geometry.coordinates.length > 1) {
+        allObjects = allObjects.concat(curr[array]);
+      }
     }
     return acc.concat(allObjects);
   }, []);
@@ -37,12 +42,12 @@ const initialize = (geoJSON) => {
     },
     geoJSON: {
       type: 'FeatureCollection',
-      features
+      features,
     },
     userSession: {
       ...JSON.parse(sessionStorage.getItem('trailmaster-login')),
-      visibleFeatures: []
-    }
+      visibleFeatures: [],
+    },
   };
 
   var store = configure(initialState);
@@ -67,7 +72,7 @@ const initialize = (geoJSON) => {
     geolocationError, {
       timeout: 60000,
       enableHighAccuracy: true,
-      maximumAge: Infinity
+      maximumAge: Infinity,
     });
 
   ReactDOM.render(

@@ -1,7 +1,7 @@
 require('./config/config');
 
-const fs = require('fs');
-const https = require('https');
+// const fs = require('fs');
+// const https = require('https');
 const express = require('express');
 const bodyParser = require('body-parser');
 const _ = require('lodash');
@@ -27,14 +27,14 @@ app.use(bodyParser.json());
 
 app.get('*', function(req, res, next) {
   if (process.env.NODE_ENV === 'production' && req.headers['x-forwarded-proto'] !== 'https') {
-    res.redirect('https://' + req.host + req.url)
+    res.redirect('https://' + req.host + req.url);
   } else {
-    next()/* Continue to other routes if we're not redirecting */
+    next();/* Continue to other routes if we're not redirecting */
   }
 });
 
 app.post('/users', (req, res) => {
-  var body = _.pick(req.body, ['email', 'password']);
+  var body = _.pick(req.body, ['email', 'password',]);
   var user = new userModel(body);
 
   user
@@ -55,7 +55,7 @@ app.post('/users', (req, res) => {
 });
 
 app.patch('/users/password', (req, res) => {
-  var body = _.pick(req.body, ['email', 'password']);
+  var body = _.pick(req.body, ['email', 'password',]);
   bcrypt
     .hash(body.password, 10)
     .then(hash => {
@@ -78,7 +78,7 @@ app.get('/users/me', authenticate, (req, res) => {
   res.send(req.user);
 });
 app.post('/users/login', (req, res) => {
-  var body = _.pick(req.body, ['email', 'password']);
+  var body = _.pick(req.body, ['email', 'password',]);
 
   userModel
     .findByCredentials(body.email, body.password)
@@ -177,7 +177,7 @@ app.get('/users/reset/:reqID-:email', (req, res) => {
       }
       userModel.update({
         email: email
-      }, {resetRequests: remainingRequests}).then((user) => {
+      }, {resetRequests: remainingRequests}).then((person) => {
         // console.log(user);
       });
     });
@@ -241,7 +241,11 @@ app.patch('/pois/:id', (req, res) => {
 
   poiModel.findByIdAndUpdate(id, {
     $set: req.body
-  }, {new: true}).then((point) => {
+  }, {
+    new: true,
+    runValidators: true,
+    setDefaultsOnInsert: true
+  }).then((point) => {
     if (!point) {
       return res
         .status(404)
@@ -315,7 +319,11 @@ app.patch('/routes/:id', (req, res) => {
 
   routeModel.findByIdAndUpdate(id, {
     $set: req.body
-  }, {new: true}).then((point) => {
+  }, {
+    new: true,
+    runValidators: true,
+    setDefaultsOnInsert: true
+  }).then((point) => {
     if (!point) {
       return res
         .status(404)

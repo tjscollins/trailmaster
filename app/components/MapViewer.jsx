@@ -88,11 +88,7 @@ export class MapViewer extends BaseComponent {
       //Try loading desired data....
 
       //Points of Interest & Labels
-      var points = geoJSON.features.filter(p => {
-        // Guarding against geoJSON data with
-        // invalid coordinates by filtering it out
-        return p.geometry.coordinates.length > 1;
-      });
+      var points = geoJSON.features;
       map.addSource('store', {
         'type': 'geojson',
         'data': {
