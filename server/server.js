@@ -227,7 +227,7 @@ app.delete('/pois/:id', (req, res) => {
     .catch((e) => {
       res
         .status(400)
-        .send();
+        .send(e);
     });
 });
 app.patch('/pois/:id', (req, res) => {

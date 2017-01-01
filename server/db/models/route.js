@@ -64,7 +64,7 @@ var routeSchema = new mongoose.Schema({
 routeSchema.statics.markForDelete = function(_id) {
   var ROUTE = this;
   return ROUTE.findOne({_id}).then(route => {
-    console.log('Looking to mark', route, ' for delete');
+    if (!route) return null;
     return route.update({
       $set: {
         delete: true

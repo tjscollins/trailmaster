@@ -130,9 +130,10 @@ describe('DELETE /pois/:id', () => {
     request(app)
       .delete(`/pois/${hexId}`)
       .expect(200)
-      .expect((res) => {
-        expect(res.body._id).toBe(hexId);
-      })
+      // .expect((res) => {
+      //   console.log('Response from DELETE pois', res.body);
+      //   expect(res.body._id).toBe(hexId);
+      // })
       .end((err, res) => {
         if (err) {
           return done(err);
@@ -141,7 +142,7 @@ describe('DELETE /pois/:id', () => {
         poiModel
           .findById(hexId)
           .then((poi) => {
-            expect(poi).toNotExist();
+            expect(poi.delete).toBe(true);
             done();
           })
           .catch((e) => done(e));
@@ -293,6 +294,48 @@ describe('GET /routes', () => {
       .end(done);
   });
 });
+
+describe('DELETE /routes/:id', () => {
+  it('should remove a route', (done) => {
+    var hexId = routes[0]
+      ._id
+      .toHexString();
+
+    request(app)
+      .delete(`/routes/${hexId}`)
+      .expect(200)
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        }
+
+        routeModel
+          .findById(hexId)
+          .then((route) => {
+            expect(route.delete).toBe(true);
+            done();
+          })
+          .catch((e) => done(e));
+      });
+  });
+
+  it('should return 404 if route not found', (done) => {
+    var hexId = new ObjectID().toHexString();
+
+    request(app)
+      .delete(`/routes/${hexId}`)
+      .expect(404)
+      .end(done);
+  });
+
+  it('should return 404 if object id is invalid', (done) => {
+    request(app)
+      .delete('/routes/123abc')
+      .expect(404)
+      .end(done);
+  });
+});
+
 
 describe('POST /trails', () => {
   it('should create a new Trail', (done) => {

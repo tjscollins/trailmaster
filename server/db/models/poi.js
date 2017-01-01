@@ -62,7 +62,7 @@ var poiSchema = new mongoose.Schema({
 poiSchema.statics.markForDelete = function(_id) {
   var POI = this;
   return POI.findOne({_id}).then(poi => {
-    console.log('Looking to mark', poi, ' for delete');
+    if (!poi) return null;
     return poi.update({
       $set: {
         delete: true
