@@ -9,21 +9,21 @@ module.exports = {
   },
   plugins: [
     new webpack.ProvidePlugin({'$': 'jquery', 'jQuery': 'jquery', 'jquery': 'jquery'}),
-    // new webpack
-    //   .optimize
-    //   .OccurenceOrderPlugin(),
-    // new webpack.DefinePlugin({
-    //   'process.env': {
-    //     'NODE_ENV': JSON.stringify('production')
-    //   }
-    // }),
-    // new webpack
-    //   .optimize
-    //   .UglifyJsPlugin({
-    //     compressor: {
-    //       warnings: false
-    //     }
-    //   })
+    new webpack
+      .optimize
+      .OccurenceOrderPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify('production')
+      }
+    }),
+    new webpack
+      .optimize
+      .UglifyJsPlugin({
+        compressor: {
+          warnings: false
+        }
+      })
   ],
   output: {
     path: __dirname,
@@ -67,5 +67,5 @@ module.exports = {
       }
     ]
   },
-  devtool: 'eval-source-map'
+  // devtool: 'eval-source-map'
 };
