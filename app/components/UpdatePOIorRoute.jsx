@@ -20,7 +20,7 @@ export class UpdatePOIorRoute extends BaseComponent {
       map: null,
       del: 'first',
       deleteN: 10,
-      deletes: []
+      deletes: [],
     };
   }
   deleteLast() {
@@ -41,14 +41,14 @@ export class UpdatePOIorRoute extends BaseComponent {
         ...this.state.point,
         geometry: {
           ...this.state.point.geometry,
-          coordinates: JSON.parse(this.refs.geometry.value)
+          coordinates: JSON.parse(this.refs.geometry.value),
         },
         properties: {
           ...this.state.point.properties,
           name: this.refs.name.value,
           desc: this.refs.desc.value,
-          condition: this.refs.cond.value
-        }
+          condition: this.refs.cond.value,
+        },
       }
     });
   }
@@ -68,7 +68,7 @@ export class UpdatePOIorRoute extends BaseComponent {
         'Content-type': 'application/json'
       },
       dataType: 'json',
-      data: JSON.stringify(this.state.point)
+      data: JSON.stringify(this.state.point),
     }).done((data) => {
       window
         .location
@@ -89,13 +89,13 @@ export class UpdatePOIorRoute extends BaseComponent {
     return {};
   }
   listData() {
-    var {searchText, geoJSON} = this.props;
+    var {searchText, geoJSON,} = this.props;
     var {updateSearchText} = searchText;
     return geoJSON
       .features
       .map((point) => {
         var id = point._id;
-        var {name, desc, condition, last} = point.properties;
+        var {name, desc, condition, last,} = point.properties;
         return name.match(new RegExp(updateSearchText, 'i'))
           ? (
             <tr onClick={this.select(point, id)} id={id} style={{
@@ -112,25 +112,29 @@ export class UpdatePOIorRoute extends BaseComponent {
   }
   markForDelete() {
     var {id} = this.state;
+    var {userSession} = this.props;
     var type = this.state.point.geometry.type === 'Point'
       ? 'pois'
       : 'routes';
     console.log('Click!');
     console.log('Marking: ', id);
+    if (!userSession.xAuth) {
+      alert('You must sign-in in order to delete items');
+      return;
+    }
     if (confirm('Are you sure you want to delete this item?')) {
-      $.ajax({
-        url: `/${type}/${id}`,
-        type: 'delete'
-      }).done((data) => {
-        window
-          .location
-          .reload(true);
-      });
+      $
+        .ajax({url: `/${type}/${id}`, type: 'delete',})
+        .done((data) => {
+          window
+            .location
+            .reload(true);
+        });
     }
   }
   quickDelete(e) {
     e.preventDefault();
-    var {del, deleteN, point} = this.state;
+    var {del, deleteN, point,} = this.state;
     var {coordinates} = point.geometry;
     if (del === 'first') {
       var newCoords = coordinates.slice(deleteN);
@@ -139,15 +143,15 @@ export class UpdatePOIorRoute extends BaseComponent {
           ...this.state.point,
           geometry: {
             ...point.geometry,
-            coordinates: newCoords
-          }
+            coordinates: newCoords,
+          },
         },
         deletes: [
           ...this.state.deletes, {
             side: 'first',
-            coords: coordinates.slice(0, deleteN)
+            coords: coordinates.slice(0, deleteN),
           },
-        ]
+        ],
       });
     } else if (del === 'last') {
       var newCoords = coordinates.slice(0, coordinates.length - deleteN);
@@ -156,21 +160,21 @@ export class UpdatePOIorRoute extends BaseComponent {
           ...this.state.point,
           geometry: {
             ...point.geometry,
-            coordinates: newCoords
-          }
+            coordinates: newCoords,
+          },
         },
         deletes: [
           ...this.state.deletes, {
             side: 'last',
-            coords: coordinates.slice(coordinates.length - deleteN)
+            coords: coordinates.slice(coordinates.length - deleteN),
           },
-        ]
+        ],
       });
     }
   }
   select(point, id) {
     return () => {
-      this.setState({id: id, point: point});
+      this.setState({id: id, point: point,});
       $('#select-poi-route').modal('hide');
       $('#update-poi-route').modal('show');
     };
@@ -183,7 +187,7 @@ export class UpdatePOIorRoute extends BaseComponent {
   }
   undoDelete(e) {
     e.preventDefault();
-    var {deletes, point} = this.state;
+    var {deletes, point,} = this.state;
     var mostRecent = deletes.pop();
     if (mostRecent.side === 'first') {
       this.setState({
@@ -194,10 +198,10 @@ export class UpdatePOIorRoute extends BaseComponent {
             coordinates: [
               ...mostRecent.coords,
               ...point.geometry.coordinates,
-            ]
-          }
+            ],
+          },
         },
-        deletes
+        deletes,
       });
     } else if (mostRecent.side === 'last') {
       this.setState({
@@ -208,10 +212,10 @@ export class UpdatePOIorRoute extends BaseComponent {
             coordinates: [
               ...point.geometry.coordinates,
               ...mostRecent.coords,
-            ]
-          }
+            ],
+          },
         },
-        deletes
+        deletes,
       });
     }
   }
@@ -219,8 +223,8 @@ export class UpdatePOIorRoute extends BaseComponent {
     var {dispatch} = this.props;
     var {point} = this.state;
     if (point) {
-      var {properties, geometry} = point;
-      var {name, desc, condition} = properties;
+      var {properties, geometry,} = point;
+      var {name, desc, condition,} = properties;
       mapboxgl.accessToken = 'pk.eyJ1IjoidGpzY29sbGlucyIsImEiOiJjaXdhZjl4b3AwM2h5MzNwbzZ0eDg0YWZsIn0.uR5NCLn73_X2M9PxDO_4KA';
       if (this.state.map !== null) {
         this
@@ -236,7 +240,7 @@ export class UpdatePOIorRoute extends BaseComponent {
           : [...geometry.coordinates[0]],
         zoom: 12,
         hash: false,
-        interactive: true
+        interactive: true,
       });
 
       map.on('load', () => {
@@ -245,8 +249,8 @@ export class UpdatePOIorRoute extends BaseComponent {
           type: 'geojson',
           data: {
             type: 'FeatureCollection',
-            features: [point]
-          }
+            features: [point],
+          },
         });
         switch (point.geometry.type) {
           case 'Point':
@@ -261,14 +265,14 @@ export class UpdatePOIorRoute extends BaseComponent {
               'text-offset': [
                 0, 0.6,
               ],
-              'text-anchor': 'top'
+              'text-anchor': 'top',
             };
             break;
           case 'LineString':
             var layerType = 'line';
             var layout = {
               'line-join': 'round',
-              'line-cap': 'round'
+              'line-cap': 'round',
             };
             map.addLayer({
               'id': 'preview label',
@@ -283,14 +287,14 @@ export class UpdatePOIorRoute extends BaseComponent {
                 'text-offset': [
                   0, 0.6,
                 ],
-                'text-anchor': 'top'
-              }
+                'text-anchor': 'top',
+              },
             });
             break;
           default:
             throw new Error(`Unknown feature type ${layerType}`);
         }
-        map.addLayer({'id': 'preview', 'type': layerType, 'source': 'preview', 'layout': layout});
+        map.addLayer({'id': 'preview', 'type': layerType, 'source': 'preview', 'layout': layout,});
         this.setState({map});
       });
     }
@@ -379,7 +383,7 @@ export class UpdatePOIorRoute extends BaseComponent {
                     <div className="col-xs-8">
                       <textarea id="edit-json-coordinates" className="form-control col-xs-8" ref="geometry" rows="10" wrap="soft" required value={JSON.stringify(geometry
                         ? geometry.coordinates
-                      : null, null, 2)}/>
+                        : null, null, 2)}/>
                     </div>
 
                     <div style={this.isRoute()} className="col-xs-4">
