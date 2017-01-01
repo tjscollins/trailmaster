@@ -165,3 +165,9 @@ export var month = (mo) => {
       return mo;
   }
 };
+
+export var validateServerData = (data) => {
+  if (data.geometry.coordinates.length <= 1) return false;
+  if (data.delete) return false;
+  return true;
+};

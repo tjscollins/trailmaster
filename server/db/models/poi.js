@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
-
-var poiModel = mongoose.model('POI', new mongoose.Schema({
+var poiSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
@@ -56,8 +55,23 @@ var poiModel = mongoose.model('POI', new mongoose.Schema({
         message: '{VALUE} is not a valid GPS coordinate'
       }
     }
-  }
-}));
+  },
+  delete: Boolean
+});
+
+poiSchema.statics.markForDelete = function(_id) {
+  var POI = this;
+  return POI.findOne({_id}).then(poi => {
+    console.log('Looking to mark', poi, ' for delete');
+    return poi.update({
+      $set: {
+        delete: true
+      }
+    });
+  });
+};
+
+var poiModel = mongoose.model('POI', poiSchema);
 
 module.exports = {
   poiModel

@@ -10,6 +10,9 @@ import * as actions from 'actions';
 /*----------Modules----------*/
 import $ from 'jquery';
 
+/*----------API Functions----------*/
+import {validateServerData} from 'TrailmasterAPI';
+
 /*----------Components----------*/
 import MainContainer from 'MainContainer';
 
@@ -20,18 +23,18 @@ Promise.all([
 ]).then(res => {
   initialize(res);
 }).catch(err => {
-  console.log('Error fetching data', err);
+  console.error('Error fetching data', err);
 });
 
 const initialize = (geoJSON) => {
-  var features = geoJSON.reduce((acc, curr) => {
+  var features = geoJSON.reduce((acc, currentObject) => {
     var allObjects = [];
-    for (var array in curr) {
-      // Guarding against geoJSON data with
-      // invalid coordinates by filtering it out
-      // Need a proper validator function
-      if (curr[array][0].geometry.coordinates.length > 1) {
-        allObjects = allObjects.concat(curr[array]);
+    for (var key in currentObject) {
+      // Validate Server Data BEFORE loading it into Redux Store
+      if (Array.isArray(currentObject[key])) {
+        currentObject[key].forEach((item) => {
+          if (validateServerData(item)) allObjects.push(item);
+        });
       }
     }
     return acc.concat(allObjects);

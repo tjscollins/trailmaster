@@ -38,7 +38,7 @@ module.exports = {
     "react/prop-types": 1,
     "react/react-in-jsx-scope": 1,
     "react/require-extension": 1,
-    "react/self-closing-comp": 1,
+    "react/self-closing-comp": 0,
     "react/sort-comp": 1,
     "react/wrap-multilines": 1,
 
@@ -74,7 +74,7 @@ module.exports = {
     "block-scoped-var": 0, // treat var statements as if they were block scoped (off by default)
     "complexity": 0, // specify the maximum cyclomatic complexity allowed in a program (off by default)
     "consistent-return": 0, // require return statements to either always or never specify values
-    "curly": 1, // specify curly brace conventions for all control statements
+    "curly": "off", // specify curly brace conventions for all control statements
     "default-case": 0, // require default case in switch statements (off by default)
     "dot-notation": 1, // encourages use of dot notation whenever possible
     "eqeqeq": 1, // require the use of === and !==

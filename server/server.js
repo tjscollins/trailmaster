@@ -215,7 +215,7 @@ app.delete('/pois/:id', (req, res) => {
   }
 
   poiModel
-    .findByIdAndRemove(id)
+    .markForDelete(id)
     .then((point) => {
       if (!point) {
         return res
@@ -293,7 +293,7 @@ app.delete('/routes/:id', (req, res) => {
   }
 
   routeModel
-    .findByIdAndRemove(id)
+    .markForDelete(id)
     .then((point) => {
       if (!point) {
         return res

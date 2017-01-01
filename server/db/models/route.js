@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var routeModel = mongoose.model('Route', new mongoose.Schema({
+var routeSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
@@ -57,8 +57,23 @@ var routeModel = mongoose.model('Route', new mongoose.Schema({
         message: '{VALUE} is not a valid set of GPS coordinates'
       }
     }
-  }
-}));
+  },
+  delete: Boolean
+});
+
+routeSchema.statics.markForDelete = function(_id) {
+  var ROUTE = this;
+  return ROUTE.findOne({_id}).then(route => {
+    console.log('Looking to mark', route, ' for delete');
+    return route.update({
+      $set: {
+        delete: true
+      }
+    });
+  });
+};
+
+var routeModel = mongoose.model('Route', routeSchema);
 
 module.exports = {
   routeModel

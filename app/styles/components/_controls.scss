@@ -4,7 +4,6 @@ div {
     position: absolute;
     top: 50px;
     left: 0;
-
     // Display and Sizing
     overflow: auto;
     @include for-phone-only {
@@ -19,7 +18,6 @@ div {
       width: $controls-width;
       height: 95vh;
     }
-
     //  Other
     background-color: $controls-bg-color;
     border: $controls-border;
@@ -31,17 +29,14 @@ div {
       @include for-tablet-landscape-up {
         left: -$controls-width;
       }
-
       // Display and Sizing
       overflow: hidden;
     }
 
     .panel {
       // Positioning
-
       // Display and Sizing
       margin: 0;
-
       // Other
       border: none;
 
@@ -51,14 +46,12 @@ div {
 
         h3.controls-title {
           // Positioning
-
           // Display and Sizing
           margin: 5px;
           @include for-phone-only {
             margin: 0;
             font-size: $phone-controls-font-size + 0.5rem;
           }
-
           // Other
           text-align: left;
 
@@ -77,10 +70,8 @@ div {
           top: 5px;
           left: $phone-controls-width - 55px;
         }
-
         //Display and Sizing
         padding-left: 25px;
-
         //Other
         cursor: pointer;
       }

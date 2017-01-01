@@ -13,7 +13,7 @@ export class UpdatePOIorRoute extends BaseComponent {
   constructor() {
     super();
     //this._bind(...local methods) from BaseComponent
-    this._bind('formChange', 'deleteLast', 'deleteFirst', 'deleteTen', 'deleteHund', 'quickDelete', 'undoDelete', 'isRoute');
+    this._bind('formChange', 'deleteLast', 'deleteFirst', 'deleteTen', 'deleteHund', 'quickDelete', 'undoDelete', 'isRoute', 'markForDelete');
     this.state = {
       id: null,
       point: null,
@@ -70,7 +70,9 @@ export class UpdatePOIorRoute extends BaseComponent {
       dataType: 'json',
       data: JSON.stringify(this.state.point)
     }).done((data) => {
-      window.location.reload(true);
+      window
+        .location
+        .reload(true);
       // dispatch(actions.updateGeoJSON(this.state.point));
       // dispatch(actions.updateMap());
     });
@@ -108,6 +110,24 @@ export class UpdatePOIorRoute extends BaseComponent {
           : null;
       });
   }
+  markForDelete() {
+    var {id} = this.state;
+    var type = this.state.point.geometry.type === 'Point'
+      ? 'pois'
+      : 'routes';
+    console.log('Click!');
+    console.log('Marking: ', id);
+    if (confirm('Are you sure you want to delete this item?')) {
+      $.ajax({
+        url: `/${type}/${id}`,
+        type: 'delete'
+      }).done((data) => {
+        window
+          .location
+          .reload(true);
+      });
+    }
+  }
   quickDelete(e) {
     e.preventDefault();
     var {del, deleteN, point} = this.state;
@@ -126,7 +146,7 @@ export class UpdatePOIorRoute extends BaseComponent {
           ...this.state.deletes, {
             side: 'first',
             coords: coordinates.slice(0, deleteN)
-          }
+          },
         ]
       });
     } else if (del === 'last') {
@@ -143,7 +163,7 @@ export class UpdatePOIorRoute extends BaseComponent {
           ...this.state.deletes, {
             side: 'last',
             coords: coordinates.slice(coordinates.length - deleteN)
-          }
+          },
         ]
       });
     }
@@ -173,7 +193,7 @@ export class UpdatePOIorRoute extends BaseComponent {
             ...point.geometry,
             coordinates: [
               ...mostRecent.coords,
-              ...point.geometry.coordinates
+              ...point.geometry.coordinates,
             ]
           }
         },
@@ -187,7 +207,7 @@ export class UpdatePOIorRoute extends BaseComponent {
             ...point.geometry,
             coordinates: [
               ...point.geometry.coordinates,
-              ...mostRecent.coords
+              ...mostRecent.coords,
             ]
           }
         },
@@ -235,11 +255,11 @@ export class UpdatePOIorRoute extends BaseComponent {
               'icon-image': 'marker-15',
               'text-field': '{name}',
               'text-font': [
-                'Open Sans Regular', 'Arial Unicode MS Regular'
+                'Open Sans Regular', 'Arial Unicode MS Regular',
               ],
               'text-size': 10,
               'text-offset': [
-                0, 0.6
+                0, 0.6,
               ],
               'text-anchor': 'top'
             };
@@ -257,11 +277,11 @@ export class UpdatePOIorRoute extends BaseComponent {
               'layout': {
                 'text-field': '{name}',
                 'text-font': [
-                  'Open Sans Regular', 'Arial Unicode MS Regular'
+                  'Open Sans Regular', 'Arial Unicode MS Regular',
                 ],
                 'text-size': 10,
                 'text-offset': [
-                  0, 0.6
+                  0, 0.6,
                 ],
                 'text-anchor': 'top'
               }
@@ -327,6 +347,9 @@ export class UpdatePOIorRoute extends BaseComponent {
                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
+                <button className="btn btn-danger delete-feature" onClick={this.markForDelete}>
+                  <i className="fa fa-trash"></i>
+                </button>
                 <h4 className="modal-title">Update POI or Route</h4>
               </div>
               <div className="modal-body">
@@ -356,7 +379,7 @@ export class UpdatePOIorRoute extends BaseComponent {
                     <div className="col-xs-8">
                       <textarea id="edit-json-coordinates" className="form-control col-xs-8" ref="geometry" rows="10" wrap="soft" required value={JSON.stringify(geometry
                         ? geometry.coordinates
-                        : null, null, 2)}/>
+                      : null, null, 2)}/>
                     </div>
 
                     <div style={this.isRoute()} className="col-xs-4">
@@ -400,7 +423,7 @@ export class UpdatePOIorRoute extends BaseComponent {
                   </div>
                 </form>
 
-                <div id="preview-map"/>
+                <div id="preview-map"></div>
               </div>
               <div className="modal-footer">
                 <button className="btn btn-secondary" data-dismiss="modal">Cancel</button>

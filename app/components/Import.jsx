@@ -20,7 +20,7 @@ export class Import extends BaseComponent {
       dataType: 'gpx',
       importedGeoJSON: {
         features: [{}]
-      }
+      },
     };
   }
   dataEntry() {
@@ -36,7 +36,7 @@ export class Import extends BaseComponent {
       name, desc, cond,
       // data,
       gpx,
-      kml
+      kml,
     } = this.refs;
     var {features} = this.state.importedGeoJSON;
     if (Object.keys(features[0]).length === 0)
@@ -53,10 +53,10 @@ export class Import extends BaseComponent {
             ...features[0].properties,
             name: name.value,
             desc: desc.value,
-            cond: cond.value
-          }
+            cond: cond.value,
+          },
         }
-      ]
+      ],
     };
     this.setState({importedGeoJSON: newGeoJSON});
   }
@@ -65,7 +65,7 @@ export class Import extends BaseComponent {
       name, desc, cond,
       // data,
       // gpx,
-      // kml
+      // kml,
     } = this.refs;
     var {dispatch} = this.props;
     var routeList = this
@@ -77,7 +77,7 @@ export class Import extends BaseComponent {
       .map((point) => {
         return [
           point[0] - 360,
-          point[1]
+          point[1],
         ];
       });
     var date = new Date();
@@ -91,12 +91,12 @@ export class Import extends BaseComponent {
         desc: desc.value,
         condition: cond.value,
         last: `${month(date.getMonth())} ${date.getFullYear()}`,
-        displayed: false
+        displayed: false,
       },
       geometry: {
         type: 'LineString',
-        coordinates: [...routeList]
-      }
+        coordinates: [...routeList],
+      },
     };
     $.ajax({
       url: '/routes',
@@ -105,10 +105,14 @@ export class Import extends BaseComponent {
         'Content-type': 'application/json'
       },
       dataType: 'json',
-      data: JSON.stringify(newFeature)
+      data: JSON.stringify(newFeature),
     }).done((data) => {
       dispatch(actions.addRoute(data));
       dispatch(actions.updateMap());
+      this.refs.name.value = '';
+      this.refs.desc.value = '';
+      this.refs.cond.value = '';
+      this.refs.data.value = '';
     });
   }
   render() {
