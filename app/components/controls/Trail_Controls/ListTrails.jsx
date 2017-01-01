@@ -67,11 +67,11 @@ export class ListTrails extends BaseComponent {
         var {name, desc, date, _id} = trail;
         return name.match(new RegExp(trailSearchText, 'i'))
           ? (
-            <tr onClick={this.display(_id)} id={_id} style={this.displayStyle(_id)} className="point-of-interest" key={_id}>
-              <td>{name}</td>
-              <td>{desc}</td>
-              <td>{date}</td>
-              <td>
+            <tr id={_id} style={this.displayStyle(_id)} className="point-of-interest" key={_id}>
+              <td onClick={this.display(_id)} >{name}</td>
+              <td onClick={this.display(_id)} >{desc}</td>
+              <td onClick={this.display(_id)} >{date}</td>
+              <td style={{cursor: 'default'}}>
                 <button className="btn btn-danger delete-trail" onClick={this.markForDelete(_id)}>
                   <i className="fa fa-trash"></i>
                 </button>
@@ -83,7 +83,7 @@ export class ListTrails extends BaseComponent {
   }
   markForDelete(id) {
     var {userSession} = this.props;
-    return () => {
+    return (e) => {
       if (!userSession.xAuth) {
         alert('You must sign-in in order to delete trails');
         return;
@@ -92,9 +92,6 @@ export class ListTrails extends BaseComponent {
         $
           .ajax({url: `/trails/${id}`, type: 'delete',})
           .done((data) => {
-            window
-              .location
-              .reload(true);
           });
       }
     };

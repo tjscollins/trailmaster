@@ -329,6 +329,7 @@ app.patch('/routes/:id', (req, res) => {
 
     res.send(point);
   }).catch((e) => {
+    console.log('Bad PATCH request: ', req.body);
     res
       .status(400)
       .send();

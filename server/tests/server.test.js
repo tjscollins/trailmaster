@@ -107,7 +107,6 @@ describe('POST /pois', () => {
       });
   });
 });
-
 describe('GET /pois', () => {
   it('should get all POIs', (done) => {
     request(app)
@@ -120,7 +119,6 @@ describe('GET /pois', () => {
       .end(done);
   });
 });
-
 describe('DELETE /pois/:id', () => {
   it('should remove a poi', (done) => {
     var hexId = pois[1]
@@ -165,7 +163,6 @@ describe('DELETE /pois/:id', () => {
       .end(done);
   });
 });
-
 describe('PATCH /pois/:id', () => {
   it('should update the poi', (done) => {
     var hexId = pois[0]
@@ -281,7 +278,6 @@ describe('POST /routes', () => {
       });
   });
 });
-
 describe('GET /routes', () => {
   it('should get all ROUTES', (done) => {
     request(app)
@@ -294,7 +290,6 @@ describe('GET /routes', () => {
       .end(done);
   });
 });
-
 describe('DELETE /routes/:id', () => {
   it('should remove a route', (done) => {
     var hexId = routes[0]
@@ -335,7 +330,26 @@ describe('DELETE /routes/:id', () => {
       .end(done);
   });
 });
+describe('PATCH /routes/:id', () => {
+  it('should update the route', (done) => {
+    var hexId = routes[0]
+      ._id
+      .toHexString();
+    const newGeometry = Object.assign({}, routes[0].geometry, {
+      coordinates: [[100, -25], [100, -26], [99, -26], [99, -27]]
+    });
+    const newRoute = Object.assign({}, routes[0], {geometry: newGeometry});
 
+    request(app)
+      .patch(`/routes/${hexId}`)
+      .send(newRoute)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.geometry.coordinates).toEqual([[100, -25], [100, -26], [99, -26], [99, -27]]);
+      })
+      .end(done);
+  });
+});
 
 describe('POST /trails', () => {
   it('should create a new Trail', (done) => {
