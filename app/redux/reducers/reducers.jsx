@@ -2,11 +2,11 @@
 import uuid from 'uuid';
 import $ from 'jquery';
 
-export var userSessionReducer = (state = {
+export const userSessionReducer = (state = {
   xAuth: '',
   email: '',
   _id: '',
-  visibleFeatures: []
+  visibleFeatures: [],
 }, action) => {
   switch (action.type) {
     case 'LOGIN':
@@ -56,7 +56,7 @@ export var userSessionReducer = (state = {
   }
 };
 
-export var trailsReducer = (state = {
+export const trailsReducer = (state = {
   myTrails: []
 }, action) => {
   switch (action.type) {
@@ -94,14 +94,14 @@ export var trailsReducer = (state = {
   }
 };
 
-export var userLocationReducer = (state = {
+export const userLocationReducer = (state = {
   trackingRoute: false,
   routeList: [],
   mapCentering: false,
   coords: {
     latitude: 15,
-    longitude: 145
-  }
+    longitude: 145,
+  },
 }, action) => {
   switch (action.type) {
     case 'UPDATE_POS':
@@ -145,26 +145,32 @@ export var userLocationReducer = (state = {
   }
 };
 
-export var mapReducer = (state = {
-  update: false
+export const mapReducer = (state = {
+  update: false,
+  center: [],
 }, action) => {
   switch (action.type) {
     case 'UPDATE_MAP':
       return {
         ...state,
-        update: true
+        update: true,
       };
     case 'COMPLETE_UPDATE_MAP':
       return {
         ...state,
-        update: false
+        update: false,
+      };
+    case 'STORE_CENTER':
+      return {
+        ...state,
+        center: action.center,
       };
     default:
       return state;
   }
 };
 
-export var searchTextReducer = (state = {
+export const searchTextReducer = (state = {
   POISearchText: '',
   RoutesSearchText: '',
   trailSearchText: '',
@@ -196,7 +202,7 @@ export var searchTextReducer = (state = {
   }
 };
 
-export var geoJSONReducer = (state = initialGeoState, action) => {
+export const geoJSONReducer = (state = initialGeoState, action) => {
   switch (action.type) {
     case 'UPDATE_GEO_JSON':
       var {point} = action;

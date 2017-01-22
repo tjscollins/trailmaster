@@ -1,8 +1,14 @@
 /*----------Modules----------*/
 import React from 'react';
 
-//Simplifies binding methods to THIS variable in other components
+/**
+ * Base Component class to provide _bind to React Components
+ */
 class BaseComponent extends React.Component {
+  /**
+   * _bind - binds this on all methods provided as strings to _bind
+   *
+   */
   _bind(...methods) {
     methods.forEach((method) => this[method] = this[method].bind(this));
   }

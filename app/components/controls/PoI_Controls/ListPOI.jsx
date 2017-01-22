@@ -1,7 +1,7 @@
 /*----------Modules----------*/
 import React from 'react';
 import {connect} from 'react-redux';
-import uuid from 'uuid';
+import distance from '@turf/distance';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
@@ -13,6 +13,13 @@ export class ListPOI extends BaseComponent {
   constructor() {
     super();
   }
+
+  /**
+   * display - generates a toggle display function for a give geoJSON feature
+   *
+   * @param  {string} id string identify geoJSON feature
+   * @return {function}    function to dispatch.toggleVisibility
+   */
   display(id) {
     return () => {
       this
@@ -21,8 +28,8 @@ export class ListPOI extends BaseComponent {
     };
   }
   displayStyle(id) {
-    var {geoJSON, userSession} = this.props;
-    var thisPoint = geoJSON
+    let {geoJSON, userSession} = this.props;
+    let thisPoint = geoJSON
       .features
       .filter((point) => {
         return point._id === id;
@@ -39,32 +46,74 @@ export class ListPOI extends BaseComponent {
         cursor: 'pointer'
       };
   }
+
+  /**
+   * distanceFilter - filters out geoJSON not within 50 miles of map center.
+   *
+   * @param  {array} features list of geoJSON features
+   * @return {array}          filtered list of geoJSON features
+   */
+  distanceFilter(features) {
+    // get map center
+    let {center} = this.props.map;
+    if (!center)
+      return [];
+    let from = {
+      'type': 'Feature',
+      'properties': {},
+      'geometry': {
+        'type': 'Point',
+        'coordinates': [
+          center.lng - 360,
+          center.lat
+        ]
+      }
+    };
+    return features.filter((feature) => {
+      // calculate distance between feature and map center
+      let {coordinates, type} = feature.geometry;
+      let to = {
+        'type': 'Feature',
+        'properties': {},
+        'geometry': {
+          'type': 'Point',
+          'coordinates': coordinates
+        }
+      };
+      // if dist > 100 miles, return false to filter feature if dist < 100 miles,
+      // return true to keep feature
+      // console.log(distance(from, to, 'miles'));
+      return distance(from, to, 'miles') < 100;
+    });
+  }
   listPoints() {
-    var {searchText, geoJSON} = this.props;
-    var {POISearchText} = searchText;
-    return geoJSON
-      .features
-      .filter((point) => {
-        return point.geometry.type === 'Point';
-      })
-      .map((point) => {
-        var id = point._id;
-        var {name, desc, condition, last} = point.properties;
-        return name.match(new RegExp(POISearchText, 'i'))
-          ? (
-            <tr onClick={this.display(id)} id={id} style={this.displayStyle(id)} className="point-of-interest" key={id}>
-              <td>{name}</td>
-              <td>{desc}</td>
-              <td>{condition}</td>
-              <td>{last}</td>
-            </tr>
-          )
-          : null;
-      });
+    let {searchText, geoJSON} = this.props;
+    let {POISearchText} = searchText;
+    return this.distanceFilter(geoJSON.features.filter((point) => {
+      return point.geometry.type === 'Point';
+    })).map((point) => {
+      let id = point._id;
+      let {name, desc, condition, last} = point.properties;
+      return name.match(new RegExp(POISearchText, 'i'))
+        ? (
+          <tr
+            onClick={this.display(id)}
+            id={id}
+            style={this.displayStyle(id)}
+            className='point-of-interest'
+            key={id}>
+            <td>{name}</td>
+            <td>{desc}</td>
+            <td>{condition}</td>
+            <td>{last}</td>
+          </tr>
+        )
+        : null;
+    });
   }
   render() {
     return (
-      <table className="list-box table table-striped">
+      <table className='list-box table table-striped'>
         <thead>
           <tr>
             <th>Name</th>
@@ -87,4 +136,4 @@ export class ListPOI extends BaseComponent {
   }
 }
 
-export default connect(state => state)(ListPOI);
+export default connect((state) => state)(ListPOI);

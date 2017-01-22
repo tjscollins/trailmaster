@@ -86,15 +86,22 @@ gulp.task('SCSS', ['Fonts'], function() {
 });
 
 // Scripts
-gulp.task('JSX', function() {
+gulp.task('JSX-dev', () => {
   return gulp
-    .src(SRC_PATH + 'app.jsx')
-    .pipe(plumber(function(err) {
-      console.log('Scripts task error\n', err);
-      this.emit('end');
-    }))
+  .src(SRC_PATH + 'app.jsx')
     .pipe(sourcemaps.init())
-    .pipe(webpack(require('./webpack.config.js')))
+    .pipe(webpack(require('./webpack.config.dev.js')))
+    .pipe(concat('bundle.js'))
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest(DIST_PATH))
+    .pipe(livereload());
+});
+
+gulp.task('JSX-production', () => {
+  return gulp
+  .src(SRC_PATH + 'app.jsx')
+    .pipe(sourcemaps.init())
+    .pipe(webpack(require('./webpack.config.production.js')))
     .pipe(concat('bundle.js'))
     .pipe(sourcemaps.write())
     .pipe(gulp.dest(DIST_PATH))
@@ -106,7 +113,7 @@ gulp.task('Clean', function() {
 });
 
 gulp.task('default', [
-  'HTML', 'SCSS', 'JSX'
+  'HTML', 'SCSS', 'JSX-dev'
 ], function() {
   return;
 });
@@ -120,6 +127,6 @@ gulp.task('watch', [
 ], function() {
   livereload.listen();
   gulp.watch(HTML_PATH + '**/*.html', ['HTML']);
-  gulp.watch(SCRIPTS_PATH, ['JSX']);
+  gulp.watch(SCRIPTS_PATH, ['JSX-dev']);
   gulp.watch(SCSS_PATH + '**/*.scss', ['SCSS']);
 });

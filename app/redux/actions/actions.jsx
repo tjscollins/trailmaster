@@ -1,93 +1,97 @@
 //user session actions
-export var login = (xAuth, userId, email) => {
+export const login = (xAuth, userId, email) => {
   return {type: 'LOGIN', xAuth, userId, email};
 };
 
-export var logout = () => {
+export const logout = () => {
   return {type: 'LOGOUT'};
 };
 
-export var toggleVisibility = (id) => {
+export const toggleVisibility = (id) => {
   return {type: 'TOGGLE_VISIBILITY', id};
 };
 
 //trails actions
-export var displayTrails = (trails) => {
+export const displayTrails = (trails) => {
   return {type: 'DISPLAY_TRAILS', trails};
 };
 
-export var clearTrails = () => {
+export const clearTrails = () => {
   return {type: 'CLEAR_TRAILS'};
 };
 
-export var saveTrail = (list, name, desc) => {
+export const saveTrail = (list, name, desc) => {
   return {type: 'SAVE_TRAIL', list, name, desc};
 };
 
-export var showTrail = (id) => {
+export const showTrail = (id) => {
   return {type: 'SHOW_TRAIL', id};
 };
 
 //userLocation actions
-export var updatePOS = (position) => {
+export const updatePOS = (position) => {
   return {type: 'UPDATE_POS', position};
 };
 
-export var toggleMapCentering = () => {
+export const toggleMapCentering = () => {
   return {type: 'TOGGLE_MAP_CENTERING'};
 };
 
-export var trackRoute = () => {
+export const trackRoute = () => {
   return {type: 'TRACK_ROUTE'};
 };
 
-export var stopTrackingRoute = () => {
+export const stopTrackingRoute = () => {
   return {type: 'STOP_TRACKING_ROUTE'};
 };
 
-export var clearRouteList = () => {
+export const clearRouteList = () => {
   return {type: 'CLEAR_ROUTE_LIST'};
 };
 
-export var addToRouteList = (position) => {
+export const addToRouteList = (position) => {
   return {type: 'ADD_TO_ROUTE_LIST', position};
 };
 
 //geoJSON actions
-export var addPOI = (feature) => {
+export const addPOI = (feature) => {
   return {type: 'ADD_POI', feature};
 };
 
-export var addRoute = (feature) => {
+export const addRoute = (feature) => {
   return {type: 'ADD_ROUTE', feature};
 };
 
-export var updateGeoJSON = (point) => {
+export const updateGeoJSON = (point) => {
   return {type: 'UPDATE_GEO_JSON', point};
 };
 
 //map actions
-export var updateMap = () => {
+export const updateMap = () => {
   return {type: 'UPDATE_MAP'};
 };
 
-export var completeUpdateMap = () => {
+export const completeUpdateMap = () => {
   return {type: 'COMPLETE_UPDATE_MAP'};
 };
 
-//searchText actions
-export var setUpdateSearchText = (updateSearchText) => {
-  return {type: 'UPDATE_SEARCH_TEXT', updateSearchText}
+export const storeCenter = (center) => {
+  return {type: 'STORE_CENTER', center};
 };
 
-export var setPOISearchText = (POISearchText) => {
+//searchText actions
+export const setUpdateSearchText = (updateSearchText) => {
+  return {type: 'UPDATE_SEARCH_TEXT', updateSearchText};
+};
+
+export const setPOISearchText = (POISearchText) => {
   return {type: 'SET_POI_SEARCH_TEXT', POISearchText};
 };
 
-export var setRoutesSearchText = (RoutesSearchText) => {
+export const setRoutesSearchText = (RoutesSearchText) => {
   return {type: 'SET_ROUTES_SEARCH_TEXT', RoutesSearchText};
 };
 
-export var setTrailSearchText = (trailSearchText) => {
+export const setTrailSearchText = (trailSearchText) => {
   return {type: 'SET_TRAIL_SEARCH_TEXT', trailSearchText};
 };

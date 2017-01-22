@@ -15,28 +15,28 @@ export class MapViewer extends BaseComponent {
     this._bind('createMap');
     this.state = {
       map: false,
-      layerIDs: []
+      layerIDs: [],
     };
     this.map = false;
     this.layerIDs = [];
   }
   createMap(props) {
     //Passing props as arg to allow choice of nextProps or current props as appropriate
-    var self = this;
-    var {geoJSON, userLocation} = props;
-    var layerIDs = [];
-    var filterPOI = document.getElementById('poi-searchText');
-    var filterRoutes = document.getElementById('routes-searchText');
+    const self = this;
+    let {geoJSON, userLocation, dispatch} = props;
+    let layerIDs = [];
+    let filterPOI = document.getElementById('poi-searchText');
+    let filterRoutes = document.getElementById('routes-searchText');
     mapboxgl.accessToken = this.props.map.accessToken;
-    var map = new mapboxgl.Map({
+    let map = new mapboxgl.Map({
       container: 'mapviewer',
       style: 'mapbox://styles/mapbox/outdoors-v9',
       center: [
-        userLocation.coords.longitude, userLocation.coords.latitude
+        userLocation.coords.longitude, userLocation.coords.latitude,
       ],
       zoom: 12,
       hash: false,
-      interactive: true
+      interactive: true,
     });
     //Try loading interface
     map.addControl(new mapboxgl.GeolocateControl());
@@ -56,15 +56,18 @@ export class MapViewer extends BaseComponent {
                 'marker-color': '#00007e',
                 'marker-size': 'large',
                 'marker-symbol': 'icon-color',
-                name: 'You'
+                'name': 'You',
               },
               geometry: {
                 type: 'Point',
-                coordinates: [userLocation.coords.longitude, userLocation.coords.latitude]
-              }
-            }
-          ]
-        }
+                coordinates: [
+                  userLocation.coords.longitude,
+                    userLocation.coords.latitude,
+                  ],
+              },
+            },
+          ],
+        },
       });
       map.addLayer({
         'id': 'You Are Here',
@@ -75,31 +78,31 @@ export class MapViewer extends BaseComponent {
           'icon-size': 2,
           'text-field': '{name}',
           'text-font': [
-            'Open Sans Regular', 'Arial Unicode MS Regular'
+            'Open Sans Regular', 'Arial Unicode MS Regular',
           ],
           'text-size': 10,
           'text-offset': [
-            0, 1
+            0, 1,
           ],
           'text-anchor': 'top',
-          'visibility': 'visible'
-        }
+          'visibility': 'visible',
+        },
       });
       //Try loading desired data....
 
       //Points of Interest & Labels
-      var points = geoJSON.features;
+      let points = geoJSON.features;
       map.addSource('store', {
         'type': 'geojson',
         'data': {
           ...geoJSON,
-          'features': points
-        }
+          'features': points,
+        },
       });
       points.forEach((point) => {
-        var layerID = point.properties.name;
-        var layerType = '',
-          layout = {};
+        let layerID = point.properties.name;
+        let layerType = '';
+        let layout = {};
 
         if (!map.getLayer(layerID)) {
           switch (point.geometry.type) {
@@ -109,14 +112,14 @@ export class MapViewer extends BaseComponent {
                 'icon-image': 'marker-15',
                 'text-field': '{name}',
                 'text-font': [
-                  'Open Sans Regular', 'Arial Unicode MS Regular'
+                  'Open Sans Regular', 'Arial Unicode MS Regular',
                 ],
                 'text-size': 10,
                 'text-offset': [
-                  0, 0.6
+                  0, 0.6,
                 ],
                 'text-anchor': 'top',
-                'visibility': 'none'
+                'visibility': 'none',
               };
               break;
             case 'LineString':
@@ -124,7 +127,7 @@ export class MapViewer extends BaseComponent {
               layout = {
                 'line-join': 'round',
                 'line-cap': 'round',
-                'visibility': 'none'
+                'visibility': 'none',
               };
               map.addLayer({
                 'id': `${layerID} label`,
@@ -133,14 +136,14 @@ export class MapViewer extends BaseComponent {
                 'layout': {
                   'text-field': '{name}',
                   'text-font': [
-                    'Open Sans Regular', 'Arial Unicode MS Regular'
+                    'Open Sans Regular', 'Arial Unicode MS Regular',
                   ],
                   'text-size': 10,
                   'text-offset': [
-                    0, 0.6
+                    0, 0.6,
                   ],
                   'text-anchor': 'top',
-                  'visibility': 'none'
+                  'visibility': 'none',
                 },
                 'filter': ['==', 'name', layerID]
               });
@@ -216,6 +219,7 @@ export class MapViewer extends BaseComponent {
       });
     });
     this.setState({map, layerIDs});
+    dispatch(actions.storeCenter(map.getCenter()));
     // return map;
   }
   shouldDisplay(layerName, search, props) {
@@ -247,7 +251,6 @@ export class MapViewer extends BaseComponent {
           if (this.shouldDisplay(name, searchPOI, nextProps) && layerIDs[i][1] === 'symbol') {
             map.setLayoutProperty(name, 'visibility', 'visible');
           } else if (this.shouldDisplay(name, searchRoutes, nextProps) && layerIDs[i][1] !== 'symbol') {
-            // console.log('Displaying', name);
             map.setLayoutProperty(name, 'visibility', 'visible');
             map.setLayoutProperty(name + ' label', 'visibility', 'visible');
           } else {
@@ -258,13 +261,12 @@ export class MapViewer extends BaseComponent {
           }
       });
     if (nextProps.map.update) {
-      // console.log('Re-generating map');
       map.remove();
       this.createMap(nextProps);
       dispatch(actions.completeUpdateMap());
     } else if (nextProps.userLocation.mapCentering) {
-      var newLong = nextProps.userLocation.coords.longitude;
-      var newLat = nextProps.userLocation.coords.latitude;
+      let newLong = nextProps.userLocation.coords.longitude;
+      let newLat = nextProps.userLocation.coords.latitude;
       setTimeout(() => {
         this
           .state
@@ -279,14 +281,14 @@ export class MapViewer extends BaseComponent {
                   'marker-color': '#00007e',
                   'marker-size': 'large',
                   'marker-symbol': 'icon-color',
-                  name: 'You'
+                  'name': 'You',
                 },
                 geometry: {
                   type: 'Point',
-                  coordinates: [newLong, newLat]
-                }
-              }
-            ]
+                  coordinates: [newLong, newLat],
+                },
+              },
+            ],
           });
 
         //is New Position on Visible Map?
@@ -305,23 +307,27 @@ export class MapViewer extends BaseComponent {
               duration: 5000,
               animate: true,
               center: [
-                newLong, newLat
+                newLong, newLat,
               ],
               zoom: this
                 .map
-                .getZoom()
+                .getZoom(),
             });
         }
       }, 750);
-
     }
   }
   componentDidMount() {
-    var {dispatch} = this.props;
-    this.state.map || this.createMap(this.props);
+    let {dispatch} = this.props;
+    if (this.state.map) {
+      dispatch(actions.storeCenter(this.state.map.getCenter()));
+    } else {
+      this.createMap(this.props);
+    }
   }
   render() {
-    return (<div id="mapviewer" className="mapviewer"/>);
+    // this.state.map && dispatch(actions.storeCenter(this.state.map.getCenter()));
+    return (<div id='mapviewer' className='mapviewer' />);
   }
 }
-export default connect(state => state)(MapViewer);
+export default connect((state) => state)(MapViewer);

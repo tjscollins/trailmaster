@@ -30,6 +30,7 @@
   "dependencies": {
     "@mapbox/mapbox-gl-directions": "^3.0.3",
     "@mapbox/togeojson": "^0.16.0",
+    "@turf/turf": "^3.7.4",
     "bcryptjs": "^2.4.0",
     "body-parser": "^1.15.2",
     "bootstrap-sass": "^3.3.7",
@@ -67,6 +68,7 @@
     "eslint-config-google": "^0.7.0",
     "eslint-config-standard": "^6.2.1",
     "eslint-config-standard-jsx": "^3.2.0",
+    "eslint-config-standard-react": "^4.2.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-react": "^6.7.1",

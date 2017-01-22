@@ -1,6 +1,7 @@
 /*----------Modules----------*/
 import React from 'react';
 import {connect} from 'react-redux';
+import distance from '@turf/distance';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
@@ -14,14 +15,14 @@ export class ListRoutes extends BaseComponent {
   }
   display(id) {
     //Display point on map
-    var {dispatch} = this.props;
+    let {dispatch} = this.props;
     return () => {
       dispatch(actions.toggleVisibility(id));
     };
   }
   displayStyle(id) {
-    var {geoJSON, userSession} = this.props;
-    var thisPoint = geoJSON
+    let {geoJSON, userSession} = this.props;
+    let thisPoint = geoJSON
       .features
       .filter((point) => {
         return point._id === id;
@@ -38,28 +39,69 @@ export class ListRoutes extends BaseComponent {
         cursor: 'pointer'
       };
   }
+  /**
+   * distanceFilter - filters out geoJSON not within 50 miles of map center.
+   *
+   * @param  {array} features list of geoJSON features
+   * @return {array}          filtered list of geoJSON features
+   */
+  distanceFilter(features) {
+    // get map center
+    let {center} = this.props.map;
+    if (!center)
+      return [];
+    let from = {
+      'type': 'Feature',
+      'properties': {},
+      'geometry': {
+        'type': 'Point',
+        'coordinates': [
+          center.lng - 360,
+          center.lat
+        ]
+      }
+    };
+    return features.filter((feature) => {
+      // calculate distance between feature and map center
+      let {coordinates, type} = feature.geometry;
+      let to = {
+        'type': 'Feature',
+        'properties': {},
+        'geometry': {
+          'type': 'Point',
+          'coordinates': coordinates[0]
+        }
+      };
+      // if dist > 100 miles, return false to filter feature if dist < 100 miles,
+      // return true to keep feature
+      // console.log(distance(from, to, 'miles'));
+      return distance(from, to, 'miles') < 100;
+    });
+  }
   listRoutes() {
-    var {geoJSON} = this.props;
-    var {RoutesSearchText} = this.props.searchText;
-    return geoJSON
-      .features
-      .filter((point) => {
-        return point.geometry.type === 'LineString';
-      })
-      .map((point) => {
-        var id = point._id;
-        var {name, desc, condition, last} = point.properties;
-        return name.match(new RegExp(RoutesSearchText, 'i'))
-          ? (
-            <tr onClick={this.display(id)} id={id} style={this.displayStyle(id)} className="routes" key={id}>
-              <td>{name}</td>
-              <td>{desc}</td>
-              <td>{condition}</td>
-              <td>{last}</td>
-            </tr>
-          )
-          : null;
-      });
+    let {geoJSON} = this.props;
+    let {RoutesSearchText} = this.props.searchText;
+    return this.distanceFilter(geoJSON.features.filter((point) => {
+      return point.geometry.type === 'LineString';
+    })).map((point) => {
+      let id = point._id;
+      let {name, desc, condition, last} = point.properties;
+      return name.match(new RegExp(RoutesSearchText, 'i'))
+        ? (
+          <tr
+            onClick={this.display(id)}
+            id={id}
+            style={this.displayStyle(id)}
+            className="routes"
+            key={id}>
+            <td>{name}</td>
+            <td>{desc}</td>
+            <td>{condition}</td>
+            <td>{last}</td>
+          </tr>
+        )
+        : null;
+    });
   }
   render() {
     return (
