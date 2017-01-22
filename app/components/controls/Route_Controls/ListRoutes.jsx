@@ -2,6 +2,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import distance from '@turf/distance';
+import lineDistance from '@turf/line-distance';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
@@ -86,17 +87,18 @@ export class ListRoutes extends BaseComponent {
     })).map((point) => {
       let id = point._id;
       let {name, desc, condition, last} = point.properties;
+      let length = lineDistance(point, 'miles');
       return name.match(new RegExp(RoutesSearchText, 'i'))
         ? (
           <tr
             onClick={this.display(id)}
             id={id}
             style={this.displayStyle(id)}
-            className="routes"
+            className='routes'
             key={id}>
             <td>{name}</td>
             <td>{desc}</td>
-            <td>{condition}</td>
+            <td>{condition}<br /> <br />{Math.round(length*100)/100} miles</td>
             <td>{last}</td>
           </tr>
         )

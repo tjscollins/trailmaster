@@ -164,7 +164,7 @@ export class MapViewer extends BaseComponent {
       filterPOI.addEventListener('keyup', function(e) {
         // If the input value matches a layerID set
         // it's visibility to 'visible' or else hide it.
-        console.log('Calling filterPOI');
+        // console.log('Calling filterPOI');
         let {geoJSON} = self.props;
         let value = e
           .target
@@ -187,7 +187,7 @@ export class MapViewer extends BaseComponent {
       filterRoutes.addEventListener('keyup', function(e) {
         // If the input value matches a layerID set
         // it's visibility to 'visible' or else hide it.
-        console.log('Calling filterRoutes');
+        // console.log('Calling filterRoutes');
         let {geoJSON} = self.props;
         let value = e
           .target
