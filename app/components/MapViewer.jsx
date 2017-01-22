@@ -16,9 +16,8 @@ export class MapViewer extends BaseComponent {
     this.state = {
       map: false,
       layerIDs: [],
+      checkCenter: null,
     };
-    this.map = false;
-    this.layerIDs = [];
   }
   createMap(props) {
     //Passing props as arg to allow choice of nextProps or current props as appropriate
@@ -42,7 +41,6 @@ export class MapViewer extends BaseComponent {
     map.addControl(new mapboxgl.GeolocateControl());
     map.addControl(new mapboxgl.NavigationControl());
     map.addControl(new mapboxgl.ScaleControl({maxWidth: 120, unit: 'imperial'}));
-
     map.on('load', () => {
       //place userLocation
       map.addSource('user', {
@@ -167,13 +165,13 @@ export class MapViewer extends BaseComponent {
         // If the input value matches a layerID set
         // it's visibility to 'visible' or else hide it.
         console.log('Calling filterPOI');
-        var {geoJSON} = self.props;
-        var value = e
+        let {geoJSON} = self.props;
+        let value = e
           .target
           .value
           .trim() || '!!!!!!!';
         layerIDs.forEach(function(layerID) {
-          var re = new RegExp(value, 'i');
+          let re = new RegExp(value, 'i');
           if (layerID[1] === 'symbol') {
             //Only layers representing POIs
             if (self.shouldDisplay(layerID[0], re, self.props)) {
@@ -190,13 +188,13 @@ export class MapViewer extends BaseComponent {
         // If the input value matches a layerID set
         // it's visibility to 'visible' or else hide it.
         console.log('Calling filterRoutes');
-        var {geoJSON} = self.props;
-        var value = e
+        let {geoJSON} = self.props;
+        let value = e
           .target
           .value
           .trim() || '!!!!!!!!';
         layerIDs.forEach(function(layerID) {
-          var re = new RegExp(value, 'i');
+          let re = new RegExp(value, 'i');
           if (layerID[1] === 'line') {
             //Only Layers representing Route-Line
             if (self.shouldDisplay(layerID[0], re, self.props)) {
@@ -207,7 +205,7 @@ export class MapViewer extends BaseComponent {
           } else if (layerID[1] === 'label') {
             //Only Layers representing Route-Line
             //Trim off ' label' suffix from layerID
-            var name = layerID[0].substring(0, layerID[0].length - 6);
+            let name = layerID[0].substring(0, layerID[0].length - 6);
             if (self.shouldDisplay(name, re, self.props)) {
               //Only Route-Lines that match the non-zero search
               map.setLayoutProperty(layerID[0], 'visibility', 'visible');
@@ -218,14 +216,16 @@ export class MapViewer extends BaseComponent {
         });
       });
     });
+    map.on('moveend', () => {
+      dispatch(actions.storeCenter(map.getCenter()));
+    });
     this.setState({map, layerIDs});
     dispatch(actions.storeCenter(map.getCenter()));
-    // return map;
   }
   shouldDisplay(layerName, search, props) {
     //Props should be passed in here to allow selection between current or nextProps as appropriate
-    var {geoJSON, userSession} = props;
-    var onePoint = geoJSON
+    let {geoJSON, userSession} = props;
+    let onePoint = geoJSON
       .features
       .filter((point) => {
         return point.properties.name === layerName;
@@ -235,16 +235,16 @@ export class MapViewer extends BaseComponent {
       .indexOf(onePoint._id) > -1;
   }
   componentWillReceiveProps(nextProps) {
-    var {dispatch, searchText} = nextProps;
-    var {map, layerIDs} = this.state;
-    var searchPOI = new RegExp(searchText.POISearchText || '!!!!!!', 'i');
-    var searchRoutes = new RegExp(searchText.RoutesSearchText || '!!!!!!', 'i');
+    let {dispatch, searchText} = nextProps;
+    let {map, layerIDs} = this.state;
+    let searchPOI = new RegExp(searchText.POISearchText || '!!!!!!', 'i');
+    let searchRoutes = new RegExp(searchText.RoutesSearchText || '!!!!!!', 'i');
     nextProps
       .geoJSON
       .features
       .forEach(({properties, geometry}) => {
-        var {name, displayed} = properties;
-        var i = layerIDs.map((id) => {
+        let {name, displayed} = properties;
+        let i = layerIDs.map((id) => {
           return id[0];
         }).indexOf(name);
         if (i > -1) {
@@ -292,14 +292,14 @@ export class MapViewer extends BaseComponent {
           });
 
         //is New Position on Visible Map?
-        var bounds = this
+        let bounds = this
           .state
           .map
           .getBounds();
-        var swLng = bounds._sw.lng,
-          swLat = bounds._sw.lat;
-        var neLng = bounds._ne.lng,
-          neLat = bounds._ne.lat;
+        let swLng = bounds._sw.lng;
+        let swLat = bounds._sw.lat;
+        let neLng = bounds._ne.lng;
+        let neLat = bounds._ne.lat;
         if (newLong > swLng || newLong < neLng || newLat > neLat || newLat < swLat) {
           this
             .map
@@ -318,15 +318,11 @@ export class MapViewer extends BaseComponent {
     }
   }
   componentDidMount() {
-    let {dispatch} = this.props;
-    if (this.state.map) {
-      dispatch(actions.storeCenter(this.state.map.getCenter()));
-    } else {
+    if (!this.state.map) {
       this.createMap(this.props);
     }
   }
   render() {
-    // this.state.map && dispatch(actions.storeCenter(this.state.map.getCenter()));
     return (<div id='mapviewer' className='mapviewer' />);
   }
 }
