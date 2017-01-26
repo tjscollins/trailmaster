@@ -40,10 +40,16 @@ module.exports = {
     modulesDirectories: [
       'node_modules',
       './client/react/components/',
-      './client/redux',
+      './client/react/components/controls/PoI_Controls',
+      './client/react/components/controls/Route_Controls',
+      './client/react/components/controls/Trail_Controls',
+      './client/api',
     ],
     alias: {
-      applicationStyles: 'client/styles/main.scss',
+      actions: 'client/redux/actions/actions.jsx',
+      reducers: 'client/redux/reducers/reducers.jsx',
+      configureStore: 'client/redux/store/configureStore.jsx',
+      geoJSON: 'client/redux/store/geoJSON.js',
     },
     extensions: ['', '.js', '.jsx'],
   },

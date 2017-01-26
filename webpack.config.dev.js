@@ -2,7 +2,7 @@ const webpack = require('webpack');
 
 module.exports = {
   entry: [
-    'script!jquery/dist/jquery.min.js', 'script!bootstrap/dist/js/bootstrap.min.js', './app/app.jsx',
+    'script!jquery/dist/jquery.min.js', 'script!bootstrap/dist/js/bootstrap.min.js', './client/react/react-app.jsx',
 
   ],
   externals: {
@@ -23,19 +23,17 @@ module.exports = {
     root: __dirname,
     modulesDirectories: [
       'node_modules',
-      './app/components/',
-      './app/components/controls/PoI_Controls',
-      './app/components/controls/Route_Controls',
-      './app/components/controls/Trail_Controls',
-      './app/api',
+      './client/react/components/',
+      './client/react/components/controls/PoI_Controls',
+      './client/react/components/controls/Route_Controls',
+      './client/react/components/controls/Trail_Controls',
+      './client/api',
     ],
     alias: {
-      Main: 'app/components/Main.jsx',
-      applicationStyles: 'app/styles/app.scss',
-      actions: 'app/redux/actions/actions.jsx',
-      reducers: 'app/redux/reducers/reducers.jsx',
-      configureStore: 'app/redux/store/configureStore.jsx',
-      geoJSON: 'app/redux/store/geoJSON.js',
+      actions: 'client/redux/actions/actions.jsx',
+      reducers: 'client/redux/reducers/reducers.jsx',
+      configureStore: 'client/redux/store/configureStore.jsx',
+      geoJSON: 'client/redux/store/geoJSON.js',
     },
     extensions: ['', '.js', '.jsx'],
   },
