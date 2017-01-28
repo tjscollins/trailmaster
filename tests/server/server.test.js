@@ -5,11 +5,11 @@ const {ObjectID} = require('mongodb');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const {app} = require('./../server.js');
-const {poiModel} = require('./../db/models/poi');
-const {routeModel} = require('./../db/models/route');
-const {trailModel} = require('./../db/models/trail');
-const {userModel} = require('./../db/models/user');
+const {app} = require('./../../server/server.js');
+const {poiModel} = require('./../../server/db/models/poi');
+const {routeModel} = require('./../../server/db/models/route');
+const {trailModel} = require('./../../server/db/models/trail');
+const {userModel} = require('./../../server/db/models/user');
 const {
   pois,
   routes,
@@ -24,18 +24,18 @@ beforeEach(populateServer);
 
 describe('POST /pois', () => {
   it('should create a new POI', (done) => {
-    var poi = {
+    let poi = {
       type: 'Feature',
       properties: {
         'marker-color': '#7e7e7e',
         'marker-size': 'medium',
         'marker-symbol': '',
-        name: 'Rabbit Hole',
-        desc: 'Hole descends from top of cliff to bottom, forming climbable cave',
-        condition: 'Rope in good condition',
-        last: 'June 2014',
-        displayed: false,
-        id: '5'
+        'name': 'Rabbit Hole',
+        'desc': 'Hole descends from top of cliff to bottom, forming climbable cave',
+        'condition': 'Rope in good condition',
+        'last': 'June 2014',
+        'displayed': false,
+        'id': '5'
       },
       geometry: {
         type: 'Point',

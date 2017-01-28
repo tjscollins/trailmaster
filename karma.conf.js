@@ -1,4 +1,4 @@
-var webpackConfig = require('./webpack.config.js');
+let webpackConfig = require('./webpack.config.dev.js');
 
 module.exports = function(config) {
   config.set({
@@ -10,11 +10,11 @@ module.exports = function(config) {
     ],
     files: [
       'node_modules/jquery/dist/jquery.min.js',
-      //  'node_modules/bootstrap/dist/js/bootstrap.min.js',
-      'app/tests/**/*.test.jsx'
+       'node_modules/bootstrap/dist/js/bootstrap.min.js',
+      'tests/client/**/*.test.jsx'
     ],
     preprocessors: {
-      'app/tests/**/*.test.jsx': ['webpack', 'sourcemap']
+      'tests/client/**/*.test.jsx': ['webpack', 'sourcemap']
     },
     reporters: ['mocha'],
     client: {

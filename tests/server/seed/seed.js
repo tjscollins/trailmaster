@@ -1,8 +1,8 @@
 const {ObjectID} = require('mongodb');
-const {poiModel} = require('./../../db/models/poi');
-const {routeModel} = require('./../../db/models/route');
-const {trailModel} = require('./../../db/models/trail');
-const {userModel} = require('./../../db/models/user');
+const {poiModel} = require('./../../../server/db/models/poi');
+const {routeModel} = require('./../../../server/db/models/route');
+const {trailModel} = require('./../../../server/db/models/trail');
+const {userModel} = require('./../../../server/db/models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
