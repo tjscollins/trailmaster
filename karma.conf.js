@@ -1,16 +1,16 @@
-let webpackConfig = require('./webpack.config.dev.js');
+const webpackConfig = require('./webpack.config.dev.js');
 
 module.exports = function(config) {
   config.set({
     autowatch: false,
-    browsers: ['Chrome'],
+    browsers: ['Chrome', 'Firefox'],
     singleRun: true,
     frameworks: [
       'mocha', 'sinon'
     ],
     files: [
       'node_modules/jquery/dist/jquery.min.js',
-       'node_modules/bootstrap/dist/js/bootstrap.min.js',
+      'node_modules/bootstrap/dist/js/bootstrap.min.js',
       'tests/client/**/*.test.jsx'
     ],
     preprocessors: {

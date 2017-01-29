@@ -1,4 +1,4 @@
-/*global describe it beforeEach done*/
+/*global describe it beforeEach*/
 const expect = require('expect');
 const request = require('supertest');
 const {ObjectID} = require('mongodb');
@@ -72,17 +72,17 @@ describe('POST /pois', () => {
   });
 
   it('should not create a new POI with invalid data', (done) => {
-    var poi = {
+    let poi = {
       type: 'Something wrong',
       properties: {
         'marker-color': '#7e7e7e',
         'marker-size': 'medium',
         'marker-symbol': '',
-        desc: 'Hole descends from top of cliff to bottom, forming climbable cave',
-        condition: 'Rope in good condition',
-        last: 'June 2014',
-        displayed: false,
-        id: '5'
+        'desc': 'Hole descends from top of cliff to bottom, forming climbable cave',
+        'condition': 'Rope in good condition',
+        'last': 'June 2014',
+        'displayed': false,
+        'id': '5'
       },
       geometry: {
         type: 'Point'
@@ -120,18 +120,17 @@ describe('GET /pois', () => {
   });
 });
 describe('DELETE /pois/:id', () => {
-  it('should remove a poi', (done) => {
-    var hexId = pois[1]
+  it('should remove a poi and return 200', (done) => {
+    let hexId = pois[1]
       ._id
       .toHexString();
 
     request(app)
       .delete(`/pois/${hexId}`)
       .expect(200)
-      // .expect((res) => {
-      //   console.log('Response from DELETE pois', res.body);
-      //   expect(res.body._id).toBe(hexId);
-      // })
+      .expect((res) => {
+        expect(res.body.nModified).toBe(1);
+      })
       .end((err, res) => {
         if (err) {
           return done(err);
@@ -148,7 +147,7 @@ describe('DELETE /pois/:id', () => {
   });
 
   it('should return 404 if poi not found', (done) => {
-    var hexId = new ObjectID().toHexString();
+    let hexId = new ObjectID().toHexString();
 
     request(app)
       .delete(`/pois/${hexId}`)
@@ -164,8 +163,8 @@ describe('DELETE /pois/:id', () => {
   });
 });
 describe('PATCH /pois/:id', () => {
-  it('should update the poi', (done) => {
-    var hexId = pois[0]
+  it('should update the poi with valid data', (done) => {
+    let hexId = pois[0]
       ._id
       .toHexString();
     const newGeometry = Object.assign({}, pois[0].geometry, {
@@ -182,21 +181,37 @@ describe('PATCH /pois/:id', () => {
       })
       .end(done);
   });
+
+  it('should not update the poi with invalid data', (done) => {
+    let hexId = pois[0]
+      ._id
+      .toHexString();
+    const newGeometry = Object.assign({}, pois[0].geometry, {
+      coordinates: [100]
+    });
+    const newPOI = Object.assign({}, pois[0], {geometry: newGeometry});
+
+    request(app)
+      .patch(`/pois/${hexId}`)
+      .send(newPOI)
+      .expect(400)
+      .end(done);
+  });
 });
 
 describe('POST /routes', () => {
   it('should create a new ROUTE', (done) => {
-    var route = {
+    let route = {
       type: 'Feature',
       properties: {
-        stroke: '#555555',
+        'stroke': '#555555',
         'stroke-width': 2,
         'stroke-opacity': 1,
-        name: 'Chalan Kiya to Kannat Tabla Connector',
-        desc: 'Trail to move from Kannat Tabla area down into Chalan Kiya near the start of the Chalan Kiya ravine',
-        condition: 'Uncut, overgrown',
-        last: 'Dec 2015',
-        displayed: false
+        'name': 'Chalan Kiya to Kannat Tabla Connector',
+        'desc': 'Trail to move from Kannat Tabla area down into Chalan Kiya near the start of the Chalan Kiya ravine',
+        'condition': 'Uncut, overgrown',
+        'last': 'Dec 2015',
+        'displayed': false
       },
       geometry: {
         type: 'LineString',
@@ -240,17 +255,17 @@ describe('POST /routes', () => {
   });
 
   it('should not create a new ROUTE with invalid data', (done) => {
-    var route = {
+    let route = {
       type: 'Something\'s wrong',
       properties: {
-        stroke: '#555555',
+        'stroke': '#555555',
         'stroke-width': 2,
         'stroke-opacity': 1,
-        name: 'Chalan Kiya to Kannat Tabla Connector',
-        desc: 'Trail to move from Kannat Tabla area down into Chalan Kiya near the start of the Chalan Kiya ravine',
-        condition: 'Uncut, overgrown',
-        last: 'Dec 2015',
-        displayed: false
+        'name': 'Chalan Kiya to Kannat Tabla Connector',
+        'desc': 'Trail to move from Kannat Tabla area down into Chalan Kiya near the start of the Chalan Kiya ravine',
+        'condition': 'Uncut, overgrown',
+        'last': 'Dec 2015',
+        'displayed': false
       },
       geometry: {
         type: 'Point',
@@ -292,7 +307,7 @@ describe('GET /routes', () => {
 });
 describe('DELETE /routes/:id', () => {
   it('should remove a route', (done) => {
-    var hexId = routes[0]
+    let hexId = routes[0]
       ._id
       .toHexString();
 
@@ -315,7 +330,7 @@ describe('DELETE /routes/:id', () => {
   });
 
   it('should return 404 if route not found', (done) => {
-    var hexId = new ObjectID().toHexString();
+    let hexId = new ObjectID().toHexString();
 
     request(app)
       .delete(`/routes/${hexId}`)
@@ -332,7 +347,7 @@ describe('DELETE /routes/:id', () => {
 });
 describe('PATCH /routes/:id', () => {
   it('should update the route', (done) => {
-    var hexId = routes[0]
+    let hexId = routes[0]
       ._id
       .toHexString();
     const newGeometry = Object.assign({}, routes[0].geometry, {
@@ -353,8 +368,8 @@ describe('PATCH /routes/:id', () => {
 
 describe('POST /trails', () => {
   it('should create a new Trail', (done) => {
-    var trail = {
-      _creator: new ObjectID(),
+    let trail = {
+      '_creator': new ObjectID(),
       'name': 'Kagman High to Rabbit Trail',
       'desc': 'Test',
       'date': 'Dec 2016',
@@ -427,7 +442,7 @@ describe('POST /trails', () => {
   });
 
   it('should not create a new Trail with invalid data', (done) => {
-    var trail = {};
+    let trail = {};
 
     request(app)
       .post('/trails')
@@ -448,7 +463,6 @@ describe('POST /trails', () => {
   });
 });
 describe('GET /trails', () => {
-
   it('should GET all Trails', (done) => {
     request(app)
       .get('/trails')
@@ -462,7 +476,7 @@ describe('GET /trails', () => {
 });
 describe('DELETE /trails/:id', () => {
   it('should remove a trail', (done) => {
-    var hexId = trails[0]
+    let hexId = trails[0]
       ._id
       .toHexString();
 
@@ -485,7 +499,7 @@ describe('DELETE /trails/:id', () => {
   });
 
   it('should return 404 if trail not found', (done) => {
-    var hexId = new ObjectID().toHexString();
+    let hexId = new ObjectID().toHexString();
 
     request(app)
       .delete(`/trails/${hexId}`)
@@ -527,8 +541,8 @@ describe('GET /users/me', () => {
 
 describe('POST /users', () => {
   it('should create a user', (done) => {
-    var email = 'example@example.com';
-    var password = '123mnb!';
+    let email = 'example@example.com';
+    let password = '123mnb!';
 
     request(app)
       .post('/users')
@@ -646,13 +660,13 @@ describe('DELETE /users/me/token', () => {
 
 describe('PATCH /users/password', () => {
   it('should update the hash of a user\'s password to match a new password', (done) => {
-    var email = 'tjscollins@gmail.com';
-    var newPass = 'hamsterdance2';
+    let email = 'tjscollins@gmail.com';
+    let newPass = 'hamsterdance2';
     request(app)
       .patch('/users/password')
       .send({email, password: newPass})
       .expect(303)
-      .end(err => {
+      .end((err) => {
         if (err) {
           return done(err);
         }
@@ -668,7 +682,7 @@ describe('PATCH /users/password', () => {
                 // console.log(ans);
                 expect(ans).toEqual(true);
                 done();
-              }, err => done(err));
+              }, (err) => done(err));
           });
       });
   });
@@ -676,12 +690,12 @@ describe('PATCH /users/password', () => {
 
 describe('POST /users/reset', () => {
   it('should generate a resetRequest and send an email with a password RESET link if there is a valid user email', (done) => {
-    var email = 'tjscollins@gmail.com';
+    let email = 'tjscollins@gmail.com';
     request(app)
       .post('/users/reset')
       .send({email})
       .expect(200)
-      .end(err => {
+      .end((err) => {
         if (err) {
           return done(err);
         }
@@ -694,17 +708,17 @@ describe('POST /users/reset', () => {
             expect(user[0].resetRequests).toExist();
             expect(user[0].resetRequests.length).toBe(1);
             done();
-          }, err => done(err));
+          }, (err) => done(err));
       });
   });
 
   it('should NOT generate a resetRequest and send an email with a password RESET link if there is a valid user email', (done) => {
-    var email = 'tjmail.com';
+    let email = 'tjmail.com';
     request(app)
       .post('/users/reset')
       .send({email})
       .expect(400)
-      .end(err => {
+      .end((err) => {
         done();
       });
   });
@@ -712,7 +726,7 @@ describe('POST /users/reset', () => {
 
 describe('GET /users/reset/:reqID-:email', () => {
   it('should send the reset page if there is a valid reset request for that user', (done) => {
-    var route = '/users/reset/585b6cd587dd7e1b8323d8d7-test@test.test';
+    let route = '/users/reset/585b6cd587dd7e1b8323d8d7-test@test.test';
     request(app)
       .get(route)
       .expect(200)
@@ -729,7 +743,7 @@ describe('GET /users/reset/:reqID-:email', () => {
   });
 
   it('should NOT send the reset page if there is NOT a valid reset request for that user', (done) => {
-    var route = '/users/reset/585b6cd587dd7e1b8323d8d7-ria@example.com';
+    let route = '/users/reset/585b6cd587dd7e1b8323d8d7-ria@example.com';
     request(app)
       .get(route)
       .expect(403)
