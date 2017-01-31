@@ -5,7 +5,7 @@ const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 const {ObjectID} = require('mongodb');
 
-var userSchema = new mongoose.Schema({
+let userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
@@ -31,6 +31,10 @@ var userSchema = new mongoose.Schema({
       token: {
         type: String,
         required: true
+      },
+      date: {
+        type: Date,
+        default: Date.now
       }
     }
   ],
@@ -41,21 +45,21 @@ var userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.toJSON = function() {
-  var user = this;
-  var userObject = user.toObject();
-
-  return _.pick(userObject, ['_id', 'email']);
+  return _.pick(this.toObject(), ['_id', 'email']);
 };
 
 userSchema.methods.generateAuthToken = function() {
-  var user = this;
-  var access = 'auth';
-  var token = jwt.sign({
+  let user = this;
+  let access = 'auth';
+  let token = jwt.sign({
     _id: user
       ._id
       .toHexString(),
     access
   }, 'abc123');
+  user.tokens = user.tokens.filter((jwt) => {
+    return Date.now() - jwt.date.valueOf() < 86400000;
+  });
   user
     .tokens
     .push({access, token});
@@ -67,7 +71,7 @@ userSchema.methods.generateAuthToken = function() {
 };
 
 userSchema.methods.removeToken = function(token) {
-  var user = this;
+  let user = this;
   return user.update({
     $pull: {
       tokens: {
@@ -89,8 +93,8 @@ userSchema.methods.changePassword = function(password) {
 };
 
 userSchema.statics.findByToken = function(token) {
-  var User = this;
-  var decoded;
+  let User = this;
+  let decoded;
 
   try {
     decoded = jwt.verify(token, 'abc123');
@@ -102,7 +106,7 @@ userSchema.statics.findByToken = function(token) {
 };
 
 userSchema.statics.findByCredentials = function(email, password) {
-  var User = this;
+  let User = this;
 
   return User
     .findOne({email})

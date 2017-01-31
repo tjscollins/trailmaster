@@ -21,7 +21,24 @@ const users = [
         token: jwt.sign({
           _id: userOneID,
           access: 'auth'
-        }, 'abc123').toString()
+        }, 'abc123').toString(),
+        date: Date.parse('Dec 15, 2000'),
+      },
+      {
+        access: 'auth',
+        token: jwt.sign({
+          _id: userOneID,
+          access: 'auth'
+        }, 'abc123').toString(),
+        date: Date.parse('Dec 15, 1999'),
+      },
+      {
+        access: 'auth',
+        token: jwt.sign({
+          _id: userOneID,
+          access: 'auth'
+        }, 'abc123').toString(),
+        date: Date.parse('Dec 15, 1999'),
       }
     ]
   }, {

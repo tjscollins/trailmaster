@@ -634,6 +634,30 @@ describe('POST /users/login', () => {
           .catch((e) => done(e));
       });
   });
+
+  it('should clear login tokens older than 24 hours', (done) => {
+    userModel
+      .findById(users[0]._id)
+      .then((user) => {
+        expect(user.tokens.length).toBe(3);
+      });
+    request(app)
+      .post('/users/login')
+      .send({email: users[0].email, password: users[0].password})
+      .expect(200)
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        }
+        userModel
+          .findById(users[0]._id)
+          .then((user) => {
+            expect(user.tokens.length).toBe(1);
+            done();
+          })
+          .catch((e) => done(e));
+      });
+  });
 });
 
 describe('DELETE /users/me/token', () => {
