@@ -1,6 +1,6 @@
 {
   "name": "trailmaster",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Hash Trail Design Application",
   "main": "server.js",
   "scripts": {
@@ -106,6 +106,7 @@
     "karma-jquery": "^0.1.0",
     "karma-mocha": "^0.2.2",
     "karma-mocha-reporter": "^2.0.0",
+    "karma-phantomjs-launcher": "^1.0.2",
     "karma-sinon": "^1.0.5",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^1.7.0",

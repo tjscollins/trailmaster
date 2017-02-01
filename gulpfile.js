@@ -63,6 +63,7 @@ const SCSS = {
     includePaths: [
       'node_modules/bootstrap-sass/assets/stylesheets/',
       'node_modules/font-awesome/css',
+      'node_modules/mapbox-gl/dist/',
       STYLES + 'base/',
       STYLES + 'components/',
     ],
@@ -93,7 +94,7 @@ gulp.task('html', () => {
 
 gulp.task('styles', () => {
   return gulp
-    .src(SCSS. in + 'main.scss')
+    .src(SCSS. in + 'app.scss')
     .pipe(sourcemaps.init())
     .pipe(sass(SCSS.sassOpts))
     .pipe(autoprefixer())

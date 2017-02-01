@@ -302,7 +302,193 @@ const trails = [
         }
       }
     ]
-  }
+  },
+  {
+    '_id': ObjectID('58917fcdeed04b1d8cafdcb5'),
+    'name': 'New Trail',
+    'desc': 'Test',
+    'date': 'Feb 2017',
+    '_creator': userOneID,
+    'list': [
+        {
+            'properties': {
+                'displayed': false,
+                'last': 'Dec 2015',
+                'condition': 'Uncut, overgrown',
+                'desc': 'Trail to move from Kannat Tabla area down into Chalan Kiya near the start of the Chalan Kiya ravine',
+                'name': 'Chalan Kiya to Kannat Tabla Connector',
+                'stroke-opacity': 1,
+                'stroke-width': 2,
+                'stroke': '#555555'
+            },
+            'geometry': {
+                'coordinates': [
+                    [
+                        -214.2744576931,
+                        15.1674326241112
+                    ],
+                    [
+                        -214.274339675903,
+                        15.1673394281815
+                    ],
+                    [
+                        -214.274232387543,
+                        15.1672980077552
+                    ],
+                    [
+                        -214.27410364151,
+                        15.16726694243
+                    ],
+                    [
+                        -214.273931980133,
+                        15.1671737464273
+                    ],
+                    [
+                        -214.273846149445,
+                        15.167070195265
+                    ],
+                    [
+                        -214.27374958992,
+                        15.1669459338032
+                    ],
+                    [
+                        -214.273760318756,
+                        15.1667906068733
+                    ],
+                    [
+                        -214.273620843887,
+                        15.1666663452471
+                    ],
+                    [
+                        -214.273481369019,
+                        15.1665938592648
+                    ],
+                    [
+                        -214.27334189415,
+                        15.1665835041224
+                    ],
+                    [
+                        -214.273073673248,
+                        15.1665627938362
+                    ],
+                    [
+                        -214.272955656052,
+                        15.1665110181117
+                    ],
+                    [
+                        -214.272783994675,
+                        15.1665006629653
+                    ],
+                    [
+                        -214.272601604462,
+                        15.1664799526709
+                    ],
+                    [
+                        -214.272408485413,
+                        15.1664385320761
+                    ],
+                    [
+                        -214.272269010544,
+                        15.1664178217757
+                    ],
+                    [
+                        -214.272075891495,
+                        15.1663764011687
+                    ],
+                    [
+                        -214.271893501282,
+                        15.1662832047733
+                    ],
+                    [
+                        -214.271689653397,
+                        15.1661485876852
+                    ],
+                    [
+                        -214.271550178528,
+                        15.1661278773564
+                    ],
+                    [
+                        -214.271367788315,
+                        15.1661796531747
+                    ],
+                    [
+                        -214.271153211594,
+                        15.1662107186596
+                    ],
+                    [
+                        -214.270949363708,
+                        15.1662314289803
+                    ],
+                    [
+                        -214.27080988884,
+                        15.1661900083368
+                    ],
+                    [
+                        -214.270670413971,
+                        15.1660657463576
+                    ],
+                    [
+                        -214.270520210266,
+                        15.1660036153406
+                    ],
+                    [
+                        -214.270370006561,
+                        15.1659725498252
+                    ]
+                ],
+                'type': 'LineString'
+            },
+            'type': 'Feature',
+            '__v': 0,
+            '_id': '587df765d96e98209375e82a'
+        },
+        {
+            'properties': {
+                'displayed': false,
+                'last': 'Dec 2016',
+                'condition': 'test',
+                'desc': 'test',
+                'name': 'Kagman High',
+                'marker-symbol': '',
+                'marker-size': 'medium',
+                'marker-color': '#7e7e7e'
+            },
+            'geometry': {
+                'coordinates': [
+                    -214.2152855,
+                    15.1672361
+                ],
+                'type': 'Point'
+            },
+            '__v': 0,
+            'type': 'Feature',
+            '_id': '584dfbbfd96e98209375e82b'
+        },
+        {
+            'properties': {
+                'displayed': false,
+                'last': 'June 2014',
+                'condition': 'Rope in good condition',
+                'desc': 'Hole descends from top of cliff to bottom, forming climbable cave',
+                'name': 'Rabbit Hole',
+                'marker-symbol': '',
+                'marker-size': 'medium',
+                'marker-color': '#7e7e7e'
+            },
+            'geometry': {
+                'coordinates': [
+                    -214.255093144012,
+                    15.1007145504365
+                ],
+                'type': 'Point'
+            },
+            'type': 'Feature',
+            '__v': 0,
+            '_id': '585df765d96e98209375e82a'
+        }
+    ],
+    '__v': 0
+}
 ];
 
 const populateServer = (done) => {
