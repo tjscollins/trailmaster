@@ -38,6 +38,10 @@ export class FAQ extends BaseComponent {
                   <h5>How Do I Contribute to the Database?</h5>
                   <p>Contributing to the database of running and biking routes is simple once you know how to get a GPX file from your GPS-capable device.  See <a href='https://youtu.be/2LyszJVVjLk'>this video</a> for instructions on how to upload data.</p>
                 </li>
+                <li>
+                  <h5>Why Don't I See Any POIs or Routes?</h5>
+                  <p>Trailmaster is currently set to only display data within 50 miles of the center of your current map view.  If you don't see any data, then no one in your area has shared any data yet.  Be the first!</p>
+                </li>
               </ol>
             </div>
             <div className='modal-footer'>
