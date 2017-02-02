@@ -54,25 +54,28 @@ export class Header extends BaseComponent {
     return userSession.xAuth
       ? [(
           <li key={uuid()}>
-            <a href="#">{userSession.email}</a>
+            <a href='#'>{userSession.email}</a>
           </li>
         ), (
           <li key={uuid()}>
-            <a href="#" onClick={this.logout}>Log out</a>
+            <a href='#' onClick={this.logout}>Log out</a>
           </li>
         )]
       : [(
           <li key={uuid()}>
-            <a href="#" onClick={this.showAccountCreator}>Create Account</a>
+            <a href='#' onClick={this.showAccountCreator}>Create Account</a>
           </li>
         ), (
           <li key={uuid()}>
-            <a href="#" onClick={this.showLogin}>Sign-in</a>
+            <a href='#' onClick={this.showLogin}>Sign-in</a>
           </li>
         )];
   }
   showAccountCreator() {
     $('#account-creator').modal('show');
+  }
+  showFAQ() {
+    $('#faq-modal').modal('show');
   }
   showLogin() {
     $('#login-modal').modal('show');
@@ -83,35 +86,40 @@ export class Header extends BaseComponent {
       .dispatch(actions.toggleMapCentering());
   }
   render() {
-    var {userLocation} = this.props;
-    var autoCenter = () => {
+    let {userLocation} = this.props;
+    let autoCenter = () => {
       return userLocation.mapCentering
         ? 'Disable Auto-Center'
         : 'Enable Auto-Center';
     };
     return (
-      <nav id="Header" className="navbar navbar-default navbar-fixed-top">
-        <div className="navbar-header">
-          <a className="navbar-brand" href="#" onClick={this.hide}>
-            <i className="fa fa-compass" aria-hidden="true"/>TrailMaster &nbsp;
-            <i className="headerhidecontrols fa fa-arrow-right" aria-hidden="true"/></a>
-          <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarui" aria-expanded="false">
-            <span className="sr-only">Toggle navigation</span>
-            <span className="icon-bar"/>
-            <span className="icon-bar"/>
-            <span className="icon-bar"/>
+      <nav id='Header' className='navbar navbar-default navbar-fixed-top'>
+        <div className='navbar-header'>
+          <a className='navbar-brand' href='#' onClick={this.hide}>
+            <i className='fa fa-compass' aria-hidden='true' />TrailMaster &nbsp;
+            <i className='headerhidecontrols fa fa-arrow-right' aria-hidden='true' /></a>
+          <button type='button' className='navbar-toggle collapsed' data-toggle='collapse' data-target='#navbarui' aria-expanded='false'>
+            <span className='sr-only'>Toggle navigation</span>
+            <span className='icon-bar' />
+            <span className='icon-bar' />
+            <span className='icon-bar' />
           </button>
         </div>
 
-        <div className="collapse navbar-collapse" id="navbarui">
-          <ul className="nav navbar-nav navbar-left">
+        <div className='collapse navbar-collapse' id='navbarui'>
+          <ul className='nav navbar-nav navbar-left'>
             {this.manageLoginDisplay()}
           </ul>
-          <ul className="nav navbar-nav navbar-right">
+          <ul className='nav navbar-nav navbar-right'>
             <li>
-              <a className="autocenter" onClick={this.toggleAutoCenter} style={{
+              <a className='autocenter' onClick={this.toggleAutoCenter} style={{
                 cursor: 'pointer'
               }}>{autoCenter()}</a>
+            </li>
+            <li>
+              <a onClick={this.showFAQ} style={{
+                cursor: 'pointer'
+              }}>FAQ</a>
             </li>
           </ul>
         </div>
@@ -120,4 +128,4 @@ export class Header extends BaseComponent {
   }
 }
 
-export default connect(state => state)(Header);
+export default connect((state) => state)(Header);

@@ -125,7 +125,7 @@ export class Import extends BaseComponent {
                 <span aria-hidden="true">&times;</span>
               </button>
               <h4 className="modal-title">Import Route from {/*KML or*/}
-                GPX file</h4>
+              GPX file</h4>
             </div>
             <div className="modal-body">
               <p>Instructions:</p>

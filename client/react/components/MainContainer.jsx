@@ -4,6 +4,7 @@ import React from 'react';
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
 import Controls from 'Controls';
+import FAQ from 'FAQ';
 import Header from 'Header';
 import Import from 'Import';
 import Login from 'Login';
@@ -18,15 +19,14 @@ export class MainContainer extends BaseComponent {
   render() {
     return (
       <div>
-        <Header/>
-        <Login/>
-        <PasswordRecovery/>
-
-        <MapViewer/>
-
-        <Controls/>
-        <Import/>
-        <UpdatePOIorRoute/>
+        <Header />
+        <Login />
+        <PasswordRecovery />
+        <MapViewer />
+        <Controls />
+        <Import />
+        <UpdatePOIorRoute />
+        <FAQ />
       </div>
     );
   }
