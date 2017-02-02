@@ -24,15 +24,15 @@ export class FAQ extends BaseComponent {
                 </li>
                 <li>
                   <h5>How Do I Use TrailMaster?</h5>
-                  <p>The website is designed to be simple to use.  <a href='https://www.youtube.com/watch?v=spYawo61iIc'>This Youtube video</a> explains how to use the site to plan new running and biking courses.  <a href=''>This page</a> explains how to save Trailmaster to your device's homescreen</p>
+                  <p>The website is designed to be simple to use.  <a href='https://www.youtube.com/watch?v=spYawo61iIc'>This Youtube video</a> explains how to use the site to plan new running and biking courses.</p>
+                </li>
+                <li>
+                  <h5>How Can I Use the Site While Marking or Running a Course?</h5>
+                  <p>Trailmaster can be accessed from any Android or iOS device the same as you access it from your computer.  <a href='http://www.howtogeek.com/196087/how-to-add-websites-to-the-home-screen-on-any-smartphone-or-tablet/'>This page</a> explains how to save Trailmaster to your mobile device's homescreen </p>
                 </li>
                 <li>
                   <h5>Is There an App Store Version?</h5>
                   <p>Not yet, but an android version is in the works.  Once finished it will have several new capabilities that the website does not have.</p>
-                </li>
-                <li>
-                  <h5>How Can I Use the Site While Marking or Running a Course?</h5>
-                  <p>Trailmaster can be accessed from any Android or iOS device the same as you access it from your computer.  </p>
                 </li>
                 <li>
                   <h5>How Do I Contribute to the Database?</h5>
