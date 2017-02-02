@@ -24,7 +24,7 @@ export class FAQ extends BaseComponent {
                 </li>
                 <li>
                   <h5>How Do I Use TrailMaster?</h5>
-                  <p>The website is designed to be simple to use.  <a href='https://www.youtube.com/watch?v=spYawo61iIc'>This Youtube video</a> explains how to use the site to plan new running and biking courses.</p>
+                  <p>The website is designed to be simple to use. <a href='https://www.youtube.com/watch?v=spYawo61iIc'>This Youtube video</a> explains how to use the site to plan new running and biking courses.</p>
                 </li>
                 <li>
                   <h5>How Can I Use the Site While Marking or Running a Course?</h5>
