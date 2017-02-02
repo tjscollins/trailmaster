@@ -70,6 +70,9 @@ export class ListTrails extends BaseComponent {
               <td onClick={this.display(_id)} >{name}</td>
               <td onClick={this.display(_id)} >{desc}</td>
               <td onClick={this.display(_id)} >{date}</td>
+              <td onClick={this.display(_id)} >
+                <p>{`${this.trailLength(_id)} miles`}</p>
+              </td>
               <td style={{cursor: 'default'}}>
                 <button className='btn btn-danger delete-trail' onClick={this.markForDelete(_id)}>
                   <i className='fa fa-trash' />
@@ -96,14 +99,18 @@ export class ListTrails extends BaseComponent {
     };
   }
   trailLength(id) {
-    let {list} = this.props.trails.myTrails;
+    let {myTrails} = this.props.trails;
     let total = 0;
-    list.forEach((feature) => {
-      if(features.geometry.type === 'LineString') {
-        total += lineDistance(feature, 'miles');
+    myTrails.forEach((trail) => {
+      if(trail._id === id) {
+        trail.list.forEach((feature) => {
+          if(feature.geometry.type === 'LineString') {
+            total += lineDistance(feature, 'miles');
+          }
+        });
       }
     });
-    return total;
+    return Math.floor(total*100)/100;
   }
   render() {
     return (
@@ -114,10 +121,13 @@ export class ListTrails extends BaseComponent {
             <tr>
               <th>Name</th>
               <th>
-                Description
+                Desc
               </th>
               <th>
-                Date Created
+                Date
+              </th>
+              <th>
+                Mapped Distance
               </th>
               <th />
             </tr>
