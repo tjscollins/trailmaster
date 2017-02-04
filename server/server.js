@@ -329,7 +329,7 @@ app.patch('/routes/:id', (req, res) => {
 
     res.send(point);
   }).catch((e) => {
-    console.log('Bad PATCH request: ', req.body);
+    // console.log('Bad PATCH request: ', req.body);
     res
       .status(400)
       .send();
@@ -349,7 +349,7 @@ app.get('/trails', authenticate, (req, res) => {
 });
 app.post('/trails', authenticate, (req, res) => {
   // console.log('Received newTrail:', req.body);
-  var trail = new trailModel({
+  let trail = new trailModel({
     list: req.body.list,
     name: req.body.name,
     desc: req.body.desc,
@@ -367,7 +367,7 @@ app.post('/trails', authenticate, (req, res) => {
     });
 });
 app.delete('/trails/:id', (req, res) => {
-  var id = req.params.id;
+  let id = req.params.id;
   if (!ObjectID.isValid(id)) {
     return res
       .status(404)

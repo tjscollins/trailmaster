@@ -364,6 +364,22 @@ describe('PATCH /routes/:id', () => {
       })
       .end(done);
   });
+
+  it('should not update the route with invalid data', (done) => {
+    let hexId = routes[0]
+      ._id
+      .toHexString();
+    const newGeometry = Object.assign({}, routes[0].geometry, {
+      coordinates: [[100], [100, -26], [99, -26], [99, -27]]
+    });
+    const newRoute = Object.assign({}, routes[0], {geometry: newGeometry});
+
+    request(app)
+      .patch(`/routes/${hexId}`)
+      .send(newRoute)
+      .expect(400)
+      .end(done);
+  });
 });
 
 describe('POST /trails', () => {
