@@ -137,16 +137,16 @@ describe('ListTrails', ()=> {
   // it('should toggle trail visibility onClick', () => {
   //
   // });
-  it('should compute total trail distance and render a mouseover tooltip', () => {
+  it('should compute total trail distance and add it to the table', () => {
     let store = configure(initialState);
     let provider = ReactTestUtils.renderIntoDocument(
       <Provider store={store}>
         <ListTrails />
       </Provider>);
     let listTrails = ReactTestUtils.findRenderedComponentWithType(provider, ListTrails);
-    let tooltips = ReactTestUtils.scryRenderedDOMComponentsWithClass(listTrails, 'trail-tooltip');
-    expect(tooltips.length).toBe(1);
-    expect(tooltips[0].children.length).toBe(1);
-    expect(tooltips[0].children[0].innerHTML).toEqual('0.31 miles');
+    let trailLength = ReactTestUtils.scryRenderedDOMComponentsWithClass(listTrails, 'trail-length');
+    expect(trailLength.length).toBe(1);
+    expect(trailLength[0].children.length).toBe(1);
+    expect(trailLength[0].children[0].innerHTML).toEqual('0.31 miles');
   });
 });

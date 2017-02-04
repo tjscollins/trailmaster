@@ -70,7 +70,7 @@ export class ListTrails extends BaseComponent {
               <td onClick={this.display(_id)} >{name}</td>
               <td onClick={this.display(_id)} >{desc}</td>
               <td onClick={this.display(_id)} >{date}</td>
-              <td onClick={this.display(_id)} >
+              <td className='trail-length' onClick={this.display(_id)} >
                 <p>{`${this.trailLength(_id)} miles`}</p>
               </td>
               <td style={{cursor: 'default'}}>
