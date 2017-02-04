@@ -1,7 +1,7 @@
 {
   "name": "trailmaster",
   "version": "0.1.9",
-  "description": "Hash Trail Design Application",
+  "description": "Trail Mapping Application",
   "main": "server.js",
   "scripts": {
     "server-test": "export NODE_ENV=test || SET NODE_ENV=test && mocha tests/server/**/*test.js",

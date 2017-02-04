@@ -24,7 +24,7 @@ export class FAQ extends BaseComponent {
                 </li>
                 <li>
                   <h5>How Do I Use TrailMaster?</h5>
-                  <p>The website is designed to be simple to use. <a href='https://www.youtube.com/watch?v=spYawo61iIc'>This Youtube video</a> explains how to use the site to plan new running and biking courses.</p>
+                  <p>The website is meant to be simple to use. <a href='https://www.youtube.com/watch?v=spYawo61iIc'>This Youtube video</a> explains how to use the site to plan new running and biking courses.</p>
                 </li>
                 <li>
                   <h5>How Can I Use the Site While Marking or Running a Course?</h5>
@@ -32,7 +32,7 @@ export class FAQ extends BaseComponent {
                 </li>
                 <li>
                   <h5>Is There an App Store Version?</h5>
-                  <p>Not yet, but an android version is in the works.  Once finished it will have several new capabilities that the website does not have.</p>
+                  <p>Not yet, but an Android version is in development.  Once finished it will have several new capabilities that the website does not have.</p>
                 </li>
                 <li>
                   <h5>How Do I Contribute to the Database?</h5>
@@ -40,7 +40,11 @@ export class FAQ extends BaseComponent {
                 </li>
                 <li>
                   <h5>Why Don't I See Any POIs or Routes?</h5>
-                  <p>Trailmaster is currently set to only display data within 50 miles of the center of your current map view.  If you don't see any data, then no one in your area has shared any data yet.  Be the first!</p>
+                  <p>Trailmaster is currently set to only display data within 50 miles of the center of your current map view.  If you don't see any data, then no one in that area has shared any data yet.  Be the first!</p>
+                </li>
+                <li>
+                  <h5>I Found a Bug!</h5>
+                  <p>Send me an email at <a href='mailto:tjscollins@gmail.com'>tjscollins@gmail.com</a> describing what you were doing and what happened.</p>
                 </li>
               </ol>
             </div>
