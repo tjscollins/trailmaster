@@ -40,10 +40,11 @@ export class Login extends BaseComponent {
     $('#login-modal').modal('hide');
     $('#pw-recovery').modal('show');
   }
-  login() {
-    var {dispatch} = this.props;
-    var {password, email} = this.refs;
-    var loginRequest = $.ajax({
+  login(e) {
+    e.preventDefault();
+    let {dispatch} = this.props;
+    let {password, email} = this.refs;
+    let loginRequest = $.ajax({
       url: '/users/login',
       type: 'post',
       beforeSend: function(request) {
