@@ -2,8 +2,8 @@ const webpack = require('webpack');
 
 module.exports = {
   entry: [
-    // 'script!jquery/dist/jquery.min.js',
-    // 'script!bootstrap-sass/assets/javascripts/bootstrap.min.js',
+    'script!jquery/dist/jquery.min.js',
+    'script!bootstrap-sass/assets/javascripts/bootstrap.min.js',
     './client/react/react-app.jsx',
   ],
   externals: {
