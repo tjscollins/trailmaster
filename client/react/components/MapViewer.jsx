@@ -2,6 +2,7 @@
 import React from 'react';
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
 import {connect} from 'react-redux';
+import {mapConfig} from 'TrailmasterAPI';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
@@ -21,6 +22,7 @@ export class MapViewer extends BaseComponent {
   }
   createMap(props) {
     //Passing props as arg to allow choice of nextProps or current props as appropriate
+    console.log('MapViewer.createMap', this.props);
     const self = this;
     let {geoJSON, userLocation, dispatch} = props;
     let layerIDs = [];
@@ -37,6 +39,7 @@ export class MapViewer extends BaseComponent {
       hash: false,
       interactive: true,
     });
+    dispatch(actions.storeCenter(map.getCenter()));
     //Try loading interface
     map.addControl(new mapboxgl.GeolocateControl());
     map.addControl(new mapboxgl.NavigationControl());
@@ -51,9 +54,9 @@ export class MapViewer extends BaseComponent {
             {
               type: 'Feature',
               properties: {
-                'marker-color': '#00007e',
-                'marker-size': 'large',
-                'marker-symbol': 'icon-color',
+                'marker-color': mapConfig.user.markerColor,
+                'marker-size': mapConfig.user.markerSize,
+                'marker-symbol': mapConfig.user.markerSymbol,
                 'name': 'You',
               },
               geometry: {
@@ -164,7 +167,6 @@ export class MapViewer extends BaseComponent {
       filterPOI.addEventListener('keyup', function(e) {
         // If the input value matches a layerID set
         // it's visibility to 'visible' or else hide it.
-        // console.log('Calling filterPOI');
         let {geoJSON} = self.props;
         let value = e
           .target
@@ -187,7 +189,6 @@ export class MapViewer extends BaseComponent {
       filterRoutes.addEventListener('keyup', function(e) {
         // If the input value matches a layerID set
         // it's visibility to 'visible' or else hide it.
-        // console.log('Calling filterRoutes');
         let {geoJSON} = self.props;
         let value = e
           .target
@@ -220,7 +221,6 @@ export class MapViewer extends BaseComponent {
       dispatch(actions.storeCenter(map.getCenter()));
     });
     this.setState({map, layerIDs});
-    dispatch(actions.storeCenter(map.getCenter()));
   }
   shouldDisplay(layerName, search, props) {
     //Props should be passed in here to allow selection between current or nextProps as appropriate

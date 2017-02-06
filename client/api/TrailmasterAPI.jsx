@@ -1,7 +1,7 @@
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
 import $ from 'jquery';
 
-export var createMap = (geoJSON, layerIDs) => {
+export const createMap = (geoJSON, layerIDs) => {
   var filterPOI = document.getElementById('poi-searchText');
   var filterRoutes = document.getElementById('routes-searchText');
   mapboxgl.accessToken = 'pk.eyJ1IjoidGpzY29sbGlucyIsImEiOiJjaXdhZjl4b3AwM2h5MzNwbzZ0eDg0YWZsIn0.uR5NCLn73_X2M9PxDO_4KA';
@@ -135,7 +135,7 @@ export var createMap = (geoJSON, layerIDs) => {
   return map;
 };
 
-export var month = (mo) => {
+export const month = (mo) => {
   switch (mo) {
     case 0:
       return 'Jan';
@@ -166,8 +166,23 @@ export var month = (mo) => {
   }
 };
 
-export var validateServerData = (data) => {
+export const validateServerData = (data) => {
   if (data.geometry.coordinates.length <= 1) return false;
   if (data.delete) return false;
   return true;
+};
+
+export const mapConfig = {
+  user: {
+    markerColor: '#120A8F',
+    markerSize: 'large',
+    markerSymbol: 'dot',
+  },
+  pois: {
+  },
+  routes: {
+
+  },
+  trails: {
+  }
 };
