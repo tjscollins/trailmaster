@@ -1,19 +1,15 @@
 nav {
   // Position
   // Display and Sizing
-  // overflow: hidden;
+  height: 50px;
   width: 100%;
-  //Other
   @include custom-transition($hide-ui-transition, $hide-ui-transition-func, $hide-ui-transition-delay);
 
   &.minified-header {
-    //Position
     top: 0;
     left: 0;
-    //Display and Sizing
     width: 180px;
     margin-right: 0;
-    //Other
     border-bottom-right-radius: 10px;
   }
 

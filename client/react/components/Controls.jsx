@@ -1,6 +1,7 @@
 /*----------Modules----------*/
 import React from 'react';
 import $ from 'jquery';
+import {toggleUI} from 'TrailmasterAPI';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
@@ -18,30 +19,6 @@ import Tools from 'Tools';
 export class Controls extends BaseComponent {
   constructor() {
     super();
-  }
-  hide() {
-    console.log('Controls.hide called');
-    if ($('#hide-arrow').hasClass('fa-arrow-left')) {
-      console.log('Controls.hide() hiding');
-      //hide UI
-      $('div.controls').addClass('hide-left');
-      $('.hidecontrols').removeClass('fa-arrow-left');
-      $('.hidecontrols').addClass('fa-arrow-right');
-      $('#Header').addClass('minified-header');
-      setTimeout(() => {
-        $('.headerhidecontrols').css('display', 'inline-block');
-      }, 250);
-    } else {
-      console.log('Controls.hide() revealing');
-      //show UI
-      $('div.controls').removeClass('hide-left');
-      $('.hidecontrols').removeClass('fa-arrow-right');
-      $('.hidecontrols').addClass('fa-arrow-left');
-      $('#Header').removeClass('minified-header');
-      setTimeout(() => {
-        $('.headerhidecontrols').css('display', 'none');
-      }, 250);
-    }
   }
   render() {
     return (
@@ -62,7 +39,7 @@ export class Controls extends BaseComponent {
                   </a>
                 </h3>
                 <i
-                  onClick={this.hide}
+                  onClick={toggleUI.bind(this, 350)}
                   id='hide-arrow'
                   className='hidecontrols fa fa-2x fa-arrow-left'
                   aria-hidden='true' />

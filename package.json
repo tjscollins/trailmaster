@@ -35,6 +35,7 @@
     "@turf/turf": "^3.7.4",
     "bcryptjs": "^2.4.0",
     "body-parser": "^1.15.2",
+    "bootstrap": "^3.3.7",
     "bootstrap-sass": "^3.3.7",
     "crypto-js": "^3.1.8",
     "express": "^4.14.0",

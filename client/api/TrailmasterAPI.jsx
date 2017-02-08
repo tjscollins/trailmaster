@@ -186,3 +186,22 @@ export const mapConfig = {
   trails: {
   }
 };
+
+export const toggleUI = (delay) => {
+    if ($('.hidecontrols').hasClass('fa-arrow-left')) {
+      // hide UI
+      $('div.controls').addClass('hide-left');
+      $('.hidecontrols').removeClass('fa-arrow-left').addClass('fa-arrow-right');
+      $('#Header').addClass('minified-header').css('overflow', 'hidden');
+      $('.headerhidecontrols').css('display', 'inline-block');
+    } else {
+      //show UI
+      $('div.controls').removeClass('hide-left');
+      $('.hidecontrols').removeClass('fa-arrow-right').addClass('fa-arrow-left');
+      $('#Header').removeClass('minified-header');
+      setTimeout(() => {
+        $('#Header').css('overflow', 'visible');
+        $('.headerhidecontrols').css('display', 'none');
+      }, delay);
+    }
+  };
