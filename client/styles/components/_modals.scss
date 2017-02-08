@@ -3,16 +3,13 @@
 }
 
 #preview-map {
-  height: 300px;
   width: 570px;
+  height: 300px;
 }
 
 .wrong-password {
-  //Position
-  float: left;
-  //Display and Sizing
+  @include custom-transition($wrong-pword-trans, $wrong-pword-func, $wrong-pword-delay);
   margin-left: 15px;
-  //Other
-  color: white;
-  @include custom-transition($wrong-pword-trans, $wrong-pword-func, $wrong-pword-delay)
+  float: left;
+  color: white
 }

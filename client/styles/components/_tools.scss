@@ -1,15 +1,12 @@
 .tool {
-  //Position
-  //Display and Sizing
-  padding-top: 5px;
   margin-bottom: 5px;
-  //Other
+  padding-top: 5px;
   text-align: left;
 }
 
 .delete-feature {
+  margin-top: -5px;
+  margin-right: 10px;
   float: right;
   line-height: 1;
-  margin-right: 10px;
-  margin-top: -5px;
 }

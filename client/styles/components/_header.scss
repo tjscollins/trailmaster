@@ -1,8 +1,4 @@
 nav {
-  // Position
-  // Display and Sizing
-  height: 50px;
-  width: 100%;
   @include custom-transition($hide-ui-transition, $hide-ui-transition-func, $hide-ui-transition-delay);
 
   &.minified-header {
@@ -24,4 +20,6 @@ nav {
   .dropdown-menu {
     z-index: 100;
   }
+  width: 100%;
+  height: 50px
 }

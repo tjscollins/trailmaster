@@ -1,11 +1,5 @@
 div {
   &.controls {
-    // Positioning
-    position: absolute;
-    top: 50px;
-    left: 0;
-    // Display and Sizing
-    overflow: auto;
     @include for-phone-only {
       width: $phone-controls-width;
       height: 87vh;
@@ -18,24 +12,19 @@ div {
       width: $controls-width;
       height: 95vh;
     }
-    //  Other
-    background-color: $controls-bg-color;
-    border: $controls-border;
     @include custom-transition($hide-ui-transition, $hide-ui-transition-func, $hide-ui-transition-delay);
 
     &.hide-left {
-      // Positioning
-      left: -$phone-controls-width;
       @include for-tablet-landscape-up {
         left: -$controls-width;
       }
-      // Display and Sizing
+      left: -$phone-controls-width;
       overflow: hidden;
     }
 
     .current-trail-header {
-      text-align: center;
       margin-bottom: -20px;
+      text-align: center;
     }
 
     .delete-trail {
@@ -48,60 +37,57 @@ div {
     }
 
     .panel {
-      // Positioning
-      // Display and Sizing
-      margin: 0;
-      // Other
-      border: none;
 
       .panel-heading {
-        border-radius: 0;
-        border: none;
 
         h3.controls-title {
-          // Positioning
-          // Display and Sizing
-          margin: 5px;
           @include for-phone-only {
             margin: 0;
             font-size: $phone-controls-font-size + 0.5rem;
           }
-          // Other
-          text-align: left;
 
           a {
             color: white;
           }
+          margin: 5px;
+          text-align: left
         }
+        border: none;
+        border-radius: 0
       }
 
       .hidecontrols {
-        // Positioning
-        position: absolute;
-        top: 10px;
-        left: 345px;
         @include for-phone-only {
           top: 5px;
           left: $phone-controls-width - 55px;
         }
-        //Display and Sizing
+        position: absolute;
+        top: 10px;
+        left: 345px;
         padding-left: 25px;
-        //Other
         cursor: pointer;
       }
 
       .list-box {
-        margin: $list-box-margin;
-        font-size: $phone-controls-font-size;
         @include for-tablet-landscape-up {
           font-size: $controls-font-size;
         }
+        margin: $list-box-margin;
+        font-size: $phone-controls-font-size
       }
 
       .search-box {
         margin-top: 10px;
       }
+      margin: 0;
+      border: none
     }
+    position: absolute;
+    top: 50px;
+    left: 0;
+    overflow: auto;
+    border: $controls-border;
+    background-color: $controls-bg-color
   }
 }
 
