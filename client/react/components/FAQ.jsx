@@ -24,11 +24,11 @@ export class FAQ extends BaseComponent {
                 </li>
                 <li>
                   <h5>How Do I Use TrailMaster?</h5>
-                  <p>The website is meant to be simple to use. <a href='https://www.youtube.com/watch?v=spYawo61iIc'>This Youtube video</a> explains how to use the site to plan new running and biking courses.</p>
+                  <p>The website is meant to be simple to use. <a target='_blank' href='https://www.youtube.com/watch?v=spYawo61iIc'>This Youtube video</a> explains how to use the site to plan new running and biking courses.</p>
                 </li>
                 <li>
                   <h5>How Can I Use the Site While Marking or Running a Course?</h5>
-                  <p>Trailmaster can be accessed from any Android or iOS device the same as you access it from your computer.  <a href='http://www.howtogeek.com/196087/how-to-add-websites-to-the-home-screen-on-any-smartphone-or-tablet/'>This page</a> explains how to save Trailmaster to your mobile device's homescreen </p>
+                  <p>Trailmaster can be accessed from any Android or iOS device the same as you access it from your computer.  <a target='_blank' href='http://www.howtogeek.com/196087/how-to-add-websites-to-the-home-screen-on-any-smartphone-or-tablet/'>This page</a> explains how to save Trailmaster to your mobile device's homescreen </p>
                 </li>
                 <li>
                   <h5>Is There an App Store Version?</h5>
@@ -36,7 +36,7 @@ export class FAQ extends BaseComponent {
                 </li>
                 <li>
                   <h5>How Do I Contribute to the Database?</h5>
-                  <p>Contributing to the database of running and biking routes is simple once you know how to get a GPX file from your GPS-capable device.  See <a href='https://youtu.be/2LyszJVVjLk'>this video</a> for instructions on how to upload data.</p>
+                  <p>Contributing to the database of running and biking routes is simple once you know how to get a GPX file from your GPS-capable device.  See <a target='_blank' href='https://youtu.be/2LyszJVVjLk'>this video</a> for instructions on how to upload data.</p>
                 </li>
                 <li>
                   <h5>Why Don't I See Any POIs or Routes?</h5>
@@ -44,7 +44,7 @@ export class FAQ extends BaseComponent {
                 </li>
                 <li>
                   <h5>I Found a Bug!</h5>
-                  <p>Send me an email at <a href='mailto:tjscollins@gmail.com'>tjscollins@gmail.com</a> describing what you were doing and what happened.</p>
+                  <p>Send me an email at <a target='_blank' href='mailto:tjscollins@gmail.com'>tjscollins@gmail.com</a> describing what you were doing and what happened.</p>
                 </li>
               </ol>
             </div>
