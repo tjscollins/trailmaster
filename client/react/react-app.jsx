@@ -50,6 +50,7 @@ const initialize = (geoJSON) => {
     userSession: {
       ...JSON.parse(sessionStorage.getItem('trailmaster-login')),
       visibleFeatures: [],
+      distanceFilter: 50,
     },
   };
 

@@ -4,6 +4,7 @@ import React from 'react';
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
 import Controls from 'Controls';
+import DistanceFilter from 'DistanceFilter';
 import FAQ from 'FAQ';
 import Header from 'Header';
 import Import from 'Import';
@@ -27,6 +28,7 @@ export class MainContainer extends BaseComponent {
         <Import />
         <UpdatePOIorRoute />
         <FAQ />
+        <DistanceFilter />
       </div>
     );
   }

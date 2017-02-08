@@ -54,6 +54,7 @@ export class ListPOI extends BaseComponent {
    * @return {array}          filtered list of geoJSON features
    */
   distanceFilter(features) {
+    let {distanceFilter} = this.props.userSession;
     // get map center
     let {center} = this.props.map;
     if (!center)
@@ -83,7 +84,7 @@ export class ListPOI extends BaseComponent {
       // if dist > 100 miles, return false to filter feature if dist < 100 miles,
       // return true to keep feature
       // console.log(distance(from, to, 'miles'));
-      return distance(from, to, 'miles') < 100;
+      return distance(from, to, 'miles') < distanceFilter;
     });
   }
   listPoints() {

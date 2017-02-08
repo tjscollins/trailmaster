@@ -55,6 +55,9 @@ export class Header extends BaseComponent {
           </li>
         )];
   }
+  setDistanceFilter() {
+    $('#distance-filter').modal('show');
+  }
   showAccountCreator() {
     $('#account-creator').modal('show');
   }
@@ -104,7 +107,7 @@ export class Header extends BaseComponent {
                     cursor: 'pointer'
                   }}>{autoCenter()}</a>
                 </li>
-                <li><a href='#'>Set Distance Filter</a></li>
+                <li><a href='#' onClick={this.setDistanceFilter}>Set Distance Filter</a></li>
                 {/* <li><a href='#'>Something else here</a></li>
                   <li role='separator' className='divider'></li>
                   <li><a href='#'>Separated link</a></li>

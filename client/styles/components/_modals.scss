@@ -3,13 +3,21 @@
 }
 
 #preview-map {
-  width: 570px;
+  width : 570px;
   height: 300px;
 }
 
 .wrong-password {
   @include custom-transition($wrong-pword-trans, $wrong-pword-func, $wrong-pword-delay);
   margin-left: 15px;
-  float: left;
-  color: white
+  float      : left;
+  color      : white;
+}
+
+#distance-filter {
+  input {
+    width      : 100px;
+    margin-left: 10px;
+    text-align : right;
+  }
 }

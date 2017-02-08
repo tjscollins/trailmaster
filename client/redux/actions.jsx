@@ -11,6 +11,10 @@ export const toggleVisibility = (id) => {
   return {type: 'TOGGLE_VISIBILITY', id};
 };
 
+export const updateDistanceFilter = (distance) => {
+  return {type: 'UPDATE_DISTANCE_FILTER', distance};
+};
+
 //trails actions
 export const displayTrails = (trails) => {
   return {type: 'DISPLAY_TRAILS', trails};

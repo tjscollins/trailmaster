@@ -7,12 +7,13 @@ export const userSessionReducer = (state = {
   email: '',
   _id: '',
   visibleFeatures: [],
+  distanceFilter: 50,
 }, action) => {
   switch (action.type) {
     case 'LOGIN':
       //store Login data to sessionStorage;
-      var {xAuth, userId, email} = action;
-      var trailmasterLogin = {
+      let {xAuth, userId, email} = action;
+      let trailmasterLogin = {
         xAuth,
         _id: userId,
         email
@@ -46,11 +47,16 @@ export const userSessionReducer = (state = {
         }
         : {
           ...state,
-          visibleFeatures : [
+          visibleFeatures: [
             ...state.visibleFeatures,
             action.id
           ]
         };
+    case 'UPDATE_DISTANCE_FILTER':
+      return {
+        ...state,
+        distanceFilter: action.distance,
+      };
     default:
       return state;
   }
