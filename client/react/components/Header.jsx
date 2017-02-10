@@ -73,9 +73,9 @@ export class Header extends BaseComponent {
       .dispatch(actions.toggleMapCentering());
   }
   render() {
-    let {userLocation} = this.props;
+    let {userSession} = this.props;
     let autoCenter = () => {
-      return userLocation.mapCentering
+      return userSession.mapCentering
         ? 'Disable Auto-Center'
         : 'Enable Auto-Center';
     };

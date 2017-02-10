@@ -4,24 +4,24 @@ import {
   geoJSONReducer,
   searchTextReducer,
   mapReducer,
-  userLocationReducer,
+  // userLocationReducer,
   trailsReducer,
   userSessionReducer
 } from 'reducers';
 
-export var configure = (initialState = {}) => {
-  var reducer = redux.combineReducers({
+export const configure = (initialState = {}) => {
+  let reducer = redux.combineReducers({
     geoJSON: geoJSONReducer,
     searchText: searchTextReducer,
     map: mapReducer,
-    userLocation: userLocationReducer,
+    // userLocation: userLocationReducer,
     trails: trailsReducer,
     userSession: userSessionReducer
   });
 
-  var store = redux.createStore(reducer, initialState, redux.compose(redux.applyMiddleware(thunk), window.devToolsExtension
+  let store = redux.createStore(reducer, initialState, redux.compose(redux.applyMiddleware(thunk), window.devToolsExtension
     ? window.devToolsExtension()
-    : f => f));
+    : (f) => f));
 
   return store;
 };

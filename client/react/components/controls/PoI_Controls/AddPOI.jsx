@@ -19,7 +19,7 @@ export class AddPOI extends BaseComponent {
     $('#add-poi-modal').modal('show');
   }
   submit() {
-    var {dispatch, userLocation} = this.props;
+    var {dispatch, userSession} = this.props;
     var {name, desc, cond} = this.refs;
     var date = new Date();
     var newFeature = {
@@ -37,8 +37,8 @@ export class AddPOI extends BaseComponent {
       geometry: {
         type: 'Point',
         coordinates: [
-          userLocation.coords.longitude - 360,
-          userLocation.coords.latitude
+          userSession.coords.longitude - 360,
+          userSession.coords.latitude
         ]
       }
     };

@@ -242,7 +242,7 @@ export class UpdatePOIorRoute extends BaseComponent {
       });
 
       map.on('load', () => {
-        //place userLocation
+        //place userSession
         map.addSource('preview', {
           type: 'geojson',
           data: {

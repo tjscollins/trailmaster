@@ -20,16 +20,16 @@ import MainContainer from 'MainContainer';
 Promise.all([
   $.get('/routes'),
   $.get('/pois'),
-]).then(res => {
+]).then((res) => {
   initialize(res);
-}).catch(err => {
+}).catch((err) => {
   console.error('Error fetching data', err);
 });
 
 const initialize = (geoJSON) => {
-  var features = geoJSON.reduce((acc, currentObject) => {
-    var allObjects = [];
-    for (var key in currentObject) {
+  let features = geoJSON.reduce((acc, currentObject) => {
+    let allObjects = [];
+    for (let key in currentObject) {
       // Validate Server Data BEFORE loading it into Redux Store
       if (Array.isArray(currentObject[key])) {
         currentObject[key].forEach((item) => {
@@ -51,25 +51,32 @@ const initialize = (geoJSON) => {
       ...JSON.parse(sessionStorage.getItem('trailmaster-login')),
       visibleFeatures: [],
       distanceFilter: 50,
+      trackingRoute: false,
+      routeList: [],
+      mapCentering: false,
+      coords: {
+        latitude: 15,
+        longitude: 145
+      },
     },
   };
 
-  var store = configure(initialState);
+  let store = configure(initialState);
 
   //Initialize User Location Monitoring
-  var processGeolocation = (pos) => {
+  const processGeolocation = (pos) => {
     // console.log('Position found', pos);
     store.dispatch(actions.updatePOS(pos));
     store.dispatch(actions.updateMap());
-    if (store.getState().userLocation.trackingRoute)
+    if (store.getState().userSession.trackingRoute)
       store.dispatch(actions.addToRouteList(pos));
     };
 
-  var geolocationError = (err) => {
+  const geolocationError = (err) => {
     console.error('Error tracking user position', err);
   };
 
-  var watchId = navigator
+  navigator
     .geolocation
     .watchPosition(processGeolocation,
     // Optional settings below
@@ -81,6 +88,6 @@ const initialize = (geoJSON) => {
 
   ReactDOM.render(
     <Provider store={store}>
-    <MainContainer/>
-  </Provider>, document.getElementById('app'));
+      <MainContainer />
+    </Provider>, document.getElementById('app'));
 };

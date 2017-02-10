@@ -19,11 +19,11 @@ export class AddRoutes extends BaseComponent {
     $('#add-route-modal').modal('show');
   }
   stopTracking() {
-    var {dispatch, userLocation} = this.props;
+    var {dispatch, userSession} = this.props;
     var {name, desc, cond} = this.refs;
     var date = new Date();
     dispatch(actions.stopTrackingRoute());
-    if (userLocation.routeList.length > 0) {
+    if (userSession.routeList.length > 0) {
       var newFeature = {
         type: 'Feature',
         properties: {
@@ -38,7 +38,7 @@ export class AddRoutes extends BaseComponent {
         },
         geometry: {
           type: 'LineString',
-          coordinates: [...userLocation.routeList]
+          coordinates: [...userSession.routeList]
         }
       };
       $.ajax({

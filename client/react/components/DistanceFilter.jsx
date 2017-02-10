@@ -1,5 +1,6 @@
 /*----------Modules----------*/
 import React from 'react';
+import $ from 'jquery';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
@@ -17,10 +18,11 @@ export class DistanceFilter extends BaseComponent {
   submit(e) {
     let {dispatch} = this.props;
     e.preventDefault();
+    $('#distance-filter').modal('hide');
     if (!Number.isNaN(toInt(this.refs.distance.value))) {
       dispatch(updateDistanceFilter(toInt(this.refs.distance.value)));
-      this.refs.distance.value = '';
     }
+    this.refs.distance.value = '';
   }
   render() {
     return (

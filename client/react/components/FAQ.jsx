@@ -40,7 +40,7 @@ export class FAQ extends BaseComponent {
                 </li>
                 <li>
                   <h5>Why Don't I See Any POIs or Routes?</h5>
-                  <p>Trailmaster is currently set to only display data within 50 miles of the center of your current map view.  If you don't see any data, then no one in that area has shared any data yet.  Be the first!</p>
+                  <p>Trailmaster is currently set to only display data within 50 miles of the center of your current map view.  If you don't see any data, then no one in that area has shared any data yet.  Be the first!  Or, change the distance filter settings using the settings dropdown menu.</p>
                 </li>
                 <li>
                   <h5>I Found a Bug!</h5>
