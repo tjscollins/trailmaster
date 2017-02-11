@@ -257,6 +257,12 @@ export const searchTextReducer = (state = {
 
 export const geoJSONReducer = (state = initialGeoState, action) => {
   switch (action.type) {
+    case 'REPLACE_GEO_JSON':
+      let {features} = action;
+      return {
+        ...state,
+        features: features,
+      };
     case 'UPDATE_GEO_JSON':
       var {point} = action;
       var unchangedFeatures = state

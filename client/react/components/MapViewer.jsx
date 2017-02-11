@@ -3,6 +3,7 @@ import React from 'react';
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
 import {connect} from 'react-redux';
 import {mapConfig} from 'TrailmasterAPI';
+import distance from '@turf/distance';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
@@ -25,7 +26,8 @@ export class MapViewer extends BaseComponent {
     // appropriate
     console.log('MapViewer.createMap', this.props);
     const self = this;
-    let {geoJSON, userSession, dispatch,} = props;
+    let {geoJSON, userSession, dispatch} = props;
+    let {distanceFilter, coords} = userSession;
     let layerIDs = [];
     let filterPOI = document.getElementById('poi-searchText');
     let filterRoutes = document.getElementById('routes-searchText');
@@ -34,17 +36,27 @@ export class MapViewer extends BaseComponent {
       container: 'mapviewer',
       style: 'mapbox://styles/mapbox/outdoors-v9',
       center: [
-        userSession.coords.longitude, userSession.coords.latitude,
+        coords.longitude, coords.latitude,
       ],
       zoom: 12,
       hash: false,
       interactive: true
     });
     dispatch(actions.storeCenter(map.getCenter()));
+    Promise.all([
+      $.get(`/pois?lat=${coords.latitude}&lng=${coords.longitude-360}&dist=${distanceFilter}`),
+      $.get(`/routes?lat=${coords.latitude}&lng=${coords.longitude-360}&dist=${distanceFilter}`),
+    ]).then((res) => {
+      let [{pois}, {routes}] = res;
+      pois.concat(routes);
+      dispatch(actions.replaceGeoJSON(pois));
+    }).catch((err) => {
+      console.error('Error fetching data', err);
+    });
     //Try loading interface
     map.addControl(new mapboxgl.GeolocateControl());
     map.addControl(new mapboxgl.NavigationControl());
-    map.addControl(new mapboxgl.ScaleControl({maxWidth: 120, unit: 'imperial',}));
+    map.addControl(new mapboxgl.ScaleControl({maxWidth: 120, unit: 'imperial'}));
     map.on('load', () => {
       //place userSession
       map.addSource('user', {
@@ -217,14 +229,47 @@ export class MapViewer extends BaseComponent {
       });
     });
     map.on('moveend', () => {
+      let {center} = self.props.map;
+      let {distanceFilter} = self.props.userSession;
+      let {lng, lat} = map.getCenter();
       dispatch(actions.storeCenter(map.getCenter()));
+      let from = {
+        'type': 'Feature',
+        'properties': {},
+        'geometry': {
+          'type': 'Point',
+          'coordinates': [
+            center.lng - 360,
+            center.lat
+          ]
+        }
+      };
+      let to = {
+        'type': 'Feature',
+        'properties': {},
+        'geometry': {
+          'type': 'Point',
+          'coordinates': [lng, lat]
+        }
+      };
+      if ( distance(from, to, 'miles') > distanceFilter/4 ) {
+        Promise.all([
+          $.get(`/pois?lat=${lat}&lng=${lng-360}&dist=${distanceFilter}`),
+          $.get(`/routes?lat=${lat}&lng=${lng-360}&dist=${distanceFilter}`),
+        ]).then((res) => {
+          let [{pois}, {routes}] = res;
+          dispatch(actions.replaceGeoJSON(pois.concat(routes)));
+        }).catch((err) => {
+          console.error('Error fetching data', err);
+        });
+      }
     });
-    this.setState({map, layerIDs,});
+    this.setState({map, layerIDs});
   }
   shouldDisplay(layerName, search, props) {
     // Props should be passed in here to allow selection between current or nextProps
     // as appropriate
-    let {geoJSON, userSession,} = props;
+    let {geoJSON, userSession} = props;
     let onePoint = geoJSON
       .features
       .filter((point) => {

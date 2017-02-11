@@ -70,6 +70,10 @@ export const updateGeoJSON = (point) => {
   return {type: 'UPDATE_GEO_JSON', point};
 };
 
+export const replaceGeoJSON = (features) => {
+  return {type: 'REPLACE_GEO_JSON', features};
+};
+
 //map actions
 export const updateMap = () => {
   return {type: 'UPDATE_MAP'};
