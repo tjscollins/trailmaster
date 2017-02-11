@@ -18,8 +18,8 @@ import MainContainer from 'MainContainer';
 
 /*----------Configure Redux Store----------*/
 Promise.all([
-  $.get('/routes'),
-  $.get('/pois'),
+  // $.get('/routes'),
+  // $.get('/pois'),
 ]).then((res) => {
   initialize(res);
 }).catch((err) => {

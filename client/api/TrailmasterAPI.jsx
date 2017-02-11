@@ -1,6 +1,9 @@
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
 import $ from 'jquery';
 
+
+
+
 export const createMap = (geoJSON, layerIDs) => {
   var filterPOI = document.getElementById('poi-searchText');
   var filterRoutes = document.getElementById('routes-searchText');

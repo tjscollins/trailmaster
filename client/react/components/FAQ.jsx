@@ -44,8 +44,8 @@ export class FAQ extends BaseComponent {
                 </li>
                 <li>
                   <h5>I Found a Bug!</h5>
-                  <p>Send me an email at <a target='_blank' href='mailto:tjscollins@gmail.com'>tjscollins@gmail.com</a> describing what you were doing and what happened.</p>
-                </li>
+                  <p>Send me an email at <a target='_blank' href='mailto:tjscollins@gmail.com'>tjscollins@gmail.com</a> describing what you were doing and what happened.  Please include 'Trailmaster Bug' in the subject line.  Alternatively, please go to the <a href='https://github.com/tjscollins/trailmaster/issues'>issues page</a> and create a new issue.</p>
+                  </li>
               </ol>
             </div>
             <div className='modal-footer'>
