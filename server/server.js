@@ -1,7 +1,6 @@
 require('./config/config');
 
-// const fs = require('fs');
-// const https = require('https');
+// const fs = require('fs'); const https = require('https');
 const express = require('express');
 const bodyParser = require('body-parser');
 const _ = require('lodash');
@@ -21,7 +20,7 @@ const {authenticate} = require('./middleware/authenticate');
 const PORT = process.env.PORT || 3000;
 
 //Create our app
-var app = express();
+const app = express();
 
 app.use(bodyParser.json());
 
@@ -34,8 +33,8 @@ app.get('*', function(req, res, next) {
 });
 
 app.post('/users', (req, res) => {
-  var body = _.pick(req.body, ['email', 'password',]);
-  var user = new userModel(body);
+  let body = _.pick(req.body, ['email', 'password',]);
+  let user = new userModel(body);
 
   user
     .save()
@@ -54,7 +53,7 @@ app.post('/users', (req, res) => {
     });
 });
 app.patch('/users/password', (req, res) => {
-  var body = _.pick(req.body, ['email', 'password',]);
+  let body = _.pick(req.body, ['email', 'password',]);
   bcrypt
     .hash(body.password, 10)
     .then(hash => {
@@ -118,7 +117,7 @@ app.post('/users/reset', (req, res) => {
       var auth = {
         auth: {
           api_key: 'key-52c28f88d00577e50d1d461a6e5dec02',
-          domain: 'mg.tjscollins.me'
+          domain: 'mg.tjscollins.me',
         }
       };
       var nodemailerMailgun = nodemailer.createTransport(mg(auth));
@@ -127,7 +126,7 @@ app.post('/users/reset', (req, res) => {
         to: `${data.email}`,
         subject: 'Password Recovery',
         text: 'Fix Your Password Here',
-        html: `<p>The following is a single-use link to reset your password.</p><p>It will only work for 24 hours</p><a href=\"${url}/${reqID}-${encodeURI(data.email)}\">Reset Password</a>`
+        html: `<p>The following is a single-use link to reset your password.</p><p>It will only work for 24 hours</p><a href=\"${url}/${reqID}-${encodeURI(data.email)}\">Reset Password</a>`,
       };
       nodemailerMailgun.sendMail(message, function(err, info) {
         if (err) {
@@ -147,7 +146,7 @@ app.post('/users/reset', (req, res) => {
     });
 });
 app.get('/users/reset/:reqID-:email', (req, res) => {
-  var {reqID, email} = req.params;
+  var {reqID, email,} = req.params;
   var toRemove = [],
     toUse = -1;
   var invalid = true;
@@ -165,7 +164,8 @@ app.get('/users/reset/:reqID-:email', (req, res) => {
           if (bcrypt.compare(reqID, request.reqID)) {
             invalid = false;
             toUse = i;
-            res.setHeader('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+            res.setHeader('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-che' +
+                'ck=0');
             res.sendFile(path.join(__dirname, '/../restricted/password-reset.html'));
           }
           return toUse !== i && interval > 0 && interval < 86400000;
@@ -182,15 +182,36 @@ app.get('/users/reset/:reqID-:email', (req, res) => {
 });
 
 app.get('/pois', (req, res) => {
-  poiModel
-    .find()
-    .then((pois) => {
+  let {query} = req;
+  if (query.hasOwnProperty('lat') && query.hasOwnProperty('lng')) {
+    let {lat, lng} = query;
+    poiModel.find({
+      'geometry.coordinates.0': {
+        $lt: parseInt(lng) + 1,
+        $gt: parseInt(lng) - 1
+      },
+      'geometry.coordinates.1': {
+        $lt: parseInt(lat) + 1,
+        $gt: parseInt(lat) - 1
+      }
+    }).then((pois) => {
       res.send({pois});
     }, (e) => {
       res
         .status(400)
         .send(e);
     });
+  } else {
+    poiModel
+      .find()
+      .then((pois) => {
+        res.send({pois});
+      }, (e) => {
+        res
+          .status(400)
+          .send(e);
+      });
+  }
 });
 app.post('/pois', (req, res) => {
   var poi = new poiModel(req.body);
@@ -242,7 +263,7 @@ app.patch('/pois/:id', (req, res) => {
   }, {
     new: true,
     runValidators: true,
-    setDefaultsOnInsert: true
+    setDefaultsOnInsert: true,
   }).then((point) => {
     if (!point) {
       return res
@@ -259,15 +280,37 @@ app.patch('/pois/:id', (req, res) => {
 });
 
 app.get('/routes', (req, res) => {
-  routeModel
-    .find()
-    .then((routes) => {
+  let {query} = req;
+  if (query.hasOwnProperty('lat') && query.hasOwnProperty('lng')) {
+    let {lat, lng} = query;
+    routeModel.find({
+      'geometry.coordinates.0.0': {
+        $lt: parseInt(lng) + 1,
+        $gt: parseInt(lng) - 1
+      },
+      'geometry.coordinates.0.1': {
+        $lt: parseInt(lat) + 1,
+        $gt: parseInt(lat) - 1
+      }
+    }).then((routes) => {
       res.send({routes});
     }, (e) => {
       res
         .status(400)
         .send(e);
     });
+  }else {
+    routeModel
+      .find()
+      .then((routes) => {
+        res.send({routes});
+      }, (e) => {
+        res
+          .status(400)
+          .send(e);
+      });
+  }
+
 });
 app.post('/routes', (req, res) => {
   var route = new routeModel(req.body);
@@ -319,7 +362,7 @@ app.patch('/routes/:id', (req, res) => {
   }, {
     new: true,
     runValidators: true,
-    setDefaultsOnInsert: true
+    setDefaultsOnInsert: true,
   }).then((point) => {
     if (!point) {
       return res
@@ -354,7 +397,7 @@ app.post('/trails', authenticate, (req, res) => {
     name: req.body.name,
     desc: req.body.desc,
     date: req.body.date,
-    _creator: ObjectID(req.user._id)
+    _creator: ObjectID(req.user._id),
   });
   trail
     .save()
