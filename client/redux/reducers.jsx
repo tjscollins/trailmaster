@@ -19,7 +19,7 @@ export const userSessionReducer = (state = {
   switch (action.type) {
     case 'LOGIN':
       //store Login data to sessionStorage;
-      let {xAuth, userId, email,} = action;
+      let {xAuth, userId, email} = action;
       let trailmasterLogin = {
         xAuth,
         _id: userId,
@@ -36,9 +36,9 @@ export const userSessionReducer = (state = {
       sessionStorage.removeItem('trailmaster-login');
       return {
         ...state,
-        xAuth: '',
-        _id: '',
-        email: '',
+        xAuth: null,
+        _id: null,
+        email: null,
       };
     case 'TOGGLE_VISIBILITY':
       return state
@@ -54,7 +54,7 @@ export const userSessionReducer = (state = {
         }
         : {
           ...state,
-          visibleFeatures : [
+          visibleFeatures: [
             ...state.visibleFeatures,
             action.id,
           ],

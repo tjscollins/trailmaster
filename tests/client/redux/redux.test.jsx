@@ -4,7 +4,7 @@ import df from 'deep-freeze-strict';
 
 import * as actions from 'actions';
 import * as reducers from 'reducers';
-// var http = require('http'),
+// let http = require('http'),
 //   mockserver = require('mockserver');
 //
 // http
@@ -12,7 +12,6 @@ import * as reducers from 'reducers';
 //   .listen('3000');
 
 describe('redux', () => {
-
   //store
   describe('configureStore', () => {});
 
@@ -20,222 +19,363 @@ describe('redux', () => {
   describe('actions', () => {
     describe('trails actions', () => {
       it('should generate the SAVE_TRAIL action', () => {
-        var action = {
+        let action = {
           type: 'SAVE_TRAIL',
           name: 'name',
           desc: 'desc',
           list: 'list'
         };
-        var res = actions.saveTrail('list', 'name', 'desc');
+        let res = actions.saveTrail('list', 'name', 'desc');
         expect(res).toEqual(action);
       });
     });
-    describe('userLocation actions', () => {
+
+    describe('userSession actions', () => {
+      it('should generate the LOGIN action', () => {
+        let action = {
+          type: 'LOGIN',
+          xAuth: 'xAuth',
+          userId: 'userId',
+          email: 'email',
+        };
+        let res = actions.login('xAuth', 'userId', 'email');
+        expect(res).toEqual(action);
+      });
+      it('should generate the LOGOUT action', () => {
+        let action = {
+          type: 'LOGOUT',
+        };
+        let res = actions.logout();
+        expect(res).toEqual(action);
+      });
+      it('should generate the TOGGLE_VISIBILITY action', () => {
+        let action = {
+          type: 'TOGGLE_VISIBILITY',
+          id: 'id'
+        };
+        let res = actions.toggleVisibility('id');
+        expect(res).toEqual(action);
+      });
+      it('should generate the UPDATE_DISTANCE_FILTER action', () => {
+        let action = {
+          type: 'UPDATE_DISTANCE_FILTER',
+          distance: 'distance',
+        };
+        let res = actions.updateDistanceFilter('distance');
+        expect(res).toEqual(action);
+      });
       it('should generate the UPDATE_POS action', () => {
-        var action = {
+        let action = {
           type: 'UPDATE_POS',
           position: 'position'
         };
-        var res = actions.updatePOS('position');
+        let res = actions.updatePOS('position');
         expect(res).toEqual(action);
       });
 
       it('should generate the TOGGLE_MAP_CENTERING action', () => {
-        var action = {
+        let action = {
           type: 'TOGGLE_MAP_CENTERING'
         };
-        var res = actions.toggleMapCentering();
+        let res = actions.toggleMapCentering();
         expect(res).toEqual(action);
       });
 
       it('should generate the TRACK_ROUTE action', () => {
-        var action = {
+        let action = {
           type: 'TRACK_ROUTE'
         };
-        var res = actions.trackRoute();
+        let res = actions.trackRoute();
         expect(res).toEqual(action);
       });
 
       it('should generate the STOP_TRACKING_ROUTE action', () => {
-        var action = {
+        let action = {
           type: 'STOP_TRACKING_ROUTE'
         };
-        var res = actions.stopTrackingRoute();
+        let res = actions.stopTrackingRoute();
         expect(res).toEqual(action);
       });
 
       it('should generate the CLEAR_ROUTE_LIST action', () => {
-        var action = {
+        let action = {
           type: 'CLEAR_ROUTE_LIST'
         };
-        var res = actions.clearRouteList();
+        let res = actions.clearRouteList();
         expect(res).toEqual(action);
       });
 
       it('should generate the ADD_TO_ROUTE_LIST action', () => {
-        var action = {
+        let action = {
           type: 'ADD_TO_ROUTE_LIST',
           position: 'position'
         };
-        var res = actions.addToRouteList('position');
+        let res = actions.addToRouteList('position');
         expect(res).toEqual(action);
       });
     });
 
     describe('geoJSON actions', () => {
       it('should generate the TOGGLE_VISIBILITY action', () => {
-        var action = {
+        let action = {
           type: 'TOGGLE_VISIBILITY',
           id: '123'
         };
-        var res = actions.toggleVisibility('123');
+        let res = actions.toggleVisibility('123');
         expect(res).toEqual(action);
       });
 
       it('should generate the ADD_POI action', () => {
-        var action = {
+        let action = {
           type: 'ADD_POI',
           feature: 'feature'
         };
-        var res = actions.addPOI('feature');
+        let res = actions.addPOI('feature');
         expect(res).toEqual(action);
       });
 
       it('should generate the ADD_ROUTE action', () => {
-        var action = {
+        let action = {
           type: 'ADD_ROUTE',
           feature: 'feature'
 
         };
-        var res = actions.addRoute('feature');
+        let res = actions.addRoute('feature');
         expect(res).toEqual(action);
       });
     });
 
     describe('map actions', () => {
       it('should generate the UPDATE_MAP action', () => {
-        var action = {
+        let action = {
           type: 'UPDATE_MAP'
         };
-        var res = actions.updateMap();
+        let res = actions.updateMap();
         expect(res).toEqual(action);
       });
 
       it('should generate the COMPLETE_UPDATE_MAP action', () => {
-        var action = {
+        let action = {
           type: 'COMPLETE_UPDATE_MAP'
         };
-        var res = actions.completeUpdateMap();
+        let res = actions.completeUpdateMap();
         expect(res).toEqual(action);
       });
     });
 
     describe('searchText actions', () => {
       it('should generate the SET_POI_SEARCH_TEXT action', () => {
-        var action = {
+        let action = {
           type: 'SET_POI_SEARCH_TEXT',
           POISearchText: 'chalan'
         };
-        var res = actions.setPOISearchText('chalan');
+        let res = actions.setPOISearchText('chalan');
         expect(res).toEqual(action);
       });
 
       it('should generate the SET_ROUTES_SEARCH_TEXT action', () => {
-        var action = {
+        let action = {
           type: 'SET_ROUTES_SEARCH_TEXT',
           RoutesSearchText: 'chalan'
         };
-        var res = actions.setRoutesSearchText('chalan');
+        let res = actions.setRoutesSearchText('chalan');
         expect(res).toEqual(action);
       });
     });
-
   });
 
   //reducers
   describe('reducers', () => {
     describe('userSessionReducer', () => {
       it('should LOGIN', () => {
-        var action = {
+        let action = {
           type: 'LOGIN',
           xAuth: 'xAuth',
           userId: 'userId',
           email: 'email'
         };
-        var state = {};
-        var res = reducers.userSessionReducer(df(state), df(action));
+        let state = {};
+        let res = reducers.userSessionReducer(df(state), df(action));
         expect(res.xAuth).toBe(action.xAuth);
         expect(res.userId).toBe(res.userId);
         expect(res.email).toBe(res.email);
       });
 
       it('should LOGOUT', () => {
-        var action = {
+        let action = {
           type: 'LOGOUT'
         };
 
-        var state = {
+        let state = {
           xAuth: 'xAuth',
-          userId: 'userId',
+          _id: 'userId',
           email: 'email'
         };
-        var state = {};
-        var res = reducers.userSessionReducer(df(state), df(action));
-        expect(res.xAuth).toNotExist();
-        expect(res.userId).toNotExist();
-        expect(res.email).toBe(res.email);
+        let res = reducers.userSessionReducer(df(state), df(action));
+        expect(res.xAuth).toBe(null);
+        expect(res._id).toBe(null);
+        expect(res.email).toBe(null);
       });
 
       it('should TOGGLE VISIBILITY of listed items', () => {
-        var action1 = {
+        let action1 = {
           type: 'TOGGLE_VISIBILITY',
           id: 123
         };
-        var action2 = {
+        let action2 = {
           type: 'TOGGLE_VISIBILITY',
           id: 10
         };
-        var state = {
+        let state = {
           visibleFeatures: [10, 1]
         };
 
-        var res = reducers.userSessionReducer(df(state), df(action1));
+        let res = reducers.userSessionReducer(df(state), df(action1));
         expect(res.visibleFeatures.length).toBe(3);
         expect(res.visibleFeatures[2]).toBe(123);
         res = reducers.userSessionReducer(df(res), df(action2));
         expect(res.visibleFeatures.length).toBe(2);
         expect(res.visibleFeatures[1]).toBe(123);
       });
+
+      it('should update the distanceFilter', () => {
+          let action = {
+            type: 'UPDATE_DISTANCE_FILTER',
+            distance: 100,
+          };
+          let state = {
+            distanceFilter: 50,
+          };
+          let res = reducers.userSessionReducer(df(state), df(action));
+          expect(res.distanceFilter).toBe(100);
+      });
+
+      it('should UPDATE the user\'s POS', () => {
+        let action = {
+          type: 'UPDATE_POS',
+          position: {
+            coords: {
+              latitude: 10,
+              longitude: 210
+            }
+          }
+        };
+        let state = {
+          coords: {
+            latitude: 15,
+            longitude: 215
+          }
+        };
+        let res = reducers.userSessionReducer(df(state), df(action));
+        expect(res.coords.longitude).toBeA('number');
+        expect(res.coords.latitude).toBeA('number');
+        expect(res.coords.longitude).toNotEqual(state.coords.longitude);
+        expect(res.coords.latitude).toNotEqual(state.coords.latitude);
+        expect(res).toEqual(action.position);
+      });
+
+      it('should TOGGLE the MAP CENTERING state', () => {
+        let action = {
+          type: 'TOGGLE_MAP_CENTERING'
+        };
+        let state = {
+          mapCentering: false
+        };
+        let res = reducers.userSessionReducer(df(state), df(action));
+        expect(res.mapCentering).toBe(true);
+      });
+
+      it('should set the TRACK_ROUTE state', () => {
+        let action = {
+          type: 'TRACK_ROUTE'
+        };
+        let state = {
+          trackingRoute: false
+        };
+        let res = reducers.userSessionReducer(df(state), df(action));
+        expect(res.trackingRoute).toBe(true);
+      });
+
+      it('should unset the TRACK_ROUTE state', () => {
+        let action = {
+          type: 'STOP_TRACKING_ROUTE'
+        };
+        let state = {
+          trackingRoute: true
+        };
+        let res = reducers.userSessionReducer(df(state), df(action));
+        expect(res.trackingRoute).toBe(false);
+      });
+
+      it('should CLEAR the ROUTE LIST', () => {
+        let action = {
+          type: 'CLEAR_ROUTE_LIST'
+        };
+        let state = {
+          routeList: [
+            [
+              1, 1
+            ],
+            [
+              2, 2
+            ],
+            [3, 3]
+          ]
+        };
+        let res = reducers.userSessionReducer(df(state), df(action));
+        expect(res.routeList).toEqual([]);
+      });
+
+      it('should ADD a position TO the ROUTE LIST', () => {
+        let action = {
+          type: 'ADD_TO_ROUTE_LIST',
+          position: {
+            coords: {
+              latitude: 10,
+              longitude: 210
+            }
+          }
+        };
+        let state = {
+          routeList: []
+        };
+        let res = reducers.userSessionReducer(df(state), df(action));
+        expect(res.routeList).toBeA('array');
+        expect(res.routeList.length).toBe(1);
+        expect(res.routeList[0]).toBeA('array');
+        expect(res.routeList[0][0]).toBe(210);
+        expect(res.routeList[0][1]).toBe(10);
+      });
     });
 
     describe('trailsReducer', () => {
       it('should DISPLAY TRAILS belonging to the logged in user', () => {
-        var action = {
+        let action = {
           type: 'DISPLAY_TRAILS',
           trails: [1, 2, 3]
         };
-        var state = {
+        let state = {
           myTrails: []
         };
 
-        var res = reducers.trailsReducer(df(state), df(action));
+        let res = reducers.trailsReducer(df(state), df(action));
         expect(res.myTrails.length).toBe(3);
         expect(res.myTrails[0]).toBe(1);
       });
 
       it('should CLEAR currently displayed TRAILS', () => {
-        var action = {
+        let action = {
           type: 'CLEAR_TRAILS'
         };
-        var state = {
+        let state = {
           myTrails: [1, 2, 3]
         };
-        var res = reducers.trailsReducer(df(state), df(action));
+        let res = reducers.trailsReducer(df(state), df(action));
         expect(res.myTrails.length).toBe(0);
       });
 
       it('should SAVE a TRAIL', () => {
-        var action = {
+        let action = {
           type: 'SAVE_TRAIL',
           name: 'name',
           desc: 'desc',
@@ -243,15 +383,15 @@ describe('redux', () => {
             {
               type: 'Feature',
               properties: {
-                stroke: '#555555',
+                'stroke': '#555555',
                 'stroke-width': 2,
                 'stroke-opacity': 1,
-                name: 'Chalan Kiya to Kannat Tabla Connector',
-                desc: 'Trail to move from Kannat Tabla area down into Chalan Kiya near the start of the Chalan Kiya ravine',
-                condition: 'Uncut, overgrown',
-                last: 'Dec 2015',
-                displayed: false,
-                id: '1'
+                'name': 'Chalan Kiya to Kannat Tabla Connector',
+                'desc': 'Trail to move from Kannat Tabla area down into Chalan Kiya near the start of the Chalan Kiya ravine',
+                'condition': 'Uncut, overgrown',
+                'last': 'Dec 2015',
+                'displayed': false,
+                'id': '1'
               },
               geometry: {
                 type: 'LineString',
@@ -346,12 +486,12 @@ describe('redux', () => {
                 'marker-color': '#7e7e7e',
                 'marker-size': 'medium',
                 'marker-symbol': '',
-                name: 'Concrete Jesus',
-                desc: 'Concrete statue of Jesus at the peak of Mt. Tapotchau',
-                condition: 'Rough dirt road, easy access on foot',
-                last: 'June 2016',
-                displayed: false,
-                id: '2'
+                'name': 'Concrete Jesus',
+                'desc': 'Concrete statue of Jesus at the peak of Mt. Tapotchau',
+                'condition': 'Rough dirt road, easy access on foot',
+                'last': 'June 2016',
+                'displayed': false,
+                'id': '2'
               },
               geometry: {
                 type: 'Point',
@@ -363,12 +503,12 @@ describe('redux', () => {
                 'marker-color': '#7e7e7e',
                 'marker-size': 'medium',
                 'marker-symbol': '',
-                name: 'Rabbit Hole',
-                desc: 'Hole descends from top of cliff to bottom, forming climbable cave',
-                condition: 'Rope in good condition',
-                last: 'June 2014',
-                displayed: false,
-                id: '4'
+                'name': 'Rabbit Hole',
+                'desc': 'Hole descends from top of cliff to bottom, forming climbable cave',
+                'condition': 'Rope in good condition',
+                'last': 'June 2014',
+                'displayed': false,
+                'id': '4'
               },
               geometry: {
                 type: 'Point',
@@ -377,236 +517,136 @@ describe('redux', () => {
             }
           ]
         };
-        var state = {
+        let state = {
           myTrails: []
         };
 
-        var res = reducers.trailsReducer(df(state), df(action));
+        let res = reducers.trailsReducer(df(state), df(action));
         expect(res.myTrails).toExist();
         expect(res.myTrails.length).toBe(1);
         expect(res.myTrails[0]).toBeA('object');
         expect(res.myTrails[0].name).toEqual('name');
         expect(res.myTrails[0].desc).toEqual('desc');
         expect(res.myTrails[0].list).toEqual(action.list);
-
-      });
-    });
-
-    describe('userLocationReducer', () => {
-      it('should UPDATE the user\'s POS', () => {
-        var action = {
-          type: 'UPDATE_POS',
-          position: {
-            coords: {
-              latitude: 10,
-              longitude: 210
-            }
-          }
-        };
-        var state = {
-          coords: {
-            latitude: 15,
-            longitude: 215
-          }
-        };
-        var res = reducers.userLocationReducer(df(state), df(action));
-        expect(res.coords.longitude).toBeA('number');
-        expect(res.coords.latitude).toBeA('number');
-        expect(res.coords.longitude).toNotEqual(state.coords.longitude);
-        expect(res.coords.latitude).toNotEqual(state.coords.latitude);
-        expect(res).toEqual(action.position);
-      });
-
-      it('should TOGGLE the MAP CENTERING state', () => {
-        var action = {
-          type: 'TOGGLE_MAP_CENTERING'
-        };
-        var state = {
-          mapCentering: false
-        };
-        var res = reducers.userLocationReducer(df(state), df(action));
-        expect(res.mapCentering).toBe(true);
-      });
-
-      it('should set the TRACK_ROUTE state', () => {
-        var action = {
-          type: 'TRACK_ROUTE'
-        };
-        var state = {
-          trackingRoute: false
-        };
-        var res = reducers.userLocationReducer(df(state), df(action));
-        expect(res.trackingRoute).toBe(true);
-      });
-
-      it('should unset the TRACK_ROUTE state', () => {
-        var action = {
-          type: 'STOP_TRACKING_ROUTE'
-        };
-        var state = {
-          trackingRoute: true
-        };
-        var res = reducers.userLocationReducer(df(state), df(action));
-        expect(res.trackingRoute).toBe(false);
-      });
-
-      it('should CLEAR the ROUTE LIST', () => {
-        var action = {
-          type: 'CLEAR_ROUTE_LIST'
-        };
-        var state = {
-          routeList: [
-            [
-              1, 1
-            ],
-            [
-              2, 2
-            ],
-            [3, 3]
-          ]
-        };
-        var res = reducers.userLocationReducer(df(state), df(action));
-        expect(res.routeList).toEqual([]);
-      });
-
-      it('should ADD a position TO the ROUTE LIST', () => {
-        var action = {
-          type: 'ADD_TO_ROUTE_LIST',
-          position: {
-            coords: {
-              latitude: 10,
-              longitude: 210
-            }
-          }
-        };
-        var state = {
-          routeList: []
-        };
-        var res = reducers.userLocationReducer(df(state), df(action));
-        expect(res.routeList).toBeA('array');
-        expect(res.routeList.length).toBe(1);
-        expect(res.routeList[0]).toBeA('array');
-        expect(res.routeList[0][0]).toBe(210);
-        expect(res.routeList[0][1]).toBe(10);
       });
     });
 
     describe('mapReducer', () => {
       it('should set the UPDATE MAP value', () => {
-        var action = {
+        let action = {
           type: 'UPDATE_MAP'
         };
-        var state = {
+        let state = {
           update: false
         };
-        var res = reducers.mapReducer(df(state), df(action));
+        let res = reducers.mapReducer(df(state), df(action));
         expect(res.update).toBe(true);
       });
 
       it('should reset the UPDATE MAP value when COMPLETE', () => {
-        var action = {
+        let action = {
           type: 'COMPLETE_UPDATE_MAP'
         };
-        var state = {
+        let state = {
           update: true
         };
-        var res = reducers.mapReducer(df(state), df(action));
+        let res = reducers.mapReducer(df(state), df(action));
         expect(res.update).toBe(false);
       });
     });
 
     describe('searchTextReducer', () => {
       it('should set updateSearchText', () => {
-        var action = {
+        let action = {
           type: 'UPDATE_SEARCH_TEXT',
           updateSearchText: 'search'
         };
-        var state = {
+        let state = {
           updateSearchText: ''
         };
 
-        var res = reducers.searchTextReducer(df(state), df(action));
+        let res = reducers.searchTextReducer(df(state), df(action));
         expect(res.updateSearchText).toEqual(action.updateSearchText);
       });
 
       it('should set POISearchText', () => {
-        var action = {
+        let action = {
           type: 'SET_POI_SEARCH_TEXT',
           POISearchText: 'search'
         };
-        var state = {
+        let state = {
           POISearchText: ''
         };
 
-        var res = reducers.searchTextReducer(df(state), df(action));
+        let res = reducers.searchTextReducer(df(state), df(action));
         expect(res.POISearchText).toEqual(action.POISearchText);
       });
 
       it('should set RoutesSearchText', () => {
-        var action = {
+        let action = {
           type: 'SET_ROUTES_SEARCH_TEXT',
           RoutesSearchText: 'search'
         };
-        var state = {
+        let state = {
           RoutesSearchText: ''
         };
 
-        var res = reducers.searchTextReducer(df(state), df(action));
+        let res = reducers.searchTextReducer(df(state), df(action));
         expect(res.RoutesSearchText).toEqual(action.RoutesSearchText);
       });
 
       it('should set trailSearchText', () => {
-        var action = {
+        let action = {
           type: 'SET_TRAIL_SEARCH_TEXT',
           trailSearchText: 'search'
         };
-        var state = {
+        let state = {
           trailSearchText: ''
         };
 
-        var res = reducers.searchTextReducer(df(state), df(action));
+        let res = reducers.searchTextReducer(df(state), df(action));
         expect(res.trailSearchText).toEqual(action.trailSearchText);
       });
     });
 
     describe('geoJSONReducer', () => {
       it('should ADD new POIs to the store', () => {
-        var action = {
+        let action = {
           type: 'ADD_POI',
           feature: 'feature'
         };
-        var state = {
+        let state = {
           type: 'FeatureCollection',
           features: []
         };
-        var res = reducers.geoJSONReducer(df(state), df(action));
+        let res = reducers.geoJSONReducer(df(state), df(action));
         expect(res.features.length).toBe(1);
         expect(res.features[0]).toBe(action.feature);
       });
 
       it('should ADD new ROUTEs to the store', () => {
-        var action = {
+        let action = {
           type: 'ADD_ROUTE',
           feature: 'feature'
         };
-        var state = {
+        let state = {
           type: 'FeatureCollection',
           features: []
         };
-        var res = reducers.geoJSONReducer(df(state), df(action));
+        let res = reducers.geoJSONReducer(df(state), df(action));
         expect(res.features.length).toBe(1);
         expect(res.features[0]).toBe(action.feature);
       });
 
       it('should UPDATE existing GEOJSON data', () => {
-        var action = {
+        let action = {
           type: 'UPDATE_GEO_JSON',
           point: {
             _id: 100,
             name: 'Tom'
           }
         };
-        var state = {
+        let state = {
           features: [
             {
               _id: 100,
@@ -617,7 +657,7 @@ describe('redux', () => {
             }
           ]
         };
-        var res = reducers.geoJSONReducer(df(state), df(action));
+        let res = reducers.geoJSONReducer(df(state), df(action));
         expect(res.features.length).toBe(2);
         expect(res.features[0].name).toBe('Chelsea');
         expect(res.features[1].name).toBe('Tom');

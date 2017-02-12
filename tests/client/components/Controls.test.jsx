@@ -8,7 +8,8 @@ import ReactTestUtils from 'react-addons-test-utils';
 import {Provider} from 'react-redux';
 import {configure} from 'configureStore';
 import $ from 'jquery';
-var jQuery = $;
+let jQuery = $;
+import * as api from 'TrailmasterAPI';
 
 /*----------Components----------*/
 import {Controls} from 'Controls';
@@ -30,21 +31,21 @@ describe('Controls', () => {
   });
 
   it('should render all controls components', () => {
-    var store = configure({});
-    var provider = ReactTestUtils.renderIntoDocument(
+    let store = configure({});
+    let provider = ReactTestUtils.renderIntoDocument(
       <Provider store={store}><Controls/></Provider>
     );
-    var controls = ReactTestUtils.scryRenderedComponentsWithType(provider, Controls)[0];
-    var addPOI = ReactTestUtils.scryRenderedComponentsWithType(controls, AddPOI);
-    var listPOI = ReactTestUtils.scryRenderedComponentsWithType(controls, ListPOI);
-    var searchPOI = ReactTestUtils.scryRenderedComponentsWithType(controls, SearchPOI);
-    var addRoutes = ReactTestUtils.scryRenderedComponentsWithType(controls, AddRoutes);
-    var listRoutes = ReactTestUtils.scryRenderedComponentsWithType(controls, ListRoutes);
-    var searchRoutes = ReactTestUtils.scryRenderedComponentsWithType(controls, SearchRoutes);
-    var addTrails = ReactTestUtils.scryRenderedComponentsWithType(controls, AddTrails);
-    var listTrails = ReactTestUtils.scryRenderedComponentsWithType(controls, ListTrails);
-    var searchTrails = ReactTestUtils.scryRenderedComponentsWithType(controls, SearchTrails);
-    var tools = ReactTestUtils.scryRenderedComponentsWithType(controls, Tools);
+    let controls = ReactTestUtils.scryRenderedComponentsWithType(provider, Controls)[0];
+    let addPOI = ReactTestUtils.scryRenderedComponentsWithType(controls, AddPOI);
+    let listPOI = ReactTestUtils.scryRenderedComponentsWithType(controls, ListPOI);
+    let searchPOI = ReactTestUtils.scryRenderedComponentsWithType(controls, SearchPOI);
+    let addRoutes = ReactTestUtils.scryRenderedComponentsWithType(controls, AddRoutes);
+    let listRoutes = ReactTestUtils.scryRenderedComponentsWithType(controls, ListRoutes);
+    let searchRoutes = ReactTestUtils.scryRenderedComponentsWithType(controls, SearchRoutes);
+    let addTrails = ReactTestUtils.scryRenderedComponentsWithType(controls, AddTrails);
+    let listTrails = ReactTestUtils.scryRenderedComponentsWithType(controls, ListTrails);
+    let searchTrails = ReactTestUtils.scryRenderedComponentsWithType(controls, SearchTrails);
+    let tools = ReactTestUtils.scryRenderedComponentsWithType(controls, Tools);
 
     expect(addPOI.length).toBe(1);
     expect(listPOI.length).toBe(1);
@@ -61,33 +62,34 @@ describe('Controls', () => {
     expect(tools.length).toBe(1);
   });
 
-  it('should call Controls.hide method when the hide-arrow is clicked', () => {
-    var hideStub = sinon.stub(Controls.prototype, 'hide');
-    var store = configure({});
-    var provider = ReactTestUtils.renderIntoDocument(
-      <Provider store={store}><Controls/></Provider>
+  it('should call toggleUI method when the hide-arrow is clicked', () => {
+    let toggleUISpy = sinon.spy(api, 'toggleUI');
+    let store = configure({});
+    let provider = ReactTestUtils.renderIntoDocument(
+      <Provider store={store}>
+        <Controls />
+      </Provider>
     );
-    var hideArrow = ReactTestUtils.scryRenderedDOMComponentsWithClass(provider, 'fa-arrow-left')[0];
+    let hideArrow = ReactTestUtils.scryRenderedDOMComponentsWithClass(provider, 'fa-arrow-left')[0];
     ReactTestUtils
       .Simulate
       .click(hideArrow);
     sinon
       .assert
-      .called(hideStub);
-    hideStub.restore();
+      .called(toggleUISpy);
   });
 
   // describe('Controls.hide()', () => {
   //   it('should change the classes on #hide-arrow', () => {
   //     //How to Mock jquery so this is testable?
   //
-  //     var store = configure({});
-  //     var provider = ReactTestUtils.renderIntoDocument(
+  //     let store = configure({});
+  //     let provider = ReactTestUtils.renderIntoDocument(
   //       <Provider store={store}><Controls/></Provider>
   //     );
-  //     var controls = ReactTestUtils.scryRenderedComponentsWithType(provider, Controls)[0];
+  //     let controls = ReactTestUtils.scryRenderedComponentsWithType(provider, Controls)[0];
   //     controls.hide();
-  //     var div = ReactTestUtils.scryRenderedDOMComponentsWithClass(controls, 'controls')[0];
+  //     let div = ReactTestUtils.scryRenderedDOMComponentsWithClass(controls, 'controls')[0];
   //     expect($(div).hasClass('hide-left')).toBe(true);
   //   });
   // });
