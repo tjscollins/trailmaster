@@ -584,6 +584,34 @@ describe('POST /users', () => {
       });
   });
 
+  it('should trim and toLowerCase all submitted email addresses', (done) => {
+    let email = 'EXample@example.com  ';
+    let password = '123mnb!';
+
+    request(app)
+      .post('/users')
+      .send({email, password})
+      .expect(200)
+      .expect((res) => {
+        expect(res.headers['x-auth']).toExist();
+        expect(res.body._id).toExist();
+        expect(res.body.email).toBe('example@example.com');
+      })
+      .end((err) => {
+        if (err) {
+          return done(err);
+        }
+
+        userModel
+          .findOne({email: 'example@example.com'})
+          .then((user) => {
+            expect(user).toExist();
+            expect(user.password).toNotBe(password);
+            done();
+          });
+      });
+  });
+
   it('should return validation errors if request invalid', (done) => {
     request(app)
       .post('/users')
@@ -606,6 +634,29 @@ describe('POST /users/login', () => {
     request(app)
       .post('/users/login')
       .send({email: users[1].email, password: users[1].password})
+      .expect(200)
+      .expect((res) => {
+        expect(res.headers['x-auth']).toExist();
+      })
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        }
+
+        userModel
+          .findById(users[1]._id)
+          .then((user) => {
+            expect(user.tokens[0]).toInclude({access: 'auth', token: res.headers['x-auth']});
+            done();
+          })
+          .catch((e) => done(e));
+      });
+  });
+
+  it('should trim and toLowerCase email address before checking login', (done)=> {
+    request(app)
+      .post('/users/login')
+      .send({email: users[1].email.toUpperCase() + '  ', password: users[1].password})
       .expect(200)
       .expect((res) => {
         expect(res.headers['x-auth']).toExist();
@@ -752,7 +803,30 @@ describe('POST /users/reset', () => {
       });
   });
 
-  it('should NOT generate a resetRequest and send an email with a password RESET link if there is a valid user email', (done) => {
+  it('should trim and toLowerCase user email address before checking if valid', (done) => {
+    let email = 'TJscollins@gmail.com  ';
+    request(app)
+      .post('/users/reset')
+      .send({email})
+      .expect(200)
+      .end((err) => {
+        if (err) {
+          return done(err);
+        }
+        userModel
+          .find({email: 'tjscollins@gmail.com'})
+          .then((user) => {
+            if (!user) {
+              return Promise.reject();
+            }
+            expect(user[0].resetRequests).toExist();
+            expect(user[0].resetRequests.length).toBe(1);
+            done();
+          }, (err) => done(err));
+      });
+  });
+
+  it('should NOT generate a resetRequest and send an email with a password RESET link if there is an invalid user email', (done) => {
     let email = 'tjmail.com';
     request(app)
       .post('/users/reset')

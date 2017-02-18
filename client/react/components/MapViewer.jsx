@@ -38,11 +38,12 @@ export class MapViewer extends React.Component {
     let searchRoutes = new RegExp(RoutesSearchText || '!!!!!!', 'i');
 
     if(update) {
-      this.refreshMap(nextProps);
+      // Timeout hack to run AFTER map has loaded fully
+      setTimeout(()=> {this.refreshMap(nextProps);}, 25);
       dispatch(actions.completeUpdateMap());
     }
 
-    if(mapCentering || initCenter) {
+    if(mapCentering || initCenter && this.state.map) {
       this.centerMap(longitude, latitude, initCenter);
       this.setState({initCenter: false});
     }
@@ -116,15 +117,16 @@ export class MapViewer extends React.Component {
     map.addControl(new mapboxgl.GeolocateControl());
     map.addControl(new mapboxgl.NavigationControl());
     map.addControl(new mapboxgl.ScaleControl({maxWidth: 120, unit: 'imperial'}));
-
+    dispatch(actions.storeCenter(map.getCenter()));
 
     map.on('load', () => {
-      dispatch(actions.storeCenter(map.getCenter()));
+
     });
 
     map.on('moveend', () => {
 
     });
+
 
     this.setState({map});
   }

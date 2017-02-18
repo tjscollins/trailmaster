@@ -33,9 +33,9 @@ app.get('*', function(req, res, next) {
 });
 
 app.post('/users', (req, res) => {
-  let body = _.pick(req.body, ['email', 'password',]);
+  let body = _.pick(req.body, ['email', 'password']);
+  body.email = body.email.trim().toLowerCase();
   let user = new userModel(body);
-
   user
     .save()
     .then(() => {
@@ -53,12 +53,12 @@ app.post('/users', (req, res) => {
     });
 });
 app.patch('/users/password', (req, res) => {
-  let body = _.pick(req.body, ['email', 'password',]);
+  let body = _.pick(req.body, ['email', 'password']);
   bcrypt
     .hash(body.password, 10)
-    .then(hash => {
+    .then((hash) => {
       userModel.update({
-        email: body.email
+        email: body.email.trim().toLowerCase()
       }, {
         password: hash
       }, (err, raw) => {
@@ -75,10 +75,10 @@ app.get('/users/me', authenticate, (req, res) => {
   res.send(req.user);
 });
 app.post('/users/login', (req, res) => {
-  var body = _.pick(req.body, ['email', 'password',]);
+  let body = _.pick(req.body, ['email', 'password']);
 
   userModel
-    .findByCredentials(body.email, body.password)
+    .findByCredentials(body.email.trim().toLowerCase(), body.password)
     .then((user) => {
       return user
         .generateAuthToken()
@@ -109,24 +109,25 @@ app.delete('/users/me/token', authenticate, (req, res) => {
     });
 });
 app.post('/users/reset', (req, res) => {
-  var data = _.pick(req.body, ['email']);
-  var url = 'http://' + req.get('host') + '/users/reset';
+  let {email} = _.pick(req.body, ['email']);
+  email = email.trim().toLowerCase();
+  let url = 'http://' + req.get('host') + '/users/reset';
   userModel
-    .resetPassword(data.email)
+    .resetPassword(email)
     .then((reqID) => {
-      var auth = {
+      let auth = {
         auth: {
           api_key: 'key-52c28f88d00577e50d1d461a6e5dec02',
           domain: 'mg.tjscollins.me',
         }
       };
-      var nodemailerMailgun = nodemailer.createTransport(mg(auth));
-      var message = {
+      let nodemailerMailgun = nodemailer.createTransport(mg(auth));
+      let message = {
         from: '"Trailmaster Admin" <tjscollins@gmail.com>',
-        to: `${data.email}`,
+        to: `${email}`,
         subject: 'Password Recovery',
         text: 'Fix Your Password Here',
-        html: `<p>The following is a single-use link to reset your password.</p><p>It will only work for 24 hours</p><a href=\"${url}/${reqID}-${encodeURI(data.email)}\">Reset Password</a>`,
+        html: `<p>The following is a single-use link to reset your password.</p><p>It will only work for 24 hours</p><a href=\"${url}/${reqID}-${encodeURI(email)}\">Reset Password</a>`,
       };
       nodemailerMailgun.sendMail(message, function(err, info) {
         if (err) {
@@ -146,21 +147,21 @@ app.post('/users/reset', (req, res) => {
     });
 });
 app.get('/users/reset/:reqID-:email', (req, res) => {
-  var {reqID, email,} = req.params;
-  var toRemove = [],
+  let {reqID, email} = req.params;
+  let toRemove = [],
     toUse = -1;
-  var invalid = true;
+  let invalid = true;
   userModel
     .find({email})
     .then((user) => {
       if (!user.length) {
         return Promise.reject('No such user');
       }
-      var remainingRequests = user[0]
+      let remainingRequests = user[0]
         .resetRequests
         .filter((request, i) => {
-          var currentTime = new Date().getTime();
-          var interval = currentTime - request.time;
+          let currentTime = new Date().getTime();
+          let interval = currentTime - request.time;
           if (bcrypt.compare(reqID, request.reqID)) {
             invalid = false;
             toUse = i;
