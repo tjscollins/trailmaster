@@ -4,9 +4,9 @@
   "description": "Trail Mapping Application",
   "main": "server.js",
   "scripts": {
-    "server-test": "export NODE_ENV=test || SET NODE_ENV=test && mocha tests/server/**/*test.js",
+    "server-test": "export NODE_ENV=test || SET NODE_ENV=test && istanbul cover _mocha tests/server/**/*test.js",
     "client-test": "karma start",
-    "test": "export NODE_ENV=test || SET NODE_ENV=test && mocha tests/server/**/*test.js && karma start",
+    "test": "export NODE_ENV=test || SET NODE_ENV=test && istanbul cover _mocha tests/server/**/*test.js && karma start",
     "test-watch": "nodemon --exec 'npm test'",
     "start": "node server/server.js"
   },
@@ -102,6 +102,7 @@
     "json-loader": "^0.5.4",
     "karma": "^0.13.22",
     "karma-chrome-launcher": "^0.2.2",
+    "karma-coverage": "^1.1.1",
     "karma-firefox-launcher": "^1.0.0",
     "karma-ie-launcher": "^1.0.0",
     "karma-jquery": "^0.1.0",
