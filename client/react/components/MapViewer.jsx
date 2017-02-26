@@ -2,13 +2,12 @@
 import React from 'react';
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
 import {connect} from 'react-redux';
-import {mapConfig} from 'TrailmasterAPI';
 import distance from '@turf/distance';
 
 /*----------Components----------*/
 
 /*----------API Functions----------*/
-import {validateServerData} from 'TrailmasterAPI';
+import {validateServerData, fetchData, mapConfig} from 'TrailmasterAPI';
 
 /*----------Redux----------*/
 import * as actions from 'actions';
@@ -53,6 +52,7 @@ export class MapViewer extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // console.log('MapViewer.componentWillReceiveProps: ', nextProps);
     const {
       dispatch,
       geoJSON: {
@@ -74,8 +74,8 @@ export class MapViewer extends React.Component {
       },
     } = nextProps;
     const {map, layerIDs, initCenter} = this.state;
-    let searchPOI = new RegExp(POISearchText || '!!!!!!', 'i');
-    let searchRoutes = new RegExp(RoutesSearchText || '!!!!!!', 'i');
+    const searchPOI = new RegExp(POISearchText || '!!!!!!', 'i');
+    const searchRoutes = new RegExp(RoutesSearchText || '!!!!!!', 'i');
 
     if (update) {
       this.refreshMap(nextProps);
@@ -88,13 +88,11 @@ export class MapViewer extends React.Component {
     }
 
     // Check Map Layer Visibility
-    features.forEach(({properties, geometry}) => {
-      let {name, displayed} = properties;
+    features.forEach(({properties: {name, displayed}, geometry}) => {
       let i = layerIDs.map((id) => {
         return id[0];
       }).indexOf(name);
       if (i > -1) {
-        // console.log(name);
         if (this.shouldDisplay(name, searchPOI, nextProps) && layerIDs[i][1] === 'symbol') {
           map.setLayoutProperty(name, 'visibility', 'visible');
         } else if (this.shouldDisplay(name, searchRoutes, nextProps) && layerIDs[i][1] !== 'symbol') {
@@ -108,6 +106,7 @@ export class MapViewer extends React.Component {
         }
     });
   }
+
   centerMap(lng, lat, instant) {
     const {map} = this.state;
     if (instant) {
@@ -168,7 +167,8 @@ export class MapViewer extends React.Component {
     map.addControl(new mapboxgl.ScaleControl({maxWidth: 120, unit: 'imperial'}));
 
     map.on('load', () => {
-      dispatch(actions.storeCenter(map.getCenter()));
+      // dispatch(actions.storeCenter(map.getCenter()));
+      // dispatch(actions.updateMap());
     });
 
     map.on('moveend', () => {
@@ -186,6 +186,7 @@ export class MapViewer extends React.Component {
    *                        certain situations.
    */
   createMapLayers(props, getNewData) {
+    // debugger;
     const {map} = this.state;
     let layerIDs = [];
     const {
@@ -200,128 +201,57 @@ export class MapViewer extends React.Component {
       dispatch
     } = props;
 
-    if (getNewData) {
-      Promise.all([
-        $.get(`/pois?lat=${latitude}&lng=${longitude - 360}&dist=${distanceFilter}`),
-        $.get(`/routes?lat=${latitude}&lng=${longitude - 360}&dist=${distanceFilter}`),
-      ]).then((data) => {
-        let features = data.reduce((acc, currentObject) => {
-          let allObjects = [];
-          for (let key in currentObject) {
-            // Validate Server Data BEFORE loading it into Redux Store
-            if (Array.isArray(currentObject[key])) {
-              currentObject[key].forEach((item) => {
-                if (validateServerData(item)) allObjects.push(item);
-              });
-            }
+
+    new Promise((resolve, reject) => {
+        if(getNewData) {
+          try {
+            fetchData(latitude, longitude, distanceFilter).then((data) => {
+              // Concatenate the list of geoJSON features into one FeatureCollection
+              let features = data.reduce((acc, currentObject) => {
+                let allObjects = [];
+                for (let key in currentObject) {
+                  // Validate Server Data BEFORE loading it into Redux Store
+                  if (Array.isArray(currentObject[key])) {
+                    currentObject[key].forEach((item) => {
+                      if (validateServerData(item)) allObjects.push(item);
+                    });
+                  }
+                }
+                return acc.concat(allObjects);
+              }, []);
+              dispatch(actions.replaceGeoJSON(features));
+              resolve(features);
+            });
+          } catch (error) {
+            reject(error);
           }
-          return acc.concat(allObjects);
-        }, []);
-        dispatch(actions.replaceGeoJSON(features));
-      })
-    }
+        } else {
+          if(geoJSON.features) {
+            resolve(geoJSON.features);
+          } else {
+            reject(new Error('geoJSON.features does not exist'));
+          }
+        }
+    }).then((features) => {
+      // Place User Marker on Map
+      const {userSource, userLayer, geoJSONSource, geoJSONLayer} = mapConfig([longitude, latitude], features);
+      map.addSource('user', userSource);
+      map.addLayer(userLayer);
 
-    // Place User Marker on Map
-    const userSource = {
-      type: 'geojson',
-      data: {
-        type: 'FeatureCollection',
-        features: [
-          {
-            type: 'Feature',
-            properties: {
-              'marker-color': 'cyan',
-              'marker-size': 'large',
-              'marker-symbol': 'icon-color',
-              'name': 'You',
-            },
-            geometry: {
-              type: 'Point',
-              coordinates: [
-                longitude, latitude,
-              ],
-            },
-          },
-        ],
-      },
-    };
+      // Add Map Layers for GeoJSON Data
+      map.addSource('geoJSON', geoJSONSource);
 
-    const userLayer = {
-      'id': 'You Are Here',
-      'type': 'symbol',
-      'source': 'user',
-      'layout': {
-        'icon-image': 'marker-15',
-        'icon-size': 2,
-        'text-field': '{name}',
-        'text-font': [
-          'Open Sans Regular', 'Arial Unicode MS Regular',
-        ],
-        'text-size': 10,
-        'text-offset': [
-          0, 1,
-        ],
-        'text-anchor': 'top',
-        'visibility': 'visible',
-      },
-    };
-
-    map.addSource('user', userSource);
-    map.addLayer(userLayer);
-
-    // Add Map Layers for GeoJSON Data
-    let geoJSONSource = {
-      'type': 'geojson',
-      'data': geoJSON,
-    };
-
-    let geoJSONLayer = (source, id, type, layout) => {
-      return {
-        id,
-        type,
-        source,
-        layout,
-        'filter': ['==', 'name', id,]
-      };
-    };
-    map.addSource('geoJSON', geoJSONSource);
-
-    geoJSON
-      .features
-      .forEach((feature) => {
-        let {name} = feature.properties;
-        let type = '',
-          layout = {};
-        switch (feature.geometry.type) {
-          case 'Point':
-            type = 'symbol';
-            layout = {
-              'icon-image': 'marker-15',
-              'text-field': '{name}',
-              'text-font': [
-                'Open Sans Regular', 'Arial Unicode MS Regular',
-              ],
-              'text-size': 10,
-              'text-offset': [
-                0, 0.6,
-              ],
-              'text-anchor': 'top',
-              'visibility': 'none',
-            };
-            break;
-          case 'LineString':
-            type = 'line';
-            layout = {
-              'line-join': 'round',
-              'line-cap': 'round',
-              'visibility': 'none',
-            };
-            // Create Text Label for LineString layers
-            map.addLayer({
-              'id': `${name} label`,
-              'type': 'symbol',
-              'source': 'geoJSON',
-              'layout': {
+      console.log('Adding Layers for features: ', features);
+      features
+        .forEach((feature) => {
+          let {name} = feature.properties;
+          let type = '',
+            layout = {};
+          switch (feature.geometry.type) {
+            case 'Point':
+              type = 'symbol';
+              layout = {
+                'icon-image': 'marker-15',
                 'text-field': '{name}',
                 'text-font': [
                   'Open Sans Regular', 'Arial Unicode MS Regular',
@@ -332,17 +262,46 @@ export class MapViewer extends React.Component {
                 ],
                 'text-anchor': 'top',
                 'visibility': 'none',
-              },
-              'filter': ['==', 'name', name,]
-            });
-            break;
-          default:
-            throw new Error(`Unknown feature type ${feature.geometry.type}`);
-        }
-        map.addLayer(geoJSONLayer('geoJSON', name, type, layout))
-        layerIDs.push([name, type,]);
-      });
-    this.setState({layerIDs});
+              };
+              break;
+            case 'LineString':
+              type = 'line';
+              layout = {
+                'line-join': 'round',
+                'line-cap': 'round',
+                'visibility': 'none',
+              };
+              // Create Text Label for LineString layers
+              map.addLayer({
+                'id': `${name} label`,
+                'type': 'symbol',
+                'source': 'geoJSON',
+                'layout': {
+                  'text-field': '{name}',
+                  'text-font': [
+                    'Open Sans Regular', 'Arial Unicode MS Regular',
+                  ],
+                  'text-size': 10,
+                  'text-offset': [
+                    0, 0.6,
+                  ],
+                  'text-anchor': 'top',
+                  'visibility': 'none',
+                },
+                'filter': ['==', 'name', name,]
+              });
+              break;
+            default:
+              throw new Error(`Unknown feature type ${feature.geometry.type}`);
+          }
+          map.addLayer(geoJSONLayer('geoJSON', name, type, layout))
+          layerIDs.push([name, type,]);
+        });
+      this.setState({layerIDs});
+    }).catch((error) => {
+      console.error(error);
+      debugger;
+    });
   }
 
   refreshMap(props) {
@@ -372,6 +331,7 @@ export class MapViewer extends React.Component {
       .visibleFeatures
       .indexOf(onePoint._id) > -1;
   }
+
   render() {
     return (<div id='mapviewer' className='mapviewer'/>);
   }

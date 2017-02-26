@@ -7,45 +7,22 @@ import {Provider} from 'react-redux';
 import {configure} from 'configureStore';
 import * as actions from 'actions';
 
-/*----------Modules----------*/
-import $ from 'jquery';
-
-/*----------API Functions----------*/
-import {validateServerData} from 'TrailmasterAPI';
-
 /*----------Components----------*/
 import MainContainer from 'MainContainer';
 
-/*----------Configure Redux Store----------*/
-Promise.all([
-  $.get(`/pois?lat=${15}&lng=${145 - 360}&dist=${50}`),
-  $.get(`/routes?lat=${15}&lng=${145 - 360}&dist=${50}`)
-]).then((res) => {
-  initialize(res);
-}).catch((err) => {
-  console.error('Error fetching data', err);
-});
-
-const initialize = (geoJSON) => {
-  let features = geoJSON.reduce((acc, currentObject) => {
-    let allObjects = [];
-    for (let key in currentObject) {
-      // Validate Server Data BEFORE loading it into Redux Store
-      if (Array.isArray(currentObject[key])) {
-        currentObject[key].forEach((item) => {
-          if (validateServerData(item)) allObjects.push(item);
-        });
-      }
-    }
-    return acc.concat(allObjects);
-  }, []);
+/**
+ * function - Initialize redux store, configure the geolocation service,
+ *             and render the react application
+ */
+(function() {
   const initialState = {
     map: {
-      accessToken: 'pk.eyJ1IjoidGpzY29sbGlucyIsImEiOiJjaXdhZjl4b3AwM2h5MzNwbzZ0eDg0YWZsIn0.uR5NCLn73_X2M9PxDO_4KA'
+      accessToken: 'pk.eyJ1IjoidGpzY29sbGlucyIsImEiOiJjaXdhZjl4b3AwM2h5MzNwbzZ0eDg0YWZsIn0.uR5NCLn73' +
+          '_X2M9PxDO_4KA'
     },
     geoJSON: {
       type: 'FeatureCollection',
-      features,
+      features: []
     },
     userSession: {
       ...JSON.parse(sessionStorage.getItem('trailmaster-login')),
@@ -55,17 +32,17 @@ const initialize = (geoJSON) => {
       routeList: [],
       mapCentering: false,
       coords: {
-        latitude: 15,
-        longitude: 145
-      },
-    },
+        latitude: 0,
+        longitude: 0,
+      }
+    }
   };
 
   let store = configure(initialState);
 
   //Initialize User Location Monitoring
   const processGeolocation = (pos) => {
-    // console.log('Position found', pos);
+    console.log('Position found', pos);
     store.dispatch(actions.updatePOS(pos));
     store.dispatch(actions.updateMap());
     if (store.getState().userSession.trackingRoute)
@@ -83,11 +60,11 @@ const initialize = (geoJSON) => {
     geolocationError, {
       timeout: 60000,
       enableHighAccuracy: true,
-      maximumAge: Infinity,
+      maximumAge: Infinity
     });
 
   ReactDOM.render(
     <Provider store={store}>
       <MainContainer />
     </Provider>, document.getElementById('app'));
-};
+})();
