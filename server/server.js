@@ -184,16 +184,20 @@ app.get('/users/reset/:reqID-:email', (req, res) => {
 
 app.get('/pois', (req, res) => {
   let {query} = req;
-  if (query.hasOwnProperty('lat') && query.hasOwnProperty('lng')) {
-    let {lat, lng} = query;
+  if (query.hasOwnProperty('lat') && query.hasOwnProperty('lng') && query.hasOwnProperty('dist')) {
+    let {lat, lng, dist} = query;
+    let lngDegPerMile = Math.cos(lat*Math.PI/180)/69;
+    let latDegPerMile = 1/69;
+
+    console.log('Sending pois within degrees', dist*lngDegPerMile, dist*latDegPerMile);
     poiModel.find({
       'geometry.coordinates.0': {
-        $lt: parseInt(lng) + 1,
-        $gt: parseInt(lng) - 1
+        $lt: parseInt(lng) + dist*lngDegPerMile,
+        $gt: parseInt(lng) - dist*lngDegPerMile,
       },
       'geometry.coordinates.1': {
-        $lt: parseInt(lat) + 1,
-        $gt: parseInt(lat) - 1
+        $lt: parseInt(lat) + dist*latDegPerMile,
+        $gt: parseInt(lat) - dist*latDegPerMile
       }
     }).then((pois) => {
       res.send({pois});

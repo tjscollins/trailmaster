@@ -7,43 +7,82 @@ import distance from '@turf/distance';
 
 /*----------Components----------*/
 
+/*----------API Functions----------*/
+import {validateServerData} from 'TrailmasterAPI';
 
 /*----------Redux----------*/
 import * as actions from 'actions';
 
+/**
+ * Renders a <div id='mapviewer' class='mapviewer' /> and loads a mapbox-gl
+ * map into the div.  Manages the state of that map and handles any updates
+ * to the map or its layers.
+ */
 export class MapViewer extends React.Component {
+  /**
+   * Mapviewer.state stores information about the mapboxgl map being rendered.
+   *
+   * @property {OBJECT} state.map          Stores the mapbox-gl instance for the component
+   * @property {ARRAY}  state.layerIDs     Stores a list of map layers that have been placed
+   *                                       on the map.
+   * @property {BOOLEAN} state.initCenter  Whether the mapbox-gl map still needs to be correctly
+   *                                       centered for the first time.
+   */
   state = {
-    map: false,
+    map: null,
     layerIDs: [],
     initCenter: true,
   }
+
   constructor(props) {
     super(props);
   }
+
   componentDidMount() {
-    if(!this.state.map) {
+    /**
+     * if - Determine whether to create a new map
+     *      Must run AFTER component mounts so that the target DOM element
+     *      will actually exist in the DOM tree.
+     *
+     * @param  {BOOLEAN} !this.state.map  Check if mapbox-gl map has been stored
+     *                                    in the component's state.
+     */
+    if (!this.state.map) {
       this.createMap(this.props);
     }
   }
+
   componentWillReceiveProps(nextProps) {
     const {
       dispatch,
-      geoJSON: {features},
-      map: {update},
-      searchText: { POISearchText, RoutesSearchText },
-      userSession: {mapCentering, coords: {longitude, latitude}},
+      geoJSON: {
+        features
+      },
+      map: {
+        update
+      },
+      searchText: {
+        POISearchText,
+        RoutesSearchText
+      },
+      userSession: {
+        mapCentering,
+        coords: {
+          longitude,
+          latitude
+        }
+      },
     } = nextProps;
-    const { map, layerIDs, initCenter } = this.state;
+    const {map, layerIDs, initCenter} = this.state;
     let searchPOI = new RegExp(POISearchText || '!!!!!!', 'i');
     let searchRoutes = new RegExp(RoutesSearchText || '!!!!!!', 'i');
 
-    if(update) {
-      // Timeout hack to run AFTER map has loaded fully
-      setTimeout(()=> {this.refreshMap(nextProps);}, 25);
+    if (update) {
+      this.refreshMap(nextProps);
       dispatch(actions.completeUpdateMap());
     }
 
-    if(mapCentering || initCenter && this.state.map) {
+    if (mapCentering || initCenter && this.state.map) {
       this.centerMap(longitude, latitude, initCenter);
       this.setState({initCenter: false});
     }
@@ -71,22 +110,32 @@ export class MapViewer extends React.Component {
   }
   centerMap(lng, lat, instant) {
     const {map} = this.state;
-    if(instant) {
+    if (instant) {
       map.jumpTo({
-        center: [lng, lat],
+        center: [
+          lng, lat,
+        ],
         zoom: map.getZoom(),
       });
     } else {
       map.easeTo({
-          duration: 5000,
-          animate: true,
-          center: [
-            lng, lat
-          ],
-          zoom: map.getZoom()
-        });
+        duration: 5000,
+        animate: true,
+        center: [
+          lng, lat,
+        ],
+        zoom: map.getZoom()
+      });
     }
   }
+
+  /**
+   * createMap -  Generates  and configures the mapbox-gl.Map instance
+   *              and stores it in this.state
+   *
+   * @param  {OBJECT} props receives props so that nextProps can be passed in for
+   *                        certain situations.
+   */
   createMap(props) {
     const {
       userSession: {
@@ -107,7 +156,7 @@ export class MapViewer extends React.Component {
       container: 'mapviewer',
       style: 'mapbox://styles/mapbox/outdoors-v9',
       center: [
-        longitude, latitude
+        longitude, latitude,
       ],
       zoom: 12,
       hash: false,
@@ -117,25 +166,60 @@ export class MapViewer extends React.Component {
     map.addControl(new mapboxgl.GeolocateControl());
     map.addControl(new mapboxgl.NavigationControl());
     map.addControl(new mapboxgl.ScaleControl({maxWidth: 120, unit: 'imperial'}));
-    dispatch(actions.storeCenter(map.getCenter()));
 
     map.on('load', () => {
-
+      dispatch(actions.storeCenter(map.getCenter()));
     });
 
     map.on('moveend', () => {
-
+      dispatch(actions.storeCenter(map.getCenter()));
     });
-
 
     this.setState({map});
   }
-  createMapLayers(props) {
-    // debugger;
-    // console.log('createMapLayers');
+
+  /**
+   * createMapLayers -  Parses geoJSON data from the Redux store and uses it to build
+   *                    map layers that display routes and pois from the store.
+   *
+   * @param  {OBJECT} props receives props so that nextProps can be passed in for
+   *                        certain situations.
+   */
+  createMapLayers(props, getNewData) {
     const {map} = this.state;
     let layerIDs = [];
-    const {geoJSON, userSession: { coords: {latitude, longitude}}, dispatch} = props;
+    const {
+      geoJSON,
+      userSession: {
+        coords: {
+          latitude,
+          longitude
+        },
+        distanceFilter,
+      },
+      dispatch
+    } = props;
+
+    if (getNewData) {
+      Promise.all([
+        $.get(`/pois?lat=${latitude}&lng=${longitude - 360}&dist=${distanceFilter}`),
+        $.get(`/routes?lat=${latitude}&lng=${longitude - 360}&dist=${distanceFilter}`),
+      ]).then((data) => {
+        let features = data.reduce((acc, currentObject) => {
+          let allObjects = [];
+          for (let key in currentObject) {
+            // Validate Server Data BEFORE loading it into Redux Store
+            if (Array.isArray(currentObject[key])) {
+              currentObject[key].forEach((item) => {
+                if (validateServerData(item)) allObjects.push(item);
+              });
+            }
+          }
+          return acc.concat(allObjects);
+        }, []);
+        dispatch(actions.replaceGeoJSON(features));
+      })
+    }
 
     // Place User Marker on Map
     const userSource = {
@@ -153,7 +237,9 @@ export class MapViewer extends React.Component {
             },
             geometry: {
               type: 'Point',
-              coordinates: [ longitude, latitude, ],
+              coordinates: [
+                longitude, latitude,
+              ],
             },
           },
         ],
@@ -191,23 +277,51 @@ export class MapViewer extends React.Component {
 
     let geoJSONLayer = (source, id, type, layout) => {
       return {
-          id,
-          type,
-          source,
-          layout,
-          'filter': ['==', 'name', id]
-        };
+        id,
+        type,
+        source,
+        layout,
+        'filter': ['==', 'name', id,]
+      };
     };
     map.addSource('geoJSON', geoJSONSource);
 
-    geoJSON.features.forEach((feature) => {
-      let {name} = feature.properties;
-      let type = '', layout = {};
-      switch(feature.geometry.type) {
-        case 'Point':
-          type = 'symbol';
-          layout = {
-                'icon-image': 'marker-15',
+    geoJSON
+      .features
+      .forEach((feature) => {
+        let {name} = feature.properties;
+        let type = '',
+          layout = {};
+        switch (feature.geometry.type) {
+          case 'Point':
+            type = 'symbol';
+            layout = {
+              'icon-image': 'marker-15',
+              'text-field': '{name}',
+              'text-font': [
+                'Open Sans Regular', 'Arial Unicode MS Regular',
+              ],
+              'text-size': 10,
+              'text-offset': [
+                0, 0.6,
+              ],
+              'text-anchor': 'top',
+              'visibility': 'none',
+            };
+            break;
+          case 'LineString':
+            type = 'line';
+            layout = {
+              'line-join': 'round',
+              'line-cap': 'round',
+              'visibility': 'none',
+            };
+            // Create Text Label for LineString layers
+            map.addLayer({
+              'id': `${name} label`,
+              'type': 'symbol',
+              'source': 'geoJSON',
+              'layout': {
                 'text-field': '{name}',
                 'text-font': [
                   'Open Sans Regular', 'Arial Unicode MS Regular',
@@ -218,47 +332,25 @@ export class MapViewer extends React.Component {
                 ],
                 'text-anchor': 'top',
                 'visibility': 'none',
-              };
-          break;
-        case 'LineString':
-          type = 'line';
-          layout = {
-                'line-join': 'round',
-                'line-cap': 'round',
-                'visibility': 'none',
-          };
-          // Create Text Label for LineString layers
-          map.addLayer({
-                'id': `${name} label`,
-                'type': 'symbol',
-                'source': 'geoJSON',
-                'layout': {
-                  'text-field': '{name}',
-                  'text-font': [
-                    'Open Sans Regular', 'Arial Unicode MS Regular',
-                  ],
-                  'text-size': 10,
-                  'text-offset': [
-                    0, 0.6,
-                  ],
-                  'text-anchor': 'top',
-                  'visibility': 'none',
-                },
-                'filter': ['==', 'name', name]
-              });
-          break;
-        default:
-          throw new Error(`Unknown feature type ${feature.geometry.type}`);
-      }
-      map.addLayer(geoJSONLayer('geoJSON', name, type, layout))
-      layerIDs.push([name, type]);
-    });
+              },
+              'filter': ['==', 'name', name,]
+            });
+            break;
+          default:
+            throw new Error(`Unknown feature type ${feature.geometry.type}`);
+        }
+        map.addLayer(geoJSONLayer('geoJSON', name, type, layout))
+        layerIDs.push([name, type,]);
+      });
     this.setState({layerIDs});
   }
+
   refreshMap(props) {
+    console.log('Mapviewer.refreshMap');
     this.removeMapLayers();
-    this.createMapLayers(props);
+    this.createMapLayers(props, true);
   }
+
   removeMapLayers() {
     let {layerIDs, map} = this.state;
     layerIDs.forEach((id) => {
@@ -266,6 +358,7 @@ export class MapViewer extends React.Component {
     });
     this.setState({layerIDs: []});
   }
+
   shouldDisplay(layerName, search, props) {
     // Props should be passed in here to allow selection between current or
     // nextProps as appropriate
@@ -280,9 +373,7 @@ export class MapViewer extends React.Component {
       .indexOf(onePoint._id) > -1;
   }
   render() {
-    return (
-      <div id='mapviewer' className='mapviewer' />
-    );
+    return (<div id='mapviewer' className='mapviewer'/>);
   }
 }
 

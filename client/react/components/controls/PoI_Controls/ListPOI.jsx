@@ -72,7 +72,7 @@ export class ListPOI extends BaseComponent {
     };
     return features.filter((feature) => {
       // calculate distance between feature and map center
-      let {coordinates, type} = feature.geometry;
+      let {coordinates} = feature.geometry;
       let to = {
         'type': 'Feature',
         'properties': {},
@@ -83,7 +83,6 @@ export class ListPOI extends BaseComponent {
       };
       // if dist > 100 miles, return false to filter feature if dist < 100 miles,
       // return true to keep feature
-      // console.log(distance(from, to, 'miles'));
       return distance(from, to, 'miles') < distanceFilter;
     });
   }

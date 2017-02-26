@@ -30,7 +30,7 @@ const fetchUSFSTrails = (offset) => {
   request.end();
 };
 
-for (let i = 100; i<600; i++) {
+for (let i = 1; i<=10; i++) {
     fetchUSFSTrails(i*50);
 }
 

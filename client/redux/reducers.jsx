@@ -145,59 +145,6 @@ export const trailsReducer = (state = {
   }
 };
 
-// export const userLocationReducer = (state = {
-//   trackingRoute: false,
-//   routeList: [],
-//   mapCentering: false,
-//   coords: {
-//     latitude: 15,
-//     longitude: 145
-//   }
-// }, action) => {
-//   switch (action.type) {
-//     case 'UPDATE_POS':
-//       return {
-//         ...state,
-//         coords: {
-//           latitude: action.position.coords.latitude,
-//           longitude: action.position.coords.longitude,
-//         },
-//       };
-//     case 'TOGGLE_MAP_CENTERING':
-//       return {
-//         ...state,
-//         mapCentering: !state.mapCentering,
-//       };
-//     case 'TRACK_ROUTE':
-//       return {
-//         ...state,
-//         trackingRoute: true,
-//       };
-//     case 'STOP_TRACKING_ROUTE':
-//       return {
-//         ...state,
-//         trackingRoute: false,
-//       };
-//     case 'CLEAR_ROUTE_LIST':
-//       return {
-//         ...state,
-//         routeList: [],
-//       };
-//     case 'ADD_TO_ROUTE_LIST':
-//       return {
-//         ...state,
-//         routeList: [
-//           ...state.routeList,
-//           [
-//             action.position.coords.longitude, action.position.coords.latitude,
-//           ],
-//         ],
-//       };
-//     default:
-//       return state;
-//   }
-// };
-
 export const mapReducer = (state = {
   update: false,
   center: []
