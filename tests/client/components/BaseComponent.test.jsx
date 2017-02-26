@@ -15,4 +15,12 @@ describe('BaseComponent', () => {
   it('should exist', () => {
     expect(BaseComponent).toExist();
   });
+
+  it('should render without errors', () => {
+    try {
+      let base = TestUtils.renderIntoDocument(<BaseComponent />);
+    } catch (err) {
+      expect(err).toNotExist();
+    }
+  });
 });

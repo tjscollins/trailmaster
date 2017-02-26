@@ -123,9 +123,9 @@ export const trailsReducer = (state = {
         myTrails: [],
       };
     case 'SAVE_TRAIL':
-      var {list, name, desc,} = action;
-      var date = new Date();
-      var newTrail = {
+      let {list, name, desc,} = action;
+      let date = new Date();
+      let newTrail = {
         list,
         name,
         desc,
@@ -138,8 +138,8 @@ export const trailsReducer = (state = {
           newTrail,
         ],
       };
-    case 'SHOW_TRAIL':
-      return state;
+    // case 'SHOW_TRAIL':
+    //   return state;
     default:
       return state;
   }
@@ -571,33 +571,6 @@ var initialGeoState = {
   ],
 };
 
-var month = (mo) => {
-  switch (mo) {
-    case 0:
-      return 'Jan';
-    case 1:
-      return 'Feb';
-    case 2:
-      return 'Mar';
-    case 3:
-      return 'Apr';
-    case 4:
-      return 'May';
-    case 5:
-      return 'Jun';
-    case 6:
-      return 'Jul';
-    case 7:
-      return 'Aug';
-    case 8:
-      return 'Sep';
-    case 9:
-      return 'Oct';
-    case 10:
-      return 'Nov';
-    case 11:
-      return 'Dec';
-    default:
-      return mo;
-  }
+const month = (mo) => {
+  return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dev'][mo];
 };

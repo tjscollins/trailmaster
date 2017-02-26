@@ -19,34 +19,40 @@ describe('MainContainer', () => {
     expect(MainContainer).toExist();
   });
 
-  // var store = configure();
-  // it('should render the <Header/> element', () => {
-  //   const mainContainer = TestUtils.renderIntoDocument(
-  //     <Provider store={store}>
-  //       <MainContainer/>
-  //     </Provider>
-  //   );
-  //   const $el = $(ReactDOM.findDOMNode(mainContainer)).children('Header');
-  //   expect($el).toExist();
-  // });
+  // it('should render without errors', () => {
+  //   const initialState = {
+  //     map: {
+  //       accessToken: 'randomstring'
+  //     },
+  //     geoJSON: {
+  //       type: 'FeatureCollection',
+  //       features: [],
+  //     },
+  //     userSession: {
+  //       xAuth: '',
+  //       email: '',
+  //       _id: '',
+  //       visibleFeatures: [],
+  //       distanceFilter: 50,
+  //       trackingRoute: false,
+  //       routeList: [],
+  //       mapCentering: false,
+  //       coords: {
+  //         latitude: 15,
+  //         longitude: 145
+  //       },
+  //     },
+  //   };
   //
-  // it('should render the <Controls/> element', () => {
-  //   const mainContainer = TestUtils.renderIntoDocument(
-  //     <Provider store={store}>
-  //       <MainContainer/>
-  //     </Provider>
-  //   );
-  //   const $el = $(ReactDOM.findDOMNode(mainContainer)).children('Controls');
-  //   expect($el).toExist();
+  //   try {
+  //     const mainContainer = TestUtils.renderIntoDocument(
+  //       <Provider store={configure(initialState)}>
+  //         <MainContainer />
+  //       </Provider>
+  //     );
+  //   } catch (err) {
+  //     expect(err).toNotExist();
+  //   }
   // });
-  //
-  // it('should render the <MapViewer/> element', () => {
-  //   const mainContainer = TestUtils.renderIntoDocument(
-  //     <Provider store={store}>
-  //       <MainContainer/>
-  //     </Provider>
-  //   );
-  //   const $el = $(ReactDOM.findDOMNode(mainContainer)).children('MapViewer');
-  //   expect($el).toExist();
-  // });
+
 });

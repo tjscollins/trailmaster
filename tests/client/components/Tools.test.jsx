@@ -14,4 +14,12 @@ describe('Tools', () => {
   it('should exist', () => {
     expect(Tools).toExist();
   });
+
+  it('should render without errors', () => {
+    try {
+      let base = TestUtils.renderIntoDocument(<Tools />);
+    } catch (err) {
+      expect(err).toNotExist();
+    }
+  });
 });

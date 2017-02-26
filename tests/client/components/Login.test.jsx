@@ -14,4 +14,12 @@ describe('Login', () => {
   it('should exist', () => {
     expect(Login).toExist();
   });
+
+  it('should render without errors', () => {
+    try {
+      let base = TestUtils.renderIntoDocument(<Login />);
+    } catch (err) {
+      expect(err).toNotExist();
+    }
+  });
 });

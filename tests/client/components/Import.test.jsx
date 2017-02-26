@@ -14,4 +14,12 @@ describe('Import', () => {
   it('should exist', () => {
     expect(Import).toExist();
   });
+
+  it('should render without errors', () => {
+    try {
+      let base = TestUtils.renderIntoDocument(<Import />);
+    } catch (err) {
+      expect(err).toNotExist();
+    }
+  });
 });

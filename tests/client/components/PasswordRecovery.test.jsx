@@ -14,4 +14,12 @@ describe('PasswordRecovery', () => {
   it('should exist', () => {
     expect(PasswordRecovery).toExist();
   });
+
+  it('should render without errors', () => {
+    try {
+      let base = TestUtils.renderIntoDocument(<PasswordRecovery />);
+    } catch (err) {
+      expect(err).toNotExist();
+    }
+  });
 });

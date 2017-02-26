@@ -1,8 +1,61 @@
 const webpack = require('webpack');
 
+const preLoaders = [
+  {
+    test: /\.css$/,
+    loader: 'null',
+  }, {
+    test: /\.mp4$/,
+    loader: 'null',
+  }, {
+    test: /\.svg$/,
+    loader: 'null',
+  }, {
+    test: /\.png$/,
+    loader: 'null',
+  }, {
+    test: /\.jpg$/,
+    loader: 'null',
+  }, {
+    test: /\.gif$/,
+    loader: 'null',
+  }, {
+    test: /\.(otf|eot|ttf|woff|woff2)/,
+    loader: 'null',
+  },
+
+  // Loader for JSON, used in some tests
+  {
+    test: /\.json$/,
+    loader: 'json',
+  },
+];
+
+const loaders = [
+  {
+    test: /\.jsx?$/,
+    loader: 'babel-loader',
+    query: {
+      presets: ['react', 'es2015', 'stage-0'],
+    },
+    exclude: /(node_modules|bower_components)/,
+  },
+];
+
+const postLoaders = [
+  {
+    test: /\.jsx?$/,
+    exclude: /(test|node_modules|bower_components)/,
+    loader: 'istanbul-instrumenter',
+  },
+];
+
+
 module.exports = {
   entry: [
-    'script!jquery/dist/jquery.min.js', 'script!bootstrap/dist/js/bootstrap.min.js', './client/react/react-app.jsx',
+    'script!jquery/dist/jquery.min.js',
+    'script!bootstrap/dist/js/bootstrap.min.js',
+    './client/react/react-app.jsx',
 
   ],
   externals: {
@@ -34,22 +87,9 @@ module.exports = {
     extensions: ['', '.js', '.jsx'],
   },
   module: {
-    preLoaders: [
-      {
-        test: /\.json$/,
-        loader: 'json',
-      },
-    ],
-    loaders: [
-      {
-        loader: 'babel-loader',
-        query: {
-          presets: ['react', 'es2015', 'stage-0'],
-        },
-        test: /\.jsx?$/,
-        exclude: /(node_modules|bower_components)/,
-      },
-    ],
+    preLoaders,
+    loaders,
+    postLoaders,
   },
-  devtool: 'eval-source-map',
+  devtool: 'inline-source-map',
 };

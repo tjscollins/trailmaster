@@ -2,22 +2,48 @@
 import expect from 'expect';
 import df from 'deep-freeze-strict';
 
+import {configure} from 'configureStore'
 import * as actions from 'actions';
 import * as reducers from 'reducers';
-// let http = require('http'),
-//   mockserver = require('mockserver');
+
+// let http = require('http'),   mockserver = require('mockserver');
 //
-// http
-//   .createServer(mockserver('app/api/mocks'))
-//   .listen('3000');
+// http   .createServer(mockserver('app/api/mocks'))   .listen('3000');
 
 describe('redux', () => {
   //store
-  describe('configureStore', () => {});
+  describe('configureStore', () => {
+    it('should configure the Redux store to an initial state', () => {
+      let initalState = {
+        userSession: true,
+        map: false,
+        geoJSON: null
+      };
+      let {geoJSON, map, userSession} = configure(initalState).getState();
+      expect(userSession).toBe(true);
+      expect(map).toBe(false);
+      expect(geoJSON).toBe(null);
+    });
+  });
 
   //actions
   describe('actions', () => {
     describe('trails actions', () => {
+      it('should generate the DISPLAY_TRAILS actions', () => {
+        let action = {
+          type: 'DISPLAY_TRAILS',
+          trails: 'trails',
+        };
+        expect(actions.displayTrails('trails')).toEqual(action);
+      });
+
+      it('should generate the CLEAR_TRAILS action', () => {
+        let action = {
+          type: 'CLEAR_TRAILS'
+        };
+        expect(actions.clearTrails()).toEqual(action);
+      });
+
       it('should generate the SAVE_TRAIL action', () => {
         let action = {
           type: 'SAVE_TRAIL',
@@ -27,6 +53,14 @@ describe('redux', () => {
         };
         let res = actions.saveTrail('list', 'name', 'desc');
         expect(res).toEqual(action);
+      });
+
+      it('should generate the SHOW_TRAIL action', () => {
+        let action = {
+          type: 'SHOW_TRAIL',
+          id: 'id',
+        };
+        expect(actions.showTrail('id')).toEqual(action);
       });
     });
 
@@ -43,7 +77,7 @@ describe('redux', () => {
       });
       it('should generate the LOGOUT action', () => {
         let action = {
-          type: 'LOGOUT',
+          type: 'LOGOUT'
         };
         let res = actions.logout();
         expect(res).toEqual(action);
@@ -138,10 +172,25 @@ describe('redux', () => {
         let action = {
           type: 'ADD_ROUTE',
           feature: 'feature'
-
         };
         let res = actions.addRoute('feature');
         expect(res).toEqual(action);
+      });
+
+      it('should generate the UPDATE_GEO_JSON action', () => {
+        let action = {
+          type: 'UPDATE_GEO_JSON',
+          point: 'point',
+        };
+        expect(actions.updateGeoJSON('point')).toEqual(action);
+      });
+
+      it('should generate the REPLACE_GEO_JSON action', () => {
+        let action = {
+          type: 'REPLACE_GEO_JSON',
+          features: 'features',
+        };
+        expect(actions.replaceGeoJSON('features')).toEqual(action);
       });
     });
 
@@ -161,9 +210,25 @@ describe('redux', () => {
         let res = actions.completeUpdateMap();
         expect(res).toEqual(action);
       });
+
+      it('should generate the STORE_CENTER action', () => {
+        let action = {
+          type: 'STORE_CENTER',
+          center: 'center',
+        };
+        expect(actions.storeCenter('center')).toEqual(action);
+      });
     });
 
     describe('searchText actions', () => {
+      it('should generate the UPDATE_SEARCH_TEXT action', () => {
+        let action = {
+          type: 'UPDATE_SEARCH_TEXT',
+          updateSearchText: 'updateSearchText',
+        };
+        expect(actions.setUpdateSearchText('updateSearchText')).toEqual(action);
+      });
+
       it('should generate the SET_POI_SEARCH_TEXT action', () => {
         let action = {
           type: 'SET_POI_SEARCH_TEXT',
@@ -180,6 +245,14 @@ describe('redux', () => {
         };
         let res = actions.setRoutesSearchText('chalan');
         expect(res).toEqual(action);
+      });
+
+      it('should generate the SET_TRAIL_SEARCH_TEXT action', () => {
+        let action = {
+          type: 'SET_TRAIL_SEARCH_TEXT',
+          trailSearchText: 'trailSearchText',
+        };
+        expect(actions.setTrailSearchText('trailSearchText')).toEqual(action);
       });
     });
   });
@@ -227,7 +300,7 @@ describe('redux', () => {
           id: 10
         };
         let state = {
-          visibleFeatures: [10, 1]
+          visibleFeatures: [10, 1,]
         };
 
         let res = reducers.userSessionReducer(df(state), df(action1));
@@ -239,15 +312,15 @@ describe('redux', () => {
       });
 
       it('should update the distanceFilter', () => {
-          let action = {
-            type: 'UPDATE_DISTANCE_FILTER',
-            distance: 100,
-          };
-          let state = {
-            distanceFilter: 50,
-          };
-          let res = reducers.userSessionReducer(df(state), df(action));
-          expect(res.distanceFilter).toBe(100);
+        let action = {
+          type: 'UPDATE_DISTANCE_FILTER',
+          distance: 100,
+        };
+        let state = {
+          distanceFilter: 50
+        };
+        let res = reducers.userSessionReducer(df(state), df(action));
+        expect(res.distanceFilter).toBe(100);
       });
 
       it('should UPDATE the user\'s POS', () => {
@@ -314,12 +387,14 @@ describe('redux', () => {
         let state = {
           routeList: [
             [
-              1, 1
+              1, 1,
             ],
             [
-              2, 2
+              2, 2,
             ],
-            [3, 3]
+            [
+              3, 3,
+            ],
           ]
         };
         let res = reducers.userSessionReducer(df(state), df(action));
@@ -352,7 +427,7 @@ describe('redux', () => {
       it('should DISPLAY TRAILS belonging to the logged in user', () => {
         let action = {
           type: 'DISPLAY_TRAILS',
-          trails: [1, 2, 3]
+          trails: [1, 2, 3,]
         };
         let state = {
           myTrails: []
@@ -368,7 +443,7 @@ describe('redux', () => {
           type: 'CLEAR_TRAILS'
         };
         let state = {
-          myTrails: [1, 2, 3]
+          myTrails: [1, 2, 3,]
         };
         let res = reducers.trailsReducer(df(state), df(action));
         expect(res.myTrails.length).toBe(0);
@@ -387,7 +462,8 @@ describe('redux', () => {
                 'stroke-width': 2,
                 'stroke-opacity': 1,
                 'name': 'Chalan Kiya to Kannat Tabla Connector',
-                'desc': 'Trail to move from Kannat Tabla area down into Chalan Kiya near the start of the Chalan Kiya ravine',
+                'desc': 'Trail to move from Kannat Tabla area down into Chalan Kiya near the start of the' +
+                    ' Chalan Kiya ravine',
                 'condition': 'Uncut, overgrown',
                 'last': 'Dec 2015',
                 'displayed': false,
@@ -397,87 +473,89 @@ describe('redux', () => {
                 type: 'LineString',
                 coordinates: [
                   [
-                    -214.27445769309995, 15.167432624111209
+                    -214.27445769309995, 15.167432624111209,
                   ],
                   [
-                    -214.27433967590332, 15.167339428181535
+                    -214.27433967590332, 15.167339428181535,
                   ],
                   [
-                    -214.27423238754272, 15.16729800775516
+                    -214.27423238754272, 15.16729800775516,
                   ],
                   [
-                    -214.27410364151, 15.167266942430045
+                    -214.27410364151, 15.167266942430045,
                   ],
                   [
-                    -214.27393198013303, 15.167173746427308
+                    -214.27393198013303, 15.167173746427308,
                   ],
                   [
-                    -214.27384614944458, 15.16707019526498
+                    -214.27384614944458, 15.16707019526498,
                   ],
                   [
-                    -214.27374958992004, 15.1669459338032
+                    -214.27374958992004, 15.1669459338032,
                   ],
                   [
-                    -214.2737603187561, 15.166790606873256
+                    -214.2737603187561, 15.166790606873256,
                   ],
                   [
-                    -214.27362084388733, 15.166666345247119
+                    -214.27362084388733, 15.166666345247119,
                   ],
                   [
-                    -214.27348136901855, 15.166593859264797
+                    -214.27348136901855, 15.166593859264797,
                   ],
                   [
-                    -214.27334189414978, 15.166583504122432
+                    -214.27334189414978, 15.166583504122432,
                   ],
                   [
-                    -214.2730736732483, 15.1665627938362
+                    -214.2730736732483, 15.1665627938362,
                   ],
                   [
-                    -214.27295565605164, 15.166511018111713
+                    -214.27295565605164, 15.166511018111713,
                   ],
                   [
-                    -214.27278399467468, 15.166500662965289
+                    -214.27278399467468, 15.166500662965289,
                   ],
                   [
-                    -214.27260160446164, 15.16647995267094
+                    -214.27260160446164, 15.16647995267094,
                   ],
                   [
-                    -214.2724084854126, 15.166438532076121
+                    -214.2724084854126, 15.166438532076121,
                   ],
                   [
-                    -214.27226901054382, 15.16641782177568
+                    -214.27226901054382, 15.16641782177568,
                   ],
                   [
-                    -214.27207589149472, 15.1663764011687
+                    -214.27207589149472, 15.1663764011687,
                   ],
                   [
-                    -214.27189350128174, 15.166283204773304
+                    -214.27189350128174, 15.166283204773304,
                   ],
                   [
-                    -214.2716896533966, 15.166148587685205
+                    -214.2716896533966, 15.166148587685205,
                   ],
                   [
-                    -214.27155017852783, 15.166127877356354
+                    -214.27155017852783, 15.166127877356354,
                   ],
                   [
-                    -214.27136778831482, 15.166179653174693
+                    -214.27136778831482, 15.166179653174693,
                   ],
                   [
-                    -214.2711532115936, 15.166210718659611
+                    -214.2711532115936, 15.166210718659611,
                   ],
                   [
-                    -214.27094936370847, 15.166231428980334
+                    -214.27094936370847, 15.166231428980334,
                   ],
                   [
-                    -214.27080988883972, 15.166190008336828
+                    -214.27080988883972, 15.166190008336828,
                   ],
                   [
-                    -214.27067041397092, 15.16606574635761
+                    -214.27067041397092, 15.16606574635761,
                   ],
                   [
-                    -214.2705202102661, 15.16600361534061
+                    -214.2705202102661, 15.16600361534061,
                   ],
-                  [-214.27037000656128, 15.165972549825248]
+                  [
+                    -214.27037000656128, 15.165972549825248,
+                  ],
                 ]
               }
             }, {
@@ -495,7 +573,7 @@ describe('redux', () => {
               },
               geometry: {
                 type: 'Point',
-                coordinates: [-214.2563098669052, 15.18629359866948]
+                coordinates: [-214.2563098669052, 15.18629359866948,]
               }
             }, {
               type: 'Feature',
@@ -512,9 +590,9 @@ describe('redux', () => {
               },
               geometry: {
                 type: 'Point',
-                coordinates: [-214.25509214401245, 15.10071455043649]
+                coordinates: [-214.25509214401245, 15.10071455043649,]
               }
-            }
+            },
           ]
         };
         let state = {
@@ -529,6 +607,7 @@ describe('redux', () => {
         expect(res.myTrails[0].desc).toEqual('desc');
         expect(res.myTrails[0].list).toEqual(action.list);
       });
+
     });
 
     describe('mapReducer', () => {
@@ -552,6 +631,20 @@ describe('redux', () => {
         };
         let res = reducers.mapReducer(df(state), df(action));
         expect(res.update).toBe(false);
+      });
+
+      it('should STORE the map\'s CENTER coordinates', () => {
+        let action = {
+          type: 'STORE_CENTER',
+          center: [
+            0, 1,
+          ],
+        };
+        let state = {
+          center: [null, null,]
+        };
+        let res = reducers.mapReducer(df(state), df(action));
+        expect(res.center).toEqual([0, 1,]);
       });
     });
 
@@ -654,7 +747,7 @@ describe('redux', () => {
             }, {
               _id: 102,
               name: 'Chelsea'
-            }
+            },
           ]
         };
         let res = reducers.geoJSONReducer(df(state), df(action));
@@ -662,6 +755,43 @@ describe('redux', () => {
         expect(res.features[0].name).toBe('Chelsea');
         expect(res.features[1].name).toBe('Tom');
         expect(res.features[1]._id).toBe(100);
+      });
+
+      it('should REPLACE existing GEOJSON data', () => {
+        let action = {
+          type: 'REPLACE_GEO_JSON',
+          features: [
+            {
+              _id: 102,
+              name: 'Tom'
+            }, {
+              _id: 103,
+              name: 'Ein'
+            },
+            {
+              _id: 104,
+              name: 'Jose',
+            },
+          ],
+        };
+
+        let state = {
+          features: [
+            {
+              _id: 100,
+              name: 'Joe',
+            }, {
+              _id: 101,
+              name: 'Ria',
+            },
+          ]
+        };
+
+        let res = reducers.geoJSONReducer(df(state), df(action));
+        expect(res.features.length).toBe(3);
+        expect(res.features[0].name).toBe('Tom');
+        expect(res.features[1].name).toBe('Ein');
+        expect(res.features[1]._id).toBe(103);
       });
     });
   });
