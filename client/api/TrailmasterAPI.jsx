@@ -1,20 +1,20 @@
 import $ from 'jquery';
 
 export const fetchData = (lat, lng, dist) => {
-  // debugger;
-  console.log('Fetching data for: ', lat, lng, dist);
+  // console.log('Fetching data for: ', lat, lng, dist);
   return Promise.all([
     $.get(`/pois?lat=${lat}&lng=${lng - 360}&dist=${dist}`),
     $.get(`/routes?lat=${lat}&lng=${lng - 360}&dist=${dist}`),
   ]).then((data) => {
-    console.log('Fetched data: ', data);
+    // console.log('Fetched data: ', data);
     return Promise.resolve(data);
+  }).catch((error) => {
+    return Promise.reject(error);
   });
 };
 
 export const validateServerData = (data) => {
   let {coordinates, type,} = data.geometry;
-
   if (coordinates.length <= 1)
     return false;
   if (type === 'LineString' && coordinates.filter((coord) => {
@@ -38,15 +38,15 @@ export const mapConfig = (coordinates, features) => {
             'marker-color': 'cyan',
             'marker-size': 'large',
             'marker-symbol': 'icon-color',
-            'name': 'You'
+            'name': 'You',
           },
           geometry: {
             type: 'Point',
-            coordinates
-          }
+            coordinates,
+          },
         },
-      ]
-    }
+      ],
+    },
   };
   const userLayer = {
     'id': 'You Are Here',
@@ -64,16 +64,16 @@ export const mapConfig = (coordinates, features) => {
         0, 1,
       ],
       'text-anchor': 'top',
-      'visibility': 'visible'
-    }
+      'visibility': 'visible',
+    },
   };
 
   const geoJSONSource = {
     'type': 'geojson',
     'data': {
       type: 'FeatureCollection',
-      features,
-    },
+      features
+    }
   };
 
   /**
@@ -85,18 +85,89 @@ export const mapConfig = (coordinates, features) => {
    * @param  {OBJECT} layout layer layout configuration
    * @return {OBJECT}        passed to mapbox-gl.Map.addLayer
    */
-  function geoJSONLayer(source, id, type, layout) {
-    return {
-      id,
+  function addGeoJSONLayers(feature, map) {
+    const {properties: {name}, geometry} = feature;
+    let type = '';
+    let layout = {};
+    switch (geometry.type) {
+      case 'Point':
+        type = 'symbol';
+        layout = {
+          'icon-image': 'marker-15',
+          'text-field': '{name}',
+          'text-font': [
+            'Open Sans Regular', 'Arial Unicode MS Regular',
+          ],
+          'text-size': 10,
+          'text-offset': [
+            0, 0.6,
+          ],
+          'text-anchor': 'top',
+          'visibility': 'none',
+        };
+        break;
+      case 'LineString':
+        type = 'line';
+        layout = {
+          'line-join': 'round',
+          'line-cap': 'round',
+          'visibility': 'none',
+        };
+        // Create Text Label for LineString layers
+        map.addLayer({
+          'id': `${name} label`,
+          'type': 'symbol',
+          'source': 'geoJSON',
+          'layout': {
+            'text-field': '{name}',
+            'text-font': [
+              'Open Sans Regular', 'Arial Unicode MS Regular',
+            ],
+            'text-size': 10,
+            'text-offset': [
+              0, 0.6,
+            ],
+            'text-anchor': 'top',
+            'visibility': 'none',
+          },
+          'filter': ['==', 'name', name]
+        });
+        break;
+      default:
+        throw new Error(`Unknown feature type ${feature.geometry.type}`);
+    }
+    map.addLayer({
+      'id': name,
       type,
-      source,
+      'source': 'geoJSON',
       layout,
-      'filter': ['==', 'name', id]
-    };
+      'filter': [
+        '==', 'name', name,
+      ],
+    });
   }
 
-  return {userSource, userLayer, geoJSONSource, geoJSONLayer};
+  return {userSource, userLayer, geoJSONSource, addGeoJSONLayers};
 };
+
+
+/**
+ * changedProps - utility function to identify which properties have changed
+ *                in the props object
+ *
+ * @param  {OBJECT} nextProps new props object
+ * @param  {OBJECT} oldProps  old props object
+ * @return {array}           list of properties that have changed values
+ */
+export function changedProps(nextProps, oldProps) {
+  let list = [];
+  for (let key in oldProps) {
+    if (nextProps[key] != oldProps[key]) {
+      list.push([key, nextProps[key], oldProps[key]]);
+    }
+  }
+  return list;
+}
 
 /*istanbul ignore next*/
 export const toggleUI = (delay) => {

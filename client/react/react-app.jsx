@@ -42,9 +42,10 @@ import MainContainer from 'MainContainer';
 
   //Initialize User Location Monitoring
   const processGeolocation = (pos) => {
-    console.log('Position found', pos);
+    // console.log('Position found', pos);
+    // let {userSession: {coords: {latitude, longitude}}} = store.getState();
+    // console.log('Old', latitude, longitude, 'New', pos);
     store.dispatch(actions.updatePOS(pos));
-    store.dispatch(actions.updateMap());
     if (store.getState().userSession.trackingRoute)
       store.dispatch(actions.addToRouteList(pos));
     };

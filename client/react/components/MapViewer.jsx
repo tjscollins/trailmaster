@@ -7,7 +7,7 @@ import distance from '@turf/distance';
 /*----------Components----------*/
 
 /*----------API Functions----------*/
-import {validateServerData, fetchData, mapConfig} from 'TrailmasterAPI';
+import {validateServerData, fetchData, mapConfig, changedProps} from 'TrailmasterAPI';
 
 /*----------Redux----------*/
 import * as actions from 'actions';
@@ -30,7 +30,7 @@ export class MapViewer extends React.Component {
   state = {
     map: null,
     layerIDs: [],
-    initCenter: true,
+    initCenter: true
   }
 
   constructor(props) {
@@ -52,7 +52,8 @@ export class MapViewer extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // console.log('MapViewer.componentWillReceiveProps: ', nextProps);
+    const changes = changedProps(nextProps, this.props);
+    // console.log('MapViewer componentWillReceiveProps', changes);
     const {
       dispatch,
       geoJSON: {
@@ -63,17 +64,17 @@ export class MapViewer extends React.Component {
       },
       searchText: {
         POISearchText,
-        RoutesSearchText
+        RoutesSearchText,
       },
       userSession: {
         mapCentering,
         coords: {
           longitude,
-          latitude
-        }
-      },
+          latitude,
+        },
+      }
     } = nextProps;
-    const {map, layerIDs, initCenter} = this.state;
+    const {map, layerIDs, initCenter,} = this.state;
     const searchPOI = new RegExp(POISearchText || '!!!!!!', 'i');
     const searchRoutes = new RegExp(RoutesSearchText || '!!!!!!', 'i');
 
@@ -140,13 +141,13 @@ export class MapViewer extends React.Component {
       userSession: {
         coords: {
           longitude,
-          latitude
+          latitude,
         }
       },
       dispatch,
       map: {
         accessToken
-      }
+      },
     } = props;
 
     // Initialize map
@@ -159,16 +160,15 @@ export class MapViewer extends React.Component {
       ],
       zoom: 12,
       hash: false,
-      interactive: true
+      interactive: true,
     });
     // Add Mapbox Interface Controls
     map.addControl(new mapboxgl.GeolocateControl());
     map.addControl(new mapboxgl.NavigationControl());
-    map.addControl(new mapboxgl.ScaleControl({maxWidth: 120, unit: 'imperial'}));
+    map.addControl(new mapboxgl.ScaleControl({maxWidth: 120, unit: 'imperial',}));
 
     map.on('load', () => {
-      // dispatch(actions.storeCenter(map.getCenter()));
-      // dispatch(actions.updateMap());
+      dispatch(actions.updateMap());
     });
 
     map.on('moveend', () => {
@@ -185,12 +185,11 @@ export class MapViewer extends React.Component {
    * @param  {OBJECT} props receives props so that nextProps can be passed in for
    *                        certain situations.
    */
-  createMapLayers(props, getNewData) {
-    // debugger;
+  createMapLayers(features, props) {
+    // console.log('   MapViewer createMapLayers');
     const {map} = this.state;
     let layerIDs = [];
     const {
-      geoJSON,
       userSession: {
         coords: {
           latitude,
@@ -201,117 +200,67 @@ export class MapViewer extends React.Component {
       dispatch
     } = props;
 
+    const {userSource, userLayer, geoJSONSource, addGeoJSONLayers} = mapConfig([longitude, latitude], features);
 
-    new Promise((resolve, reject) => {
-        if(getNewData) {
-          try {
-            fetchData(latitude, longitude, distanceFilter).then((data) => {
-              // Concatenate the list of geoJSON features into one FeatureCollection
-              let features = data.reduce((acc, currentObject) => {
-                let allObjects = [];
-                for (let key in currentObject) {
-                  // Validate Server Data BEFORE loading it into Redux Store
-                  if (Array.isArray(currentObject[key])) {
-                    currentObject[key].forEach((item) => {
-                      if (validateServerData(item)) allObjects.push(item);
-                    });
-                  }
-                }
-                return acc.concat(allObjects);
-              }, []);
-              dispatch(actions.replaceGeoJSON(features));
-              resolve(features);
-            });
-          } catch (error) {
-            reject(error);
-          }
-        } else {
-          if(geoJSON.features) {
-            resolve(geoJSON.features);
-          } else {
-            reject(new Error('geoJSON.features does not exist'));
-          }
-        }
-    }).then((features) => {
-      // Place User Marker on Map
-      const {userSource, userLayer, geoJSONSource, geoJSONLayer} = mapConfig([longitude, latitude], features);
-      map.addSource('user', userSource);
-      map.addLayer(userLayer);
+    map.addSource('user', userSource);
+    map.addLayer(userLayer);
 
-      // Add Map Layers for GeoJSON Data
-      map.addSource('geoJSON', geoJSONSource);
+    // Add Map Layers for GeoJSON Data
+    map.addSource('geoJSON', geoJSONSource);
 
-      console.log('Adding Layers for features: ', features);
-      features
-        .forEach((feature) => {
-          let {name} = feature.properties;
-          let type = '',
-            layout = {};
-          switch (feature.geometry.type) {
-            case 'Point':
-              type = 'symbol';
-              layout = {
-                'icon-image': 'marker-15',
-                'text-field': '{name}',
-                'text-font': [
-                  'Open Sans Regular', 'Arial Unicode MS Regular',
-                ],
-                'text-size': 10,
-                'text-offset': [
-                  0, 0.6,
-                ],
-                'text-anchor': 'top',
-                'visibility': 'none',
-              };
-              break;
-            case 'LineString':
-              type = 'line';
-              layout = {
-                'line-join': 'round',
-                'line-cap': 'round',
-                'visibility': 'none',
-              };
-              // Create Text Label for LineString layers
-              map.addLayer({
-                'id': `${name} label`,
-                'type': 'symbol',
-                'source': 'geoJSON',
-                'layout': {
-                  'text-field': '{name}',
-                  'text-font': [
-                    'Open Sans Regular', 'Arial Unicode MS Regular',
-                  ],
-                  'text-size': 10,
-                  'text-offset': [
-                    0, 0.6,
-                  ],
-                  'text-anchor': 'top',
-                  'visibility': 'none',
-                },
-                'filter': ['==', 'name', name,]
+    features
+      .forEach((feature) => {
+        const {properties: {name}, geometry: {type}} = feature;
+        // console.log(feature, name, type);
+        let layerType = type === 'Point' ? 'symbol' : 'line';
+        layerIDs.push([name, layerType ]);
+        addGeoJSONLayers(feature, map);
+      });
+    this.setState({layerIDs});
+  }
+
+  /**
+   * refreshMap - Remove existing layers from the map, fetch new data based on current
+   *              application state, and generate new map layers.
+   *
+   * @param  {OBJECT} props props object to be passed to this.createMapLayers
+   */
+  refreshMap(props) {
+    // console.log('Mapviewer.refreshMap');
+    const {
+      userSession: {
+        coords: {
+          latitude,
+          longitude
+        },
+        distanceFilter,
+      },
+      dispatch
+    } = props;
+    this.removeMapLayers();
+    fetchData(latitude, longitude, distanceFilter)
+      .then((data) => {
+        let features = data.reduce((acc, currentObject) => {
+          let allObjects = [];
+          for (let key in currentObject) {
+            // Validate Server Data BEFORE loading it into Redux Store
+            if (Array.isArray(currentObject[key])) {
+              currentObject[key].forEach((item) => {
+                if (validateServerData(item)) allObjects.push(item);
               });
-              break;
-            default:
-              throw new Error(`Unknown feature type ${feature.geometry.type}`);
+            }
           }
-          map.addLayer(geoJSONLayer('geoJSON', name, type, layout))
-          layerIDs.push([name, type,]);
-        });
-      this.setState({layerIDs});
+          return acc.concat(allObjects);
+        }, []);
+        dispatch(actions.replaceGeoJSON(features));
+        this.createMapLayers(features, props);
     }).catch((error) => {
-      console.error(error);
-      debugger;
+      throw error;
     });
   }
 
-  refreshMap(props) {
-    console.log('Mapviewer.refreshMap');
-    this.removeMapLayers();
-    this.createMapLayers(props, true);
-  }
-
   removeMapLayers() {
-    let {layerIDs, map} = this.state;
+    let {layerIDs, map,} = this.state;
     layerIDs.forEach((id) => {
       map.removeLayer(id);
     });
