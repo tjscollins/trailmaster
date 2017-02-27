@@ -7,7 +7,7 @@ import distance from '@turf/distance';
 /*----------Components----------*/
 
 /*----------API Functions----------*/
-import {validateServerData, fetchData, mapConfig, changedProps} from 'TrailmasterAPI';
+import {validateServerData, fetchData, mapConfig, changedProps, positionChanged} from 'TrailmasterAPI';
 
 /*----------Redux----------*/
 import * as actions from 'actions';
@@ -53,7 +53,7 @@ export class MapViewer extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const changes = changedProps(nextProps, this.props);
-    // console.log('MapViewer componentWillReceiveProps', changes);
+    console.log('MapViewer componentWillReceiveProps', changes);
     const {
       dispatch,
       geoJSON: {
@@ -79,13 +79,27 @@ export class MapViewer extends React.Component {
     const searchRoutes = new RegExp(RoutesSearchText || '!!!!!!', 'i');
 
     if (update) {
+      // Remove existing map layers, fetch new data, generate new map layers
       this.refreshMap(nextProps);
       dispatch(actions.completeUpdateMap());
     }
 
     if (mapCentering || initCenter && this.state.map) {
+      // Re-center map on user
       this.centerMap(longitude, latitude, initCenter);
       this.setState({initCenter: false});
+    }
+
+    if(positionChanged({longitude, latitude}, props.userSession.coords)) {
+      // Update user's position on map to reflect new geolocation data
+      const {userSource, userLayer} = mapConfig([longitude, latitude], null);
+      map.getSource('user').setData(userSource);
+      map.update();
+    }
+
+    if (changes[0][0] === 'userSession') {
+      let subChange = changedProps(changes[0][1], changes[0][2]);
+      console.log(subChange);
     }
 
     // Check Map Layer Visibility
@@ -261,7 +275,7 @@ export class MapViewer extends React.Component {
 
   removeMapLayers() {
     let {layerIDs, map,} = this.state;
-    layerIDs.forEach((id) => {
+    layerIDs.forEach(([id, type]) => {
       map.removeLayer(id);
     });
     this.setState({layerIDs: []});

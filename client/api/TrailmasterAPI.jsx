@@ -169,6 +169,20 @@ export function changedProps(nextProps, oldProps) {
   return list;
 }
 
+/**
+ * positionChanged - returns true of position changed by more than a certain fraction
+ *                    of a degree in either direction.
+ *
+ * @param  {type} posOne description
+ * @param  {type} posTwo description
+ * @return {type}        description
+ */
+export function positionChanged(posOne, posTwo) {
+  const SENSITIVITY = 20000;
+  return (Math.floor(posOne.latitude*SENSITIVITY) !== Math.floor(posTwo.latitude*SENSITIVITY) ||
+    Math.floor(posOne.latitude*SENSITIVITY) !== Math.floor(posTwo.latitude*SENSITIVITY));
+}
+
 /*istanbul ignore next*/
 export const toggleUI = (delay) => {
   if ($('.hidecontrols').hasClass('fa-arrow-left')) {
