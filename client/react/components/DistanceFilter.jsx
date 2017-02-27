@@ -6,7 +6,7 @@ import $ from 'jquery';
 import BaseComponent from 'BaseComponent';
 
 /*----------Redux----------*/
-import {updateDistanceFilter} from 'actions';
+import {updateDistanceFilter, updateMap} from 'actions';
 import {connect} from 'react-redux';
 import {toInt} from 'validator';
 
@@ -21,6 +21,7 @@ export class DistanceFilter extends BaseComponent {
     $('#distance-filter').modal('hide');
     if (!Number.isNaN(toInt(this.refs.distance.value))) {
       dispatch(updateDistanceFilter(toInt(this.refs.distance.value)));
+      dispatch(updateMap());
     }
     this.refs.distance.value = '';
   }

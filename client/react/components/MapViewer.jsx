@@ -94,10 +94,11 @@ export class MapViewer extends React.Component {
       longitude,
       latitude,
     }, this.props.userSession.coords) && map.getSource('user') !== undefined) {
-      // Update user's position on map to reflect new geolocation data
+      // Update user's position on map to reflect new updated geolocation data
       const {userSource, userLayer,} = mapConfig([
         longitude, latitude,
       ], null);
+      console.log('Updating user position');
       map
         .getSource('user')
         .setData(userSource);
@@ -106,6 +107,7 @@ export class MapViewer extends React.Component {
 
     if (mapCentering || initCenter && this.state.map) {
       // Re-center map on user
+      console.log('Centering Map');
       this.centerMap(longitude, latitude, initCenter);
       this.setState({initCenter: false});
     }
@@ -127,6 +129,7 @@ export class MapViewer extends React.Component {
         return id[0];
       }).indexOf(name);
       if (i > -1) {
+        console.log('Setting maplayer visibility');
         if (this.shouldDisplay(name, searchPOI, nextProps) && layerIDs[i][1] === 'symbol') {
           map.setLayoutProperty(name, 'visibility', 'visible');
         } else if (this.shouldDisplay(name, searchRoutes, nextProps) && layerIDs[i][1] !== 'symbol') {
@@ -201,10 +204,23 @@ export class MapViewer extends React.Component {
     map.addControl(new mapboxgl.ScaleControl({maxWidth: 120, unit: 'imperial'}));
 
     map.on('load', () => {
+      console.log('map load');
+      try {
+        const dummyFeatures = [];
+        const {userSource, geoJSONSource} = mapConfig([
+          longitude, latitude,
+        ], dummyFeatures);
+        map.addSource('user', userSource);
+        map.addSource('geoJSON', geoJSONSource);
+        console.log(map.getSource('user'), map.getSource('geoJSON'));
+      } catch (error) {
+        debugger;
+      }
       dispatch(actions.updateMap());
     });
 
     map.on('moveend', () => {
+      console.log('map moveend');
       dispatch(actions.storeCenter(map.getCenter()));
     });
 
@@ -219,7 +235,7 @@ export class MapViewer extends React.Component {
    *                        certain situations.
    */
   createMapLayers(features, props) {
-    // console.log('   MapViewer createMapLayers');
+    console.log('MapViewer createMapLayers');
     const {map} = this.state;
     let layerIDs = [];
     const {
@@ -237,26 +253,31 @@ export class MapViewer extends React.Component {
       longitude, latitude,
     ], features);
 
-    map.addSource('user', userSource);
-    map.addLayer(userLayer);
+    try {
+      map.getSource('user').setData(userSource);
+      map.addLayer(userLayer);
+      // Add Map Layers for GeoJSON Data
+      map.getSource('geoJSON').setData(geoJSONSource);
 
-    // Add Map Layers for GeoJSON Data
-    map.addSource('geoJSON', geoJSONSource);
+      features.forEach((feature) => {
+        const {properties: {
+            name
+          }, geometry: {
+            type
+          },} = feature;
+        // console.log(feature, name, type);
+        let layerType = type === 'Point'
+          ? 'symbol'
+          : 'line';
+        layerIDs.push([name, layerType,]);
+        addGeoJSONLayers(feature, map);
+      });
+      this.setState({layerIDs});
+    } catch (error) {
+      debugger;
+    }
+    console.log('Finished createMapLayers');
 
-    features.forEach((feature) => {
-      const {properties: {
-          name
-        }, geometry: {
-          type
-        },} = feature;
-      // console.log(feature, name, type);
-      let layerType = type === 'Point'
-        ? 'symbol'
-        : 'line';
-      layerIDs.push([name, layerType,]);
-      addGeoJSONLayers(feature, map);
-    });
-    this.setState({layerIDs});
   }
 
   /**
