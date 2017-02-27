@@ -7,7 +7,13 @@ import distance from '@turf/distance';
 /*----------Components----------*/
 
 /*----------API Functions----------*/
-import {validateServerData, fetchData, mapConfig, changedProps, positionChanged} from 'TrailmasterAPI';
+import {
+  validateServerData,
+  fetchData,
+  mapConfig,
+  changedProps,
+  positionChanged,
+} from 'TrailmasterAPI';
 
 /*----------Redux----------*/
 import * as actions from 'actions';
@@ -30,7 +36,7 @@ export class MapViewer extends React.Component {
   state = {
     map: null,
     layerIDs: [],
-    initCenter: true
+    initCenter: true,
   }
 
   constructor(props) {
@@ -64,17 +70,17 @@ export class MapViewer extends React.Component {
       },
       searchText: {
         POISearchText,
-        RoutesSearchText,
+        RoutesSearchText
       },
       userSession: {
         mapCentering,
         coords: {
           longitude,
-          latitude,
-        },
-      }
+          latitude
+        }
+      },
     } = nextProps;
-    const {map, layerIDs, initCenter,} = this.state;
+    const {map, layerIDs, initCenter} = this.state;
     const searchPOI = new RegExp(POISearchText || '!!!!!!', 'i');
     const searchRoutes = new RegExp(RoutesSearchText || '!!!!!!', 'i');
 
@@ -84,17 +90,24 @@ export class MapViewer extends React.Component {
       dispatch(actions.completeUpdateMap());
     }
 
+    if (positionChanged({
+      longitude,
+      latitude,
+    }, this.props.userSession.coords) && map.getSource('user') !== undefined) {
+      // Update user's position on map to reflect new geolocation data
+      const {userSource, userLayer,} = mapConfig([
+        longitude, latitude,
+      ], null);
+      map
+        .getSource('user')
+        .setData(userSource);
+      map.update();
+    }
+
     if (mapCentering || initCenter && this.state.map) {
       // Re-center map on user
       this.centerMap(longitude, latitude, initCenter);
       this.setState({initCenter: false});
-    }
-
-    if(positionChanged({longitude, latitude}, props.userSession.coords)) {
-      // Update user's position on map to reflect new geolocation data
-      const {userSource, userLayer} = mapConfig([longitude, latitude], null);
-      map.getSource('user').setData(userSource);
-      map.update();
     }
 
     if (changes[0][0] === 'userSession') {
@@ -103,7 +116,13 @@ export class MapViewer extends React.Component {
     }
 
     // Check Map Layer Visibility
-    features.forEach(({properties: {name, displayed}, geometry}) => {
+    features.forEach(({
+      properties: {
+        name,
+        displayed,
+      },
+      geometry,
+    }) => {
       let i = layerIDs.map((id) => {
         return id[0];
       }).indexOf(name);
@@ -129,7 +148,7 @@ export class MapViewer extends React.Component {
         center: [
           lng, lat,
         ],
-        zoom: map.getZoom(),
+        zoom: map.getZoom()
       });
     } else {
       map.easeTo({
@@ -138,7 +157,7 @@ export class MapViewer extends React.Component {
         center: [
           lng, lat,
         ],
-        zoom: map.getZoom()
+        zoom: map.getZoom(),
       });
     }
   }
@@ -155,13 +174,13 @@ export class MapViewer extends React.Component {
       userSession: {
         coords: {
           longitude,
-          latitude,
+          latitude
         }
       },
       dispatch,
       map: {
         accessToken
-      },
+      }
     } = props;
 
     // Initialize map
@@ -174,12 +193,12 @@ export class MapViewer extends React.Component {
       ],
       zoom: 12,
       hash: false,
-      interactive: true,
+      interactive: true
     });
     // Add Mapbox Interface Controls
     map.addControl(new mapboxgl.GeolocateControl());
     map.addControl(new mapboxgl.NavigationControl());
-    map.addControl(new mapboxgl.ScaleControl({maxWidth: 120, unit: 'imperial',}));
+    map.addControl(new mapboxgl.ScaleControl({maxWidth: 120, unit: 'imperial'}));
 
     map.on('load', () => {
       dispatch(actions.updateMap());
@@ -207,14 +226,16 @@ export class MapViewer extends React.Component {
       userSession: {
         coords: {
           latitude,
-          longitude
+          longitude,
         },
-        distanceFilter,
+        distanceFilter
       },
-      dispatch
+      dispatch,
     } = props;
 
-    const {userSource, userLayer, geoJSONSource, addGeoJSONLayers} = mapConfig([longitude, latitude], features);
+    const {userSource, userLayer, geoJSONSource, addGeoJSONLayers,} = mapConfig([
+      longitude, latitude,
+    ], features);
 
     map.addSource('user', userSource);
     map.addLayer(userLayer);
@@ -222,14 +243,19 @@ export class MapViewer extends React.Component {
     // Add Map Layers for GeoJSON Data
     map.addSource('geoJSON', geoJSONSource);
 
-    features
-      .forEach((feature) => {
-        const {properties: {name}, geometry: {type}} = feature;
-        // console.log(feature, name, type);
-        let layerType = type === 'Point' ? 'symbol' : 'line';
-        layerIDs.push([name, layerType ]);
-        addGeoJSONLayers(feature, map);
-      });
+    features.forEach((feature) => {
+      const {properties: {
+          name
+        }, geometry: {
+          type
+        },} = feature;
+      // console.log(feature, name, type);
+      let layerType = type === 'Point'
+        ? 'symbol'
+        : 'line';
+      layerIDs.push([name, layerType,]);
+      addGeoJSONLayers(feature, map);
+    });
     this.setState({layerIDs});
   }
 
@@ -245,37 +271,38 @@ export class MapViewer extends React.Component {
       userSession: {
         coords: {
           latitude,
-          longitude
+          longitude,
         },
-        distanceFilter,
+        distanceFilter
       },
-      dispatch
+      dispatch,
     } = props;
     this.removeMapLayers();
-    fetchData(latitude, longitude, distanceFilter)
-      .then((data) => {
-        let features = data.reduce((acc, currentObject) => {
-          let allObjects = [];
-          for (let key in currentObject) {
-            // Validate Server Data BEFORE loading it into Redux Store
-            if (Array.isArray(currentObject[key])) {
-              currentObject[key].forEach((item) => {
-                if (validateServerData(item)) allObjects.push(item);
-              });
-            }
+    fetchData(latitude, longitude, distanceFilter).then((data) => {
+      let features = data.reduce((acc, currentObject) => {
+        let allObjects = [];
+        for (let key in currentObject) {
+          // Validate Server Data BEFORE loading it into Redux Store
+          if (Array.isArray(currentObject[key])) {
+            currentObject[key].forEach((item) => {
+              if (validateServerData(item))
+                allObjects.push(item);
+              }
+            );
           }
-          return acc.concat(allObjects);
-        }, []);
-        dispatch(actions.replaceGeoJSON(features));
-        this.createMapLayers(features, props);
+        }
+        return acc.concat(allObjects);
+      }, []);
+      dispatch(actions.replaceGeoJSON(features));
+      this.createMapLayers(features, props);
     }).catch((error) => {
       throw error;
     });
   }
 
   removeMapLayers() {
-    let {layerIDs, map,} = this.state;
-    layerIDs.forEach(([id, type]) => {
+    let {layerIDs, map} = this.state;
+    layerIDs.forEach(([id, type,]) => {
       map.removeLayer(id);
     });
     this.setState({layerIDs: []});
@@ -284,7 +311,7 @@ export class MapViewer extends React.Component {
   shouldDisplay(layerName, search, props) {
     // Props should be passed in here to allow selection between current or
     // nextProps as appropriate
-    let {geoJSON, userSession} = props;
+    let {geoJSON, userSession,} = props;
     let onePoint = geoJSON
       .features
       .filter((point) => {
