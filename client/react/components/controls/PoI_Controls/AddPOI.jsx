@@ -28,16 +28,16 @@ export class AddPOI extends BaseComponent {
         'marker-color': '#7e7e7e',
         'marker-size': 'medium',
         'marker-symbol': '',
-        name: name.value,
-        desc: desc.value,
-        condition: cond.value,
-        last: `${month(date.getMonth())} ${date.getFullYear()}`,
-        displayed: false
+        'name': name.value,
+        'desc': desc.value,
+        'condition': cond.value,
+        'last': `${month(date.getMonth())} ${date.getFullYear()}`,
+        'displayed': false,
       },
       geometry: {
         type: 'Point',
         coordinates: [
-          userSession.coords.longitude - 360,
+          userSession.coords.longitude,
           userSession.coords.latitude
         ]
       }

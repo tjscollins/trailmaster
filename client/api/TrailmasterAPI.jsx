@@ -3,8 +3,8 @@ import $ from 'jquery';
 export const fetchData = (lat, lng, dist) => {
   // console.log('Fetching data for: ', lat, lng, dist);
   return Promise.all([
-    $.get(`/pois?lat=${lat}&lng=${lng - 360}&dist=${dist}`),
-    $.get(`/routes?lat=${lat}&lng=${lng - 360}&dist=${dist}`),
+    $.get(`/pois?lat=${lat}&lng=${lng}&dist=${dist}`),
+    $.get(`/routes?lat=${lat}&lng=${lng}&dist=${dist}`),
   ]).then((data) => {
     // console.log('Fetched data: ', data);
     return Promise.resolve(data);
@@ -218,4 +218,8 @@ export const toggleUI = (delay) => {
       $('.headerhidecontrols').css('display', 'none');
     }, delay);
   }
+};
+
+export const month = (mo) => {
+  return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dev'][mo];
 };

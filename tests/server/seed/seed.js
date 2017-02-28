@@ -76,7 +76,7 @@ const pois = [
     '__v': 0,
     'geometry': {
       'type': 'Point',
-      'coordinates': [-214.2152855, 15.167236099999998]
+      'coordinates': [-214.2152855+360, 15.167236099999998]
     },
     'properties': {
       'marker-color': '#7e7e7e',
@@ -105,7 +105,7 @@ const pois = [
     },
     'geometry': {
       'type': 'Point',
-      'coordinates': [-214.25509314401245, 15.10071455043649]
+      'coordinates': [-214.25509314401245+360, 15.10071455043649]
     }
   }, {
     '_creator': userOneID,
@@ -124,7 +124,7 @@ const pois = [
     },
     'geometry': {
       type: 'Point',
-      coordinates: [-214.2563098669052, 15.18629359866948]
+      coordinates: [-214.2563098669052+360, 15.18629359866948]
     }
   }
 ];

@@ -49,7 +49,7 @@ import {positionChanged} from 'TrailmasterAPI';
     // console.log('Old', latitude, longitude, 'New', pos);
     let {userSession: {coords: {latitude, longitude}}} = store.getState();
     if(positionChanged({latitude, longitude}, pos)) {
-      console.log('positionChanged');
+      console.log('positionChanged', pos);
       store.dispatch(actions.updatePOS(pos));
     }
     if (store.getState().userSession.trackingRoute)

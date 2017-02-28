@@ -66,7 +66,7 @@ export class ListPOI extends BaseComponent {
       'geometry': {
         'type': 'Point',
         'coordinates': [
-          center.lng - 360,
+          center.lng,
           center.lat
         ]
       }

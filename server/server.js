@@ -186,18 +186,19 @@ app.get('/pois', (req, res) => {
   let {query} = req;
   if (query.hasOwnProperty('lat') && query.hasOwnProperty('lng') && query.hasOwnProperty('dist')) {
     let {lat, lng, dist} = query;
+    [lat, lng] = [parseFloat(lat), parseFloat(lng)];
     let lngDegPerMile = Math.cos(lat*Math.PI/180)/69;
     let latDegPerMile = 1/69;
 
-    console.log('Sending pois within degrees', dist, lng, parseFloat(lng), dist*lngDegPerMile, lat, parseFloat(lat), dist*latDegPerMile);
+    console.log('Sending pois within degrees', dist, lng, dist*lngDegPerMile, lat, dist*latDegPerMile);
     poiModel.find({
       'geometry.coordinates.0': {
-        $lt: parseFloat(lng) + dist*lngDegPerMile,
-        $gt: parseFloat(lng) - dist*lngDegPerMile,
+        $lt: lng + dist*lngDegPerMile,
+        $gt: lng - dist*lngDegPerMile,
       },
       'geometry.coordinates.1': {
-        $lt: parseFloat(lat) + dist*latDegPerMile,
-        $gt: parseFloat(lat) - dist*latDegPerMile
+        $lt: lat + dist*latDegPerMile,
+        $gt: lat - dist*latDegPerMile
       }
     }).then((pois) => {
       res.send({pois});

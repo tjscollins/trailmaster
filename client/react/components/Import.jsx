@@ -76,7 +76,7 @@ export class Import extends BaseComponent {
       .coordinates
       .map((point) => {
         return [
-          point[0] - 360,
+          point[0],
           point[1],
         ];
       });
