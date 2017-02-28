@@ -14,15 +14,18 @@ export const fetchData = (lat, lng, dist) => {
 };
 
 export const validateServerData = (data) => {
-  let {coordinates, type,} = data.geometry;
-  if (coordinates.length <= 1)
+  let {coordinates, type} = data.geometry;
+  if (coordinates.length <= 1) {
     return false;
+  }
   if (type === 'LineString' && coordinates.filter((coord) => {
     return coord.length !== 2;
-  }).length > 0)
+  }).length > 0) {
     return false;
-  if (data.delete)
+  }
+  if (data.delete) {
     return false;
+  }
   return true;
 };
 

@@ -3,6 +3,7 @@ import React from 'react';
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
 import {connect} from 'react-redux';
 import distance from '@turf/distance';
+import gjv from 'geojson-validation';
 
 /*----------Components----------*/
 
@@ -209,10 +210,11 @@ export class MapViewer extends React.Component {
         const dummyFeatures = [];
         const {userSource, geoJSONSource} = mapConfig([
           longitude, latitude,
-        ], dummyFeatures);
+        ], []);
+        if(!gjv.valid(userSource.data)) console.log('WARNING: ', userSource);
+        if(!gjv.valid(geoJSONSource.data)) console.log('WARNING: ', geoJSONSource);
         map.addSource('user', userSource);
         map.addSource('geoJSON', geoJSONSource);
-        console.log(map.getSource('user'), map.getSource('geoJSON'));
       } catch (error) {
         debugger;
       }
@@ -254,10 +256,12 @@ export class MapViewer extends React.Component {
     ], features);
 
     try {
-      map.getSource('user').setData(userSource);
+      if(!gjv.valid(userSource.data)) console.log('WARNING: ', userSource);
+      map.getSource('user').setData(userSource.data);
       map.addLayer(userLayer);
       // Add Map Layers for GeoJSON Data
-      map.getSource('geoJSON').setData(geoJSONSource);
+      if(!gjv.valid(geoJSONSource.data)) console.log('WARNING: ', geoJSONSource);
+      map.getSource('geoJSON').setData(geoJSONSource.data);
 
       features.forEach((feature) => {
         const {properties: {
@@ -284,7 +288,8 @@ export class MapViewer extends React.Component {
    * refreshMap - Remove existing layers from the map, fetch new data based on current
    *              application state, and generate new map layers.
    *
-   * @param  {OBJECT} props props object to be passed to this.createMapLayers
+   * @param  {OBJECT} props props object to be passed to this.createMapLayers after
+   *                        new data is fetched from the server
    */
   refreshMap(props) {
     // console.log('Mapviewer.refreshMap');
