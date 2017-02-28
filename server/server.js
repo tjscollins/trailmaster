@@ -189,15 +189,15 @@ app.get('/pois', (req, res) => {
     let lngDegPerMile = Math.cos(lat*Math.PI/180)/69;
     let latDegPerMile = 1/69;
 
-    console.log('Sending pois within degrees', dist*lngDegPerMile, dist*latDegPerMile);
+    console.log('Sending pois within degrees', dist, lng, parseFloat(lng), dist*lngDegPerMile, lat, parseFloat(lat), dist*latDegPerMile);
     poiModel.find({
       'geometry.coordinates.0': {
-        $lt: parseInt(lng) + dist*lngDegPerMile,
-        $gt: parseInt(lng) - dist*lngDegPerMile,
+        $lt: parseFloat(lng) + dist*lngDegPerMile,
+        $gt: parseFloat(lng) - dist*lngDegPerMile,
       },
       'geometry.coordinates.1': {
-        $lt: parseInt(lat) + dist*latDegPerMile,
-        $gt: parseInt(lat) - dist*latDegPerMile
+        $lt: parseFloat(lat) + dist*latDegPerMile,
+        $gt: parseFloat(lat) - dist*latDegPerMile
       }
     }).then((pois) => {
       res.send({pois});
