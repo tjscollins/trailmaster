@@ -48,13 +48,14 @@ export class ListPOI extends BaseComponent {
   }
 
   /**
-   * distanceFilter - filters out geoJSON not within 50 miles of map center.
+   * distanceFilter - filters out geoJSON not within (distanceFilter) miles of map center.
    *
    * @param  {array} features list of geoJSON features
    * @return {array}          filtered list of geoJSON features
    */
   distanceFilter(features) {
     let {distanceFilter} = this.props.userSession;
+    console.log('poi distanceFilter', distanceFilter);
     // get map center
     let {center} = this.props.map;
     if (!center)
@@ -81,8 +82,7 @@ export class ListPOI extends BaseComponent {
           'coordinates': coordinates
         }
       };
-      // if dist > 100 miles, return false to filter feature if dist < 100 miles,
-      // return true to keep feature
+      console.log(feature.properties.name, distance(from, to, 'miles'));
       return distance(from, to, 'miles') < distanceFilter;
     });
   }

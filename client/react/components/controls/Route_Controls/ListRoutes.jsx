@@ -41,13 +41,14 @@ export class ListRoutes extends BaseComponent {
       };
   }
   /**
-   * distanceFilter - filters out geoJSON not within 50 miles of map center.
+   * distanceFilter - filters out geoJSON not within (distanceFilter) miles of map center.
    *
    * @param  {array} features list of geoJSON features
    * @return {array}          filtered list of geoJSON features
    */
   distanceFilter(features) {
     let {distanceFilter} = this.props.userSession;
+    console.log('routes distanceFilter', distanceFilter);
     // get map center
     let {center} = this.props.map;
     if (!center)
@@ -65,7 +66,7 @@ export class ListRoutes extends BaseComponent {
     };
     return features.filter((feature) => {
       // calculate distance between feature and map center
-      let {coordinates, type} = feature.geometry;
+      let {coordinates} = feature.geometry;
       let to = {
         'type': 'Feature',
         'properties': {},
@@ -74,9 +75,7 @@ export class ListRoutes extends BaseComponent {
           'coordinates': coordinates[0]
         }
       };
-      // if dist > 100 miles, return false to filter feature if dist < 100 miles,
-      // return true to keep feature
-      // console.log(distance(from, to, 'miles'));
+      console.log(feature.properties.name, distance(from, to, 'miles'));
       return distance(from, to, 'miles') < distanceFilter;
     });
   }

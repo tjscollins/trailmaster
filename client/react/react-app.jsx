@@ -10,6 +10,9 @@ import * as actions from 'actions';
 /*----------Components----------*/
 import MainContainer from 'MainContainer';
 
+/*----------API----------*/
+import {positionChanged} from 'TrailmasterAPI';
+
 /**
  * function - Initialize redux store, configure the geolocation service,
  *             and render the react application
@@ -43,9 +46,12 @@ import MainContainer from 'MainContainer';
   //Initialize User Location Monitoring
   const processGeolocation = (pos) => {
     // console.log('Position found', pos);
-    // let {userSession: {coords: {latitude, longitude}}} = store.getState();
     // console.log('Old', latitude, longitude, 'New', pos);
-    store.dispatch(actions.updatePOS(pos));
+    let {userSession: {coords: {latitude, longitude}}} = store.getState();
+    if(positionChanged({latitude, longitude}, pos)) {
+      console.log('positionChanged');
+      store.dispatch(actions.updatePOS(pos));
+    }
     if (store.getState().userSession.trackingRoute)
       store.dispatch(actions.addToRouteList(pos));
     };

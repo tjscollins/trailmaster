@@ -180,8 +180,13 @@ export function changedProps(nextProps, oldProps) {
  * @param  {type} posTwo description
  * @return {type}        description
  */
-export function positionChanged(posOne, posTwo) {
-  const SENSITIVITY = 20000;
+export function positionChanged(posOne, posTwo, minDistance) {
+  /**
+   * minDistance determines the minimum position change to register as a new position.
+   *              Its value represents a distance in feet, while SENSITIVITY represents
+   *              the number of minDistance intervals in one degree of latitude.
+   */
+  const SENSITIVITY = 364320 / minDistance;
   return (Math.floor(posOne.latitude*SENSITIVITY) !== Math.floor(posTwo.latitude*SENSITIVITY) ||
     Math.floor(posOne.latitude*SENSITIVITY) !== Math.floor(posTwo.latitude*SENSITIVITY));
 }
@@ -190,6 +195,9 @@ export function positionChanged(posOne, posTwo) {
 export const toggleUI = (delay) => {
   if ($('.hidecontrols').hasClass('fa-arrow-left')) {
     // hide UI
+    if (!$('button.navbar-toggle').hasClass('collapsed')) {
+      $('button.navbar-toggle').trigger('click');
+    }
     $('div.controls').addClass('hide-left');
     $('.hidecontrols')
       .removeClass('fa-arrow-left')

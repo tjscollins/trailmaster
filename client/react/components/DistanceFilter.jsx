@@ -19,11 +19,11 @@ export class DistanceFilter extends BaseComponent {
     let {dispatch} = this.props;
     e.preventDefault();
     $('#distance-filter').modal('hide');
-    if (!Number.isNaN(toInt(this.refs.distance.value))) {
-      dispatch(updateDistanceFilter(toInt(this.refs.distance.value)));
-      dispatch(updateMap());
-    }
+    let distance = toInt(this.refs.distance.value);
     this.refs.distance.value = '';
+    if (!Number.isNaN(distance)) {
+      dispatch(updateDistanceFilter(distance));
+    }
   }
   render() {
     return (

@@ -60,7 +60,7 @@ export class MapViewer extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const changes = changedProps(nextProps, this.props);
-    console.log('MapViewer componentWillReceiveProps', changes);
+    // console.log('MapViewer componentWillReceiveProps', changes);
     const {
       dispatch,
       geoJSON: {
@@ -78,19 +78,26 @@ export class MapViewer extends React.Component {
         coords: {
           longitude,
           latitude
-        }
+        },
+        distanceFilter,
       },
     } = nextProps;
     const {map, layerIDs, initCenter} = this.state;
     const searchPOI = new RegExp(POISearchText || '!!!!!!', 'i');
     const searchRoutes = new RegExp(RoutesSearchText || '!!!!!!', 'i');
 
-    if (update) {
+    if (update && this.state.map) {
       // Remove existing map layers, fetch new data, generate new map layers
       this.refreshMap(nextProps);
       dispatch(actions.completeUpdateMap());
+    } else if (distanceFilter !== this.props.userSession.distanceFilter) {
+      this.refreshMap(nextProps);
     }
 
+    /**
+     * Compare position of nextProps w/ this.props.  If change exceeds threshold
+     * (currently 5 feet), then update the user's position on the map.
+     */
     if (positionChanged({
       longitude,
       latitude,
@@ -99,17 +106,19 @@ export class MapViewer extends React.Component {
       const {userSource, userLayer,} = mapConfig([
         longitude, latitude,
       ], null);
-      console.log('Updating user position');
+      // console.log('Updating user position');
       map
         .getSource('user')
-        .setData(userSource);
-      map.update();
+        .setData(userSource.data);
     }
 
     if (mapCentering || initCenter && this.state.map) {
       // Re-center map on user
+      let {lng, lat} = map.getCenter();
       console.log('Centering Map');
-      this.centerMap(longitude, latitude, initCenter);
+      if(positionChanged({longitude, latitude}, {longitude: lng, latitude: lat})) {
+        this.centerMap(longitude, latitude, initCenter);
+      }
       this.setState({initCenter: false});
     }
 
@@ -130,7 +139,7 @@ export class MapViewer extends React.Component {
         return id[0];
       }).indexOf(name);
       if (i > -1) {
-        console.log('Setting maplayer visibility');
+        console.log('Setting maplayer visibility', name);
         if (this.shouldDisplay(name, searchPOI, nextProps) && layerIDs[i][1] === 'symbol') {
           map.setLayoutProperty(name, 'visibility', 'visible');
         } else if (this.shouldDisplay(name, searchRoutes, nextProps) && layerIDs[i][1] !== 'symbol') {
@@ -211,8 +220,8 @@ export class MapViewer extends React.Component {
         const {userSource, geoJSONSource} = mapConfig([
           longitude, latitude,
         ], []);
-        if(!gjv.valid(userSource.data)) console.log('WARNING: ', userSource);
-        if(!gjv.valid(geoJSONSource.data)) console.log('WARNING: ', geoJSONSource);
+        // if(!gjv.valid(userSource.data)) console.log('WARNING: ', userSource);
+        // if(!gjv.valid(geoJSONSource.data)) console.log('WARNING: ', geoJSONSource);
         map.addSource('user', userSource);
         map.addSource('geoJSON', geoJSONSource);
       } catch (error) {
@@ -237,9 +246,8 @@ export class MapViewer extends React.Component {
    *                        certain situations.
    */
   createMapLayers(features, props) {
-    console.log('MapViewer createMapLayers');
-    const {map} = this.state;
-    let layerIDs = [];
+    // console.log('MapViewer createMapLayers');
+    const {layerIDs, map} = this.state;
     const {
       userSession: {
         coords: {
@@ -250,17 +258,23 @@ export class MapViewer extends React.Component {
       },
       dispatch,
     } = props;
+    let newLayerIDs = [];
+
+    layerIDs.forEach(([id, type,]) => {
+      map.removeLayer(id);
+    });
 
     const {userSource, userLayer, geoJSONSource, addGeoJSONLayers,} = mapConfig([
       longitude, latitude,
     ], features);
 
     try {
-      if(!gjv.valid(userSource.data)) console.log('WARNING: ', userSource);
+      // if(!gjv.valid(userSource.data)) console.log('WARNING: ', userSource);
       map.getSource('user').setData(userSource.data);
       map.addLayer(userLayer);
+      newLayerIDs.push(['You Are Here', 'user']);
       // Add Map Layers for GeoJSON Data
-      if(!gjv.valid(geoJSONSource.data)) console.log('WARNING: ', geoJSONSource);
+      // if(!gjv.valid(geoJSONSource.data)) console.log('WARNING: ', geoJSONSource);
       map.getSource('geoJSON').setData(geoJSONSource.data);
 
       features.forEach((feature) => {
@@ -273,14 +287,19 @@ export class MapViewer extends React.Component {
         let layerType = type === 'Point'
           ? 'symbol'
           : 'line';
-        layerIDs.push([name, layerType,]);
-        addGeoJSONLayers(feature, map);
+          addGeoJSONLayers(feature, map);
+        if (type === 'Point') {
+          newLayerIDs.push([name, layerType,]);
+        } else if (type === 'LineString') {
+          newLayerIDs.push([name, layerType,]);
+          newLayerIDs.push([name + ' label', layerType,]);
+        }
       });
-      this.setState({layerIDs});
+      this.setState({layerIDs: newLayerIDs});
     } catch (error) {
       debugger;
     }
-    console.log('Finished createMapLayers');
+    // console.log('Finished createMapLayers');
 
   }
 
@@ -303,8 +322,8 @@ export class MapViewer extends React.Component {
       },
       dispatch,
     } = props;
-    this.removeMapLayers();
     fetchData(latitude, longitude, distanceFilter).then((data) => {
+      console.log('Fetching data within: ', distanceFilter);
       let features = data.reduce((acc, currentObject) => {
         let allObjects = [];
         for (let key in currentObject) {
@@ -324,14 +343,6 @@ export class MapViewer extends React.Component {
     }).catch((error) => {
       throw error;
     });
-  }
-
-  removeMapLayers() {
-    let {layerIDs, map} = this.state;
-    layerIDs.forEach(([id, type,]) => {
-      map.removeLayer(id);
-    });
-    this.setState({layerIDs: []});
   }
 
   shouldDisplay(layerName, search, props) {
