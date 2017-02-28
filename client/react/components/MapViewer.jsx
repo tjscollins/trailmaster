@@ -91,6 +91,7 @@ export class MapViewer extends React.Component {
       this.refreshMap(nextProps);
       dispatch(actions.completeUpdateMap());
     } else if (distanceFilter !== this.props.userSession.distanceFilter) {
+      console.log('Refreshing based on distanceFilter', distanceFilter, nextProps);
       this.refreshMap(nextProps);
     }
 
@@ -122,11 +123,6 @@ export class MapViewer extends React.Component {
       this.setState({initCenter: false});
     }
 
-    if (changes[0][0] === 'userSession') {
-      let subChange = changedProps(changes[0][1], changes[0][2]);
-      console.log(subChange);
-    }
-
     // Check Map Layer Visibility
     features.forEach(({
       properties: {
@@ -139,7 +135,7 @@ export class MapViewer extends React.Component {
         return id[0];
       }).indexOf(name);
       if (i > -1) {
-        console.log('Setting maplayer visibility', name);
+        // console.log('Setting maplayer visibility', name);
         if (this.shouldDisplay(name, searchPOI, nextProps) && layerIDs[i][1] === 'symbol') {
           map.setLayoutProperty(name, 'visibility', 'visible');
         } else if (this.shouldDisplay(name, searchRoutes, nextProps) && layerIDs[i][1] !== 'symbol') {

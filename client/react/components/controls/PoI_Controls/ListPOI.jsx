@@ -55,7 +55,7 @@ export class ListPOI extends BaseComponent {
    */
   distanceFilter(features) {
     let {distanceFilter} = this.props.userSession;
-    console.log('poi distanceFilter', distanceFilter);
+    // console.log('poi distanceFilter', distanceFilter);
     // get map center
     let {center} = this.props.map;
     if (!center)
@@ -82,7 +82,7 @@ export class ListPOI extends BaseComponent {
           'coordinates': coordinates
         }
       };
-      console.log(feature.properties.name, distance(from, to, 'miles'));
+      // console.log(feature.properties.name, distance(from, to, 'miles'));
       return distance(from, to, 'miles') < distanceFilter;
     });
   }

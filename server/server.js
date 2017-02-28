@@ -190,7 +190,6 @@ app.get('/pois', (req, res) => {
     let lngDegPerMile = Math.cos(lat*Math.PI/180)/69;
     let latDegPerMile = 1/69;
 
-    console.log('Sending pois within degrees', dist, lng, dist*lngDegPerMile, lat, dist*latDegPerMile);
     poiModel.find({
       'geometry.coordinates.0': {
         $lt: lng + dist*lngDegPerMile,
@@ -288,17 +287,32 @@ app.patch('/pois/:id', (req, res) => {
 app.get('/routes', (req, res) => {
   let {query} = req;
   if (query.hasOwnProperty('lat') && query.hasOwnProperty('lng')) {
-    let {lat, lng} = query;
+    let {lat, lng, dist} = query;
+    [lat, lng] = [parseFloat(lat), parseFloat(lng)];
+    let lngDegPerMile = Math.cos(lat*Math.PI/180)/69;
+    let latDegPerMile = 1/69;
+    console.log('Sending routes within degrees', dist, lng, dist*lngDegPerMile, lat, dist*latDegPerMile);
+    // console.log(`{
+    //   'geometry.coordinates.0.0': {
+    //     $lt: ${lng + dist*lngDegPerMile},
+    //     $gt: ${lng - dist*lngDegPerMile},
+    //   },
+    //   'geometry.coordinates.0.1': {
+    //     $lt: ${lat + dist*latDegPerMile},
+    //     $gt: ${lat - dist*latDegPerMile}
+    //   }
+    // }`);
     routeModel.find({
       'geometry.coordinates.0.0': {
-        $lt: parseInt(lng) + 1,
-        $gt: parseInt(lng) - 1
+        $lt: lng + dist*lngDegPerMile,
+        $gt: lng - dist*lngDegPerMile,
       },
       'geometry.coordinates.0.1': {
-        $lt: parseInt(lat) + 1,
-        $gt: parseInt(lat) - 1
+        $lt: lat + dist*latDegPerMile,
+        $gt: lat - dist*latDegPerMile
       }
     }).then((routes) => {
+      console.log(routes);
       res.send({routes});
     }, (e) => {
       res

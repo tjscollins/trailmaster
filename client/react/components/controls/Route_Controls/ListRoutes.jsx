@@ -48,7 +48,7 @@ export class ListRoutes extends BaseComponent {
    */
   distanceFilter(features) {
     let {distanceFilter} = this.props.userSession;
-    console.log('routes distanceFilter', distanceFilter);
+    // console.log('routes distanceFilter', distanceFilter);
     // get map center
     let {center} = this.props.map;
     if (!center)
