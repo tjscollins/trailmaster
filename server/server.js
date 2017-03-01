@@ -14,51 +14,122 @@ const {mongoose} = require('./db/mongoose');
 const {poiModel} = require('./db/models/poi');
 const {routeModel} = require('./db/models/route');
 const {trailModel} = require('./db/models/trail');
-const {userModel} = require('./db/models/user');
+const UserModel = require('./db/models/user');
 const {authenticate} = require('./middleware/authenticate');
 
 const PORT = process.env.PORT || 3000;
+const NODE_ENV = process.env.NODE_ENV || 'test';
 
 //Create our app
 const app = express();
-
 app.use(bodyParser.json());
 
-app.get('*', function(req, res, next) {
-  if (process.env.NODE_ENV === 'production' && req.headers['x-forwarded-proto'] !== 'https') {
-    res.redirect('https://' + req.host + req.url);
-  } else {
-    next();/* Continue to other routes if we're not redirecting */
-  }
-});
+app.route('*')
+/**
+  * Redirect all http requests to https.  Necessary for using geolocation in client.
+  */
+  .get(function(req, res, next) {
+    /*istanbul ignore if*/
+    if (NODE_ENV === 'production' && req.headers['x-forwarded-proto'] !== 'https') {
+      res.redirect('https://' + req.host + req.url);
+    } else {
+      /* Continue to other routes if we're not redirecting */
+      next();
+    }
+  });
 
-app.post('/users', (req, res) => {
-  let body = _.pick(req.body, ['email', 'password']);
-  body.email = body.email.trim().toLowerCase();
-  let user = new userModel(body);
-  user
-    .save()
-    .then(() => {
-      return user.generateAuthToken();
-    })
-    .then((token) => {
-      res
-        .header('x-auth', token)
-        .send(user);
-    })
-    .catch((e) => {
+app
+  .route('/users')
+  .post((req, res) => {
+    /**
+      * Create a new user account
+      */
+    let body = _.pick(req.body, ['email', 'password']);
+    body.email = body
+      .email
+      .trim()
+      .toLowerCase();
+    let user = new UserModel(body);
+    user
+      .save()
+      .then(() => {
+        return user.generateAuthToken();
+      })
+      .then((token) => {
+        res
+          .header('x-auth', token)
+          .send(user);
+      })
+      .catch((e) => {
+        res
+          .status(400)
+          .send(e);
+      });
+  });
+
+app
+  .route('/users/login')
+  .post((req, res) => {
+    /**
+    * Login with provided user credentials
+    */
+    let body = _.pick(req.body, ['email', 'password']);
+
+    UserModel.findByCredentials(body.email.trim().toLowerCase(), body.password).then((user) => {
+      return user
+        .generateAuthToken()
+        .then((token) => {
+          res
+            .header('x-auth', token)
+            .send(user);
+        });
+    }).catch((e) => {
       res
         .status(400)
-        .send(e);
+        .send();
     });
-});
-app.patch('/users/password', (req, res) => {
+  })
+  .get(authenticate, (req, res) => {
+    /**
+    * Return information about current authenticated user to the clien
+    */
+    res.send(req.user);
+  });
+
+app
+  .route('/users/logout')
+  .get(authenticate, (req, res) => {
+    /**
+    * Logout an authenticated user by deleting their authentication token
+    */
+    req
+      .user
+      .removeToken(req.token)
+      .then(() => {
+        res
+          .status(200)
+          .send();
+      }, () => {
+        res
+          .status(400)
+          .send();
+      });
+  });
+
+app.route('/users/password')
+/**
+   * Change a user's password
+   */
+  .patch((req, res) => {
   let body = _.pick(req.body, ['email', 'password']);
   bcrypt
     .hash(body.password, 10)
     .then((hash) => {
-      userModel.update({
-        email: body.email.trim().toLowerCase()
+      UserModel.update({
+        email: body
+          .email
+          .trim()
+          .toLowerCase()
       }, {
         password: hash
       }, (err, raw) => {
@@ -69,56 +140,32 @@ app.patch('/users/password', (req, res) => {
     })
     .then(() => {
       res.redirect(303, '/');
-    });
-});
-app.get('/users/me', authenticate, (req, res) => {
-  res.send(req.user);
-});
-app.post('/users/login', (req, res) => {
-  let body = _.pick(req.body, ['email', 'password']);
-
-  userModel
-    .findByCredentials(body.email.trim().toLowerCase(), body.password)
-    .then((user) => {
-      return user
-        .generateAuthToken()
-        .then((token) => {
-          res
-            .header('x-auth', token)
-            .send(user);
-        });
     })
-    .catch((e) => {
+    .catch((err) => {
       res
-        .status(400)
+        .status(500)
         .send();
     });
 });
-app.delete('/users/me/token', authenticate, (req, res) => {
-  req
-    .user
-    .removeToken(req.token)
-    .then(() => {
-      res
-        .status(200)
-        .send();
-    }, () => {
-      res
-        .status(400)
-        .send();
-    });
-});
-app.post('/users/reset', (req, res) => {
+
+app.route('/users/reset')
+/**
+   * Request to reset a user's password.  Generates a single-use password reset
+   * link that is emailed to the user.  Link also expires after 24 hours.
+   */
+  .post((req, res) => {
   let {email} = _.pick(req.body, ['email']);
-  email = email.trim().toLowerCase();
+  email = email
+    .trim()
+    .toLowerCase();
   let url = 'http://' + req.get('host') + '/users/reset';
-  userModel
+  UserModel
     .resetPassword(email)
     .then((reqID) => {
       let auth = {
         auth: {
           api_key: 'key-52c28f88d00577e50d1d461a6e5dec02',
-          domain: 'mg.tjscollins.me',
+          domain: 'mg.tjscollins.me'
         }
       };
       let nodemailerMailgun = nodemailer.createTransport(mg(auth));
@@ -127,7 +174,7 @@ app.post('/users/reset', (req, res) => {
         to: `${email}`,
         subject: 'Password Recovery',
         text: 'Fix Your Password Here',
-        html: `<p>The following is a single-use link to reset your password.</p><p>It will only work for 24 hours</p><a href=\"${url}/${reqID}-${encodeURI(email)}\">Reset Password</a>`,
+        html: `<p>The following is a single-use link to reset your password.</p><p>It will only work for 24 hours</p><a href=\"${url}/${reqID}-${encodeURI(email)}\">Reset Password</a>`
       };
       nodemailerMailgun.sendMail(message, function(err, info) {
         if (err) {
@@ -148,10 +195,10 @@ app.post('/users/reset', (req, res) => {
 });
 app.get('/users/reset/:reqID-:email', (req, res) => {
   let {reqID, email} = req.params;
-  let toRemove = [],
-    toUse = -1;
+  // let toRemove = [];
+  let toUse = -1;
   let invalid = true;
-  userModel
+  UserModel
     .find({email})
     .then((user) => {
       if (!user.length) {
@@ -174,7 +221,7 @@ app.get('/users/reset/:reqID-:email', (req, res) => {
       if (invalid) {
         res.sendStatus(403);
       }
-      userModel.update({
+      UserModel.update({
         email: email
       }, {resetRequests: remainingRequests}).then((person) => {
         // console.log(user);
@@ -187,18 +234,18 @@ app.get('/pois', (req, res) => {
   if (query.hasOwnProperty('lat') && query.hasOwnProperty('lng') && query.hasOwnProperty('dist')) {
     let {lat, lng, dist} = query;
     [lat, lng] = [parseFloat(lat), parseFloat(lng)];
-    let lngDegPerMile = Math.cos(lat*Math.PI/180)/69;
-    let latDegPerMile = 1/69;
+    let lngDegPerMile = Math.cos(lat * Math.PI / 180) / 69;
+    let latDegPerMile = 1 / 69;
 
     poiModel.find({
       'geometry.coordinates.0': {
         $lt: lng + dist*lngDegPerMile,
-        $gt: lng - dist*lngDegPerMile,
+        $gt: lng - dist*lngDegPerMile
       },
       'geometry.coordinates.1': {
         $lt: lat + dist*latDegPerMile,
-        $gt: lat - dist*latDegPerMile
-      }
+        $gt: lat - dist*latDegPerMile,
+      },
     }).then((pois) => {
       res.send({pois});
     }, (e) => {
@@ -219,7 +266,7 @@ app.get('/pois', (req, res) => {
   }
 });
 app.post('/pois', (req, res) => {
-  var poi = new poiModel(req.body);
+  const poi = new poiModel(req.body);
   poi
     .save()
     .then((doc) => {
@@ -231,7 +278,7 @@ app.post('/pois', (req, res) => {
     });
 });
 app.delete('/pois/:id', (req, res) => {
-  var id = req.params.id;
+  const id = req.params.id;
   if (!ObjectID.isValid(id)) {
     return res
       .status(404)
@@ -268,7 +315,7 @@ app.patch('/pois/:id', (req, res) => {
   }, {
     new: true,
     runValidators: true,
-    setDefaultsOnInsert: true,
+    setDefaultsOnInsert: true
   }).then((point) => {
     if (!point) {
       return res
@@ -289,37 +336,26 @@ app.get('/routes', (req, res) => {
   if (query.hasOwnProperty('lat') && query.hasOwnProperty('lng')) {
     let {lat, lng, dist} = query;
     [lat, lng] = [parseFloat(lat), parseFloat(lng)];
-    let lngDegPerMile = Math.cos(lat*Math.PI/180)/69;
-    let latDegPerMile = 1/69;
-    console.log('Sending routes within degrees', dist, lng, dist*lngDegPerMile, lat, dist*latDegPerMile);
-    // console.log(`{
-    //   'geometry.coordinates.0.0': {
-    //     $lt: ${lng + dist*lngDegPerMile},
-    //     $gt: ${lng - dist*lngDegPerMile},
-    //   },
-    //   'geometry.coordinates.0.1': {
-    //     $lt: ${lat + dist*latDegPerMile},
-    //     $gt: ${lat - dist*latDegPerMile}
-    //   }
-    // }`);
+    let lngDegPerMile = Math.cos(lat * Math.PI / 180) / 69;
+    let latDegPerMile = 1 / 69;
     routeModel.find({
       'geometry.coordinates.0.0': {
         $lt: lng + dist*lngDegPerMile,
-        $gt: lng - dist*lngDegPerMile,
+        $gt: lng - dist*lngDegPerMile
       },
       'geometry.coordinates.0.1': {
         $lt: lat + dist*latDegPerMile,
-        $gt: lat - dist*latDegPerMile
-      }
+        $gt: lat - dist*latDegPerMile,
+      },
     }).then((routes) => {
-      console.log(routes);
+      // console.log(routes);
       res.send({routes});
     }, (e) => {
       res
         .status(400)
         .send(e);
     });
-  }else {
+  } else {
     routeModel
       .find()
       .then((routes) => {
@@ -382,7 +418,7 @@ app.patch('/routes/:id', (req, res) => {
   }, {
     new: true,
     runValidators: true,
-    setDefaultsOnInsert: true,
+    setDefaultsOnInsert: true
   }).then((point) => {
     if (!point) {
       return res
@@ -405,6 +441,7 @@ app.get('/trails', authenticate, (req, res) => {
     .then((trails) => {
       res.send({trails});
     }, (e) => {
+      console.log(e);
       res
         .status(400)
         .send(e);
@@ -417,7 +454,7 @@ app.post('/trails', authenticate, (req, res) => {
     name: req.body.name,
     desc: req.body.desc,
     date: req.body.date,
-    _creator: ObjectID(req.user._id),
+    _creator: new ObjectID(req.user._id)
   });
   trail
     .save()

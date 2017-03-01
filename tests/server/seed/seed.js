@@ -2,7 +2,7 @@ const {ObjectID} = require('mongodb');
 const {poiModel} = require('./../../../server/db/models/poi');
 const {routeModel} = require('./../../../server/db/models/route');
 const {trailModel} = require('./../../../server/db/models/trail');
-const {userModel} = require('./../../../server/db/models/user');
+const UserModel = require('./../../../server/db/models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
@@ -511,12 +511,12 @@ const populateServer = (done) => {
 };
 
 const populateUsers = (done) => {
-  userModel
+  UserModel
     .remove({})
     .then(() => {
-      let userOne = new userModel(users[0]).save();
-      let userTwo = new userModel(users[1]).save();
-      let userThree = new userModel(users[2]).save();
+      let userOne = new UserModel(users[0]).save();
+      let userTwo = new UserModel(users[1]).save();
+      let userThree = new UserModel(users[2]).save();
 
       return Promise.all([userOne, userTwo, userThree]);
     })

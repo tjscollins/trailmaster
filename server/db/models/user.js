@@ -58,6 +58,7 @@ userSchema.methods.generateAuthToken = function() {
     access
   }, 'abc123');
   user.tokens = user.tokens.filter((jwt) => {
+    // Only keep tokens that are less than 1 day old.  Purge older tokens.
     return Date.now() - jwt.date.valueOf() < 86400000;
   });
   user
@@ -82,7 +83,7 @@ userSchema.methods.removeToken = function(token) {
 };
 
 userSchema.methods.changePassword = function(password) {
-  var user = this;
+  let user = this;
 
   // console.log('Setting password', password);
   return user.update({
@@ -129,7 +130,7 @@ userSchema.statics.findByCredentials = function(email, password) {
 };
 
 userSchema.statics.resetPassword = function(email) {
-  var User = this;
+  const User = this;
   return User
     .findOne({email})
     .then((user) => {
@@ -137,9 +138,9 @@ userSchema.statics.resetPassword = function(email) {
       if (!user) {
         return Promise.reject();
       }
-      var time = new Date().getTime();
-      var reqID = new ObjectID();
-      var _id = user._id;
+      let time = new Date().getTime();
+      let reqID = new ObjectID();
+      let _id = user._id;
 
       // console.log('Running hash algo');
       return new Promise((resolve, reject) => {
@@ -168,12 +169,9 @@ userSchema.statics.resetPassword = function(email) {
     });
 };
 
-userSchema.statics.findAndResetPW = function(reqID) {
-  // bcrypt.compare(reqID,)
-};
 
 userSchema.pre('save', function(next) {
-  var user = this;
+  let user = this;
 
   if (user.isModified('password')) {
     bcrypt.genSalt(10, (err, salt) => {
@@ -198,8 +196,6 @@ userSchema.pre('save', function(next) {
 //   }
 // });
 
-var userModel = mongoose.model('User', userSchema);
+const UserModel = mongoose.model('User', userSchema);
 
-module.exports = {
-  userModel
-};
+module.exports = UserModel;

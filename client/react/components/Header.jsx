@@ -17,10 +17,10 @@ export class Header extends BaseComponent {
     this._bind('logout', 'toggleAutoCenter');
   }
   logout() {
-    let {dispatch, userSession,} = this.props;
+    let {dispatch, userSession} = this.props;
     $.ajax({
-      url: '/users/me/token',
-      type: 'DELETE',
+      url: '/users/logout',
+      type: 'GET',
       beforeSend: function(request) {
         request.setRequestHeader('x-auth', userSession.xAuth);
       },
