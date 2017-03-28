@@ -58,6 +58,9 @@ export class Header extends BaseComponent {
   setDistanceFilter() {
     $('#distance-filter').modal('show');
   }
+  setMockLocation() {
+    $('#mock-location').modal('show');
+  }
   showAccountCreator() {
     $('#account-creator').modal('show');
   }
@@ -127,11 +130,14 @@ export class Header extends BaseComponent {
                     className='autocenter'
                     onClick={this.toggleAutoCenter}
                     style={{
-                    cursor: 'pointer'
-                  }}>{autoCenter()}</a>
+                      cursor: 'pointer'
+                    }}>{autoCenter()}</a>
                 </li>
                 <li>
                   <a href='#' onClick={this.setDistanceFilter}>Set Distance Filter</a>
+                </li>
+                <li>
+                  <a href='#' onClick={this.setMockLocation}>Search Near</a>
                 </li>
                 {/* <li><a href='#'>Something else here</a></li>
                   <li role='separator' className='divider'></li>

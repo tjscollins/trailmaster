@@ -11,6 +11,10 @@ export const userSessionReducer = (state = {
   trackingRoute: false,
   routeList: [],
   mapCentering: false,
+  gpsTracking: {
+    enable: true,
+    watcher: null,
+  },
   coords: {
     latitude: 15,
     longitude: 145

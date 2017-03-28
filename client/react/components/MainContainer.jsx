@@ -10,6 +10,7 @@ import Header from 'Header';
 import Import from 'Import';
 import Login from 'Login';
 import MapViewer from 'MapViewer';
+import MockLocation from 'MockLocation';
 import PasswordRecovery from 'PasswordRecovery';
 import UpdatePOIorRoute from 'UpdatePOIorRoute';
 
@@ -29,6 +30,7 @@ export class MainContainer extends BaseComponent {
         <UpdatePOIorRoute />
         <FAQ />
         <DistanceFilter />
+        <MockLocation />
       </div>
     );
   }
