@@ -33,8 +33,20 @@ export const showTrail = (id) => {
 };
 
 //userLocation actions
+export const watchGPS = (watcher) => {
+  return {type: 'WATCH_GPS', watcher};
+};
+
 export const updatePOS = (position) => {
   return {type: 'UPDATE_POS', position};
+};
+
+export const mockPOS = (position) => {
+  return {type: 'MOCK_POS', position};
+};
+
+export const unMockPos = () => {
+  return {type: 'UNMOCK_POS'};
 };
 
 export const toggleMapCentering = () => {

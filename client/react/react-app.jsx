@@ -37,6 +37,11 @@ import {positionChanged} from 'TrailmasterAPI';
       coords: {
         latitude: 0,
         longitude: 0,
+      },
+      gpsTracking: {
+        enable: true,
+        watcher: null,
+        mock: false,
       }
     }
   };
@@ -45,10 +50,8 @@ import {positionChanged} from 'TrailmasterAPI';
 
   //Initialize User Location Monitoring
   const processGeolocation = (pos) => {
-    // console.log('Position found', pos);
-    // console.log('Old', latitude, longitude, 'New', pos);
-    let {userSession: {coords: {latitude, longitude}}} = store.getState();
-    if(positionChanged({latitude, longitude}, pos)) {
+    let {userSession: {coords: {latitude, longitude}, gpsTracking: {mock}}} = store.getState();
+    if(positionChanged({latitude, longitude}, pos) && !mock) {
       console.log('positionChanged', pos);
       store.dispatch(actions.updatePOS(pos));
     }
@@ -60,7 +63,7 @@ import {positionChanged} from 'TrailmasterAPI';
     console.error('Error tracking user position', err);
   };
 
-  navigator
+  const watcher = navigator
     .geolocation
     .watchPosition(processGeolocation,
     // Optional settings below
@@ -69,6 +72,8 @@ import {positionChanged} from 'TrailmasterAPI';
       enableHighAccuracy: true,
       maximumAge: Infinity
     });
+
+  store.dispatch(actions.watchGPS(watcher));
 
   ReactDOM.render(
     <Provider store={store}>

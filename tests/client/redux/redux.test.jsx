@@ -324,7 +324,7 @@ describe('redux', () => {
       });
 
       it('should UPDATE the user\'s POS', () => {
-        let action = {
+        const action = {
           type: 'UPDATE_POS',
           position: {
             coords: {
@@ -333,18 +333,27 @@ describe('redux', () => {
             }
           }
         };
-        let state = {
+        const state = {
           coords: {
             latitude: 15,
             longitude: 215
           }
         };
-        let res = reducers.userSessionReducer(df(state), df(action));
+        const expectation = {
+          ...action.position,
+          gpsTracking: {
+            trueLocation: {
+              latitude: 10,
+              longitude: 210,
+            },
+          },
+        };
+        const res = reducers.userSessionReducer(df(state), df(action));
         expect(res.coords.longitude).toBeA('number');
         expect(res.coords.latitude).toBeA('number');
         expect(res.coords.longitude).toNotEqual(state.coords.longitude);
         expect(res.coords.latitude).toNotEqual(state.coords.latitude);
-        expect(res).toEqual(action.position);
+        expect(res).toEqual(expectation);
       });
 
       it('should TOGGLE the MAP CENTERING state', () => {

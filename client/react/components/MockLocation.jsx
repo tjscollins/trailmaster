@@ -6,29 +6,33 @@ import $ from 'jquery';
 import BaseComponent from 'BaseComponent';
 
 /*----------Redux----------*/
-import {updatePOS} from 'actions';
+import {mockPOS, unMockPos} from 'actions';
 import {connect} from 'react-redux';
 import {toInt} from 'validator';
 
 export class MockLocation extends BaseComponent {
   constructor() {
     super();
-    this._bind('submit');
+    this._bind(['submit', 'clear']);
+  }
+  clear(e) {
+    let {dispatch} = this.props;
+    e.preventDefault();
+    $('#mock-location').modal('hide');
+    let {latitude, longitude} = this.refs;
+    latitude.value = '';
+    longitude.value = '';
+    dispatch(unMockPos());
   }
   submit(e) {
     let {dispatch} = this.props;
     e.preventDefault();
     $('#mock-location').modal('hide');
-    // let distance = toInt(this.refs.distance.value);
-    // this.refs.distance.value = '';
-    // if (!Number.isNaN(distance)) {
-    //   dispatch(updateDistanceFilter(distance));
-    // }
     let {latitude, longitude} = this.refs;
     let lat = toInt(latitude.value);
     let lng = toInt(longitude.value);
     if(!Number.isNaN(lat) && !Number.isNaN(lng)) {
-      dispatch(updatePOS({coords: {latitude: lat, longitude: lng}}));
+      dispatch(mockPOS({coords: {latitude: lat, longitude: lng}}));
     }
   }
   render() {
@@ -61,6 +65,7 @@ export class MockLocation extends BaseComponent {
 
             <div className='modal-footer'>
               <button onClick={this.submit} type='button' className='btn btn-default' data-dismiss='modal'>Save</button>
+              <button onClick={this.clear} type='button' className='btn btn-warning' data-dismiss='modal'>Clear</button>
             </div>
           </div>
         </div>
