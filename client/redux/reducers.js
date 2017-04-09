@@ -182,6 +182,11 @@ export const trailsReducer = (state = {
           newTrail
         ]
       };
+    case 'DEL_TRAIL':
+      return {
+        ...state,
+        myTrails: state.myTrails.filter((trail) => trail.name !== action.name),
+      };
       // case 'SHOW_TRAIL':   return state;
     default:
       return state;

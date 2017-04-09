@@ -28,6 +28,13 @@ export const saveTrail = (list, name, desc, bounds) => {
   return {type: 'SAVE_TRAIL', list, name, desc, bounds};
 };
 
+export const delTrail = (name) => {
+  return {
+    type: 'DEL_TRAIL',
+    name,
+  };
+};
+
 export const showTrail = (id) => {
   return {type: 'SHOW_TRAIL', id};
 };

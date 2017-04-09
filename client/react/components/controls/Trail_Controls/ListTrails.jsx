@@ -84,7 +84,7 @@ export class ListTrails extends BaseComponent {
       });
   }
   markForDelete(id) {
-    let {userSession} = this.props;
+    let {userSession, dispatch} = this.props;
     return (e) => {
       if (!userSession.xAuth) {
         alert('You must sign-in in order to delete trails');
@@ -93,7 +93,8 @@ export class ListTrails extends BaseComponent {
       if (confirm('Are you sure you want to delete this trail?')) {
         $
           .ajax({url: `/trails/${id}`, type: 'delete'})
-          .done((data) => {
+          .done((trail) => {
+            dispatch(actions.delTrail(trail.name));
           });
       }
     };
