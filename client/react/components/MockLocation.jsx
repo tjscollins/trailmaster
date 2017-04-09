@@ -13,9 +13,8 @@ import {toInt} from 'validator';
 export class MockLocation extends BaseComponent {
   constructor() {
     super();
-    this._bind(['submit', 'clear']);
   }
-  clear(e) {
+  clear = (e) => {
     let {dispatch} = this.props;
     e.preventDefault();
     $('#mock-location').modal('hide');
@@ -24,7 +23,7 @@ export class MockLocation extends BaseComponent {
     longitude.value = '';
     dispatch(unMockPos());
   }
-  submit(e) {
+  submit = (e) => {
     let {dispatch} = this.props;
     e.preventDefault();
     $('#mock-location').modal('hide');

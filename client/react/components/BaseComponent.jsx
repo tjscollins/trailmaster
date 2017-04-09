@@ -1,10 +1,10 @@
 /*----------Modules----------*/
-import React from 'react';
+import React, {Component} from 'react';
 
 /**
  * Base Component class to provide _bind to React Components
  */
-class BaseComponent extends React.Component {
+class BaseComponent extends Component {
   /**
    * _bind - binds this on all methods provided as strings to _bind
    *
