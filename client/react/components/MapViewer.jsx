@@ -178,7 +178,7 @@ export class MapViewer extends Component {
    * @param  {OBJECT} props receives props so that nextProps can be passed in for
    *                        certain situations.
    */
-  createMap = (props) => {
+  createMap(props) {
     const {
       userSession: {
         coords: {
