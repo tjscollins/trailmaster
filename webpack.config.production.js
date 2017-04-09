@@ -30,6 +30,7 @@ module.exports = {
           warnings: false,
         },
       }),
+      new webpack.optimize.AggressiveMergingPlugin(),
   ],
   output: {
     path: __dirname,
