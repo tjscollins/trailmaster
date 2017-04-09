@@ -116,13 +116,13 @@ export class AddTrails extends BaseComponent {
           dispatch(actions.displayTrails(JSON.parse(jqXHR.responseText).trails));
         },
         error: (jqXHR, status, err) => {
-          console.log(`Error fetching new trail: ${err}`, jqXHR);
+          console.error(`Error fetching new trail: ${err}`, jqXHR);
         }
       });
     });
 
     send.fail((jqXHR, status, err) => {
-      console.log(`Error saving new trail: ${err}`, jqXHR);
+      console.error(`Error saving new trail: ${err}`, jqXHR);
     });
   }
   render() {

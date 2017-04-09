@@ -30,6 +30,7 @@ export const validateServerData = (data) => {
 };
 
 export const mapConfig = (coordinates, features) => {
+  // console.log('mapConfig called with: ', coordinates, features);
   const userSource = {
     type: 'geojson',
     data: {
@@ -80,7 +81,7 @@ export const mapConfig = (coordinates, features) => {
   };
 
   /**
-   * geoJSONLayer - returns a config object for a mapbox layer
+   * addGeoJSONLayers - returns a config object for a mapbox layer
    *
    * @param  {STRING} source collection to pull geoJSON data from
    * @param  {STRING} id     name for the layer

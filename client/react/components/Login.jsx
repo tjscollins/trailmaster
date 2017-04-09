@@ -33,7 +33,7 @@ export class Login extends BaseComponent {
     });
 
     createAccountRequest.fail((jqXHR, status, err) => {
-      console.log(`Error creating account: ${err}`, jqXHR);
+      console.error(`Error creating account: ${err}`, jqXHR);
     });
   }
   forgotPassword() {
@@ -62,7 +62,7 @@ export class Login extends BaseComponent {
     });
 
     loginRequest.fail((jqXHR, status, err) => {
-      console.log('Login error', jqXHR);
+      console.error('Login error', jqXHR);
       $('.wrong-password').css('color', 'red');
       setTimeout(() => {
         $('.wrong-password').css('color', 'white');

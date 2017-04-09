@@ -37,7 +37,7 @@ export class ListTrails extends BaseComponent {
       });
 
       getTrails.fail((jqXHR, status, err) => {
-        console.log(`Error retrieving user's trails ${err}`, jqXHR);
+        console.error(`Error retrieving user's trails ${err}`, jqXHR);
       });
     }
   }

@@ -52,7 +52,7 @@ import {positionChanged} from 'TrailmasterAPI';
   const processGeolocation = (pos) => {
     let {userSession: {coords: {latitude, longitude}, gpsTracking: {mock}}} = store.getState();
     if(positionChanged({latitude, longitude}, pos) && !mock) {
-      console.log('positionChanged', pos);
+      // console.log('positionChanged', pos);
       store.dispatch(actions.updatePOS(pos));
     }
     if (store.getState().userSession.trackingRoute)

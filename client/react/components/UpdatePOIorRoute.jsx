@@ -100,7 +100,7 @@ export class UpdatePOIorRoute extends BaseComponent {
           ? (
             <tr onClick={this.select(point, id)} id={id} style={{
               cursor: 'pointer'
-            }} className="point-of-interest" key={id}>
+            }} className='point-of-interest' key={id}>
               <td>{name}</td>
               <td>{desc}</td>
               <td>{condition}</td>
@@ -298,24 +298,24 @@ export class UpdatePOIorRoute extends BaseComponent {
     }
     return (
       <div>
-        <div id="select-poi-route" className="modal fade">
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
+        <div id='select-poi-route' className='modal fade'>
+          <div className='modal-dialog' role='document'>
+            <div className='modal-content'>
+              <div className='modal-header'>
+                <button type='button' className='close' data-dismiss='modal' aria-label='Close'>
+                  <span aria-hidden='true'>&times;</span>
                 </button>
-                <h4 className="modal-title">Update POI or Route</h4>
+                <h4 className='modal-title'>Update POI or Route</h4>
               </div>
-              <div className="modal-body">
-                <div className="search-box">
+              <div className='modal-body'>
+                <div className='search-box'>
                   <div>
-                    <input className="form-control" type="search" id="update-searchText" ref="updatesearchText" placeholder="Search" onChange={() => {
+                    <input className='form-control' type='search' id='update-searchText' ref='updatesearchText' placeholder='Search' onChange={() => {
                       dispatch(actions.setUpdateSearchText(this.refs.updatesearchText.value));
                     }}/>
                   </div>
                 </div>
-                <table className="list-box table table-striped">
+                <table className='list-box table table-striped'>
                   <thead>
                     <tr>
                       <th>Name</th>
@@ -335,84 +335,84 @@ export class UpdatePOIorRoute extends BaseComponent {
                   </tbody>
                 </table>
               </div>
-              <div className="modal-footer">
-                <button type="submit" className="btn btn-secondary" data-dismiss="modal">Close</button>
+              <div className='modal-footer'>
+                <button type='submit' className='btn btn-secondary' data-dismiss='modal'>Close</button>
               </div>
             </div>
           </div>
         </div>
 
-        <div id="update-poi-route" className="modal fade">
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
+        <div id='update-poi-route' className='modal fade'>
+          <div className='modal-dialog' role='document'>
+            <div className='modal-content'>
+              <div className='modal-header'>
+                <button type='button' className='close' data-dismiss='modal' aria-label='Close'>
+                  <span aria-hidden='true'>&times;</span>
                 </button>
-                <button className="btn btn-danger delete-feature" onClick={this.markForDelete}>
-                  <i className="fa fa-trash"></i>
+                <button className='btn btn-danger delete-feature' onClick={this.markForDelete}>
+                  <i className='fa fa-trash'></i>
                 </button>
-                <h4 className="modal-title">Update POI or Route</h4>
+                <h4 className='modal-title'>Update POI or Route</h4>
               </div>
-              <div className="modal-body">
+              <div className='modal-body'>
                 <p>Instructions:</p>
                 <p>Make changes to the geoJSON data for the selected POI or Route and view them in the preview map. When you are satisfied with your changes, click save.</p>
 
-                <form onChange={this.formChange} id="updateform" ref="updateform" className="form-horizontal">
-                  <div className="form-group">
-                    <label htmlFor="name" className="col-xs-2 control-label">Name</label>
-                    <div className="col-xs-10">
-                      <input className="form-control" id="name" ref="name" type="text" value={name}/>
+                <form onChange={this.formChange} id='updateform' ref='updateform' className='form-horizontal'>
+                  <div className='form-group'>
+                    <label htmlFor='name' className='col-xs-2 control-label'>Name</label>
+                    <div className='col-xs-10'>
+                      <input className='form-control' id='name' ref='name' type='text' defaultValue={name}/>
                     </div>
                   </div>
-                  <div className="form-group ">
-                    <label htmlFor="desc" className="col-xs-2 control-label">Description</label>
-                    <div className="col-xs-10">
-                      <input className="form-control" id="desc" ref="desc" type="text" value={desc}/>
+                  <div className='form-group '>
+                    <label htmlFor='desc' className='col-xs-2 control-label'>Description</label>
+                    <div className='col-xs-10'>
+                      <input className='form-control' id='desc' ref='desc' type='text' defaultValue={desc}/>
                     </div>
                   </div>
-                  <div className="form-group">
-                    <label htmlFor="cond" className="col-xs-2 control-label">Condition</label>
-                    <div className="col-xs-10">
-                      <input className="form-control" id="cond" ref="cond" type="text" value={condition}/>
+                  <div className='form-group'>
+                    <label htmlFor='cond' className='col-xs-2 control-label'>Condition</label>
+                    <div className='col-xs-10'>
+                      <input className='form-control' id='cond' ref='cond' type='text' defaultValue={condition}/>
                     </div>
                   </div>
-                  <div className="form-group">
-                    <div className="col-xs-8">
-                      <textarea id="edit-json-coordinates" className="form-control col-xs-8" ref="geometry" rows="10" wrap="soft" required value={JSON.stringify(geometry
+                  <div className='form-group'>
+                    <div className='col-xs-8'>
+                      <textarea id='edit-json-coordinates' className='form-control col-xs-8' ref='geometry' rows='10' wrap='soft' required defaultValue={JSON.stringify(geometry
                         ? geometry.coordinates
                         : null, null, 2)}/>
                     </div>
 
-                    <div style={this.isRoute()} className="col-xs-4">
-                      <button onClick={this.quickDelete} className="btn btn-default form-control">Quick Delete</button>
+                    <div style={this.isRoute()} className='col-xs-4'>
+                      <button onClick={this.quickDelete} className='btn btn-default form-control'>Quick Delete</button>
                       <br/>
                       <br/>
-                      <div className="form-check">
-                        <div className="form-inline col-xs-6">
-                          <label className="form-check-label">
-                            <input onChange={this.deleteFirst} type="radio" name="delete-type" ref="first" value="first" checked={this.state.del === 'first'}/>
+                      <div className='form-check'>
+                        <div className='form-inline col-xs-6'>
+                          <label className='form-check-label'>
+                            <input onChange={this.deleteFirst} type='radio' name='delete-type' ref='first' value='first' checked={this.state.del === 'first'}/>
                             &nbsp; First
                           </label>
                         </div>
 
-                        <div className="col-xs-6">
-                          <label className="form-check-label">
-                            <input onChange={this.deleteLast} type="radio" name="delete-type" ref="last" value="last" checked={this.state.del === 'last'}/>
+                        <div className='col-xs-6'>
+                          <label className='form-check-label'>
+                            <input onChange={this.deleteLast} type='radio' name='delete-type' ref='last' value='last' checked={this.state.del === 'last'}/>
                             &nbsp; Last
                           </label>
                         </div>
                       </div>
-                      <div className="form-check">
-                        <div className="col-xs-6">
-                          <label className="form-check-label">
-                            <input onChange={this.deleteTen} type="radio" name="deleteN" ref="ten" value="ten" checked={this.state.deleteN === 10}/>
+                      <div className='form-check'>
+                        <div className='col-xs-6'>
+                          <label className='form-check-label'>
+                            <input onChange={this.deleteTen} type='radio' name='deleteN' ref='ten' value='ten' checked={this.state.deleteN === 10}/>
                             &nbsp; 10
                           </label>
                         </div>
-                        <div className="col-xs-6">
-                          <label className="form-check-label">
-                            <input onChange={this.deleteHund} type="radio" name="deleteN" ref="hund" value="hund" checked={this.state.deleteN === 100}/>
+                        <div className='col-xs-6'>
+                          <label className='form-check-label'>
+                            <input onChange={this.deleteHund} type='radio' name='deleteN' ref='hund' value='hund' checked={this.state.deleteN === 100}/>
                             &nbsp; 100
                           </label>
                           <br/>
@@ -420,18 +420,18 @@ export class UpdatePOIorRoute extends BaseComponent {
                         </div>
                       </div>
 
-                      <button onClick={this.undoDelete} className="btn btn-default form-control">Undo Delete</button>
+                      <button onClick={this.undoDelete} className='btn btn-default form-control'>Undo Delete</button>
                     </div>
                   </div>
                 </form>
 
-                <div id="preview-map"></div>
+                <div id='preview-map'></div>
               </div>
-              <div className="modal-footer">
-                <button className="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <div className='modal-footer'>
+                <button className='btn btn-secondary' data-dismiss='modal'>Cancel</button>
                 <button onClick={this
                   .formSubmit
-                  .bind(this)} type="submit" className="btn btn-primary" data-dismiss="modal">Save</button>
+                  .bind(this)} type='submit' className='btn btn-primary' data-dismiss='modal'>Save</button>
               </div>
             </div>
           </div>

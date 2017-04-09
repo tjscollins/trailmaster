@@ -75,7 +75,7 @@ export class ListRoutes extends BaseComponent {
           'coordinates': coordinates[0]
         }
       };
-      console.log(feature.properties.name, distance(from, to, 'miles'));
+      // console.log(feature.properties.name, distance(from, to, 'miles'));
       return distance(from, to, 'miles') < distanceFilter;
     });
   }

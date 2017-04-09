@@ -6,7 +6,7 @@ import $ from 'jquery';
 import BaseComponent from 'BaseComponent';
 
 /*----------Redux----------*/
-import {mockPOS, unMockPos} from 'actions';
+import {mockPOS, unMockPos, updateMap} from 'actions';
 import {connect} from 'react-redux';
 import {toInt} from 'validator';
 
@@ -21,7 +21,11 @@ export class MockLocation extends BaseComponent {
     let {latitude, longitude} = this.refs;
     latitude.value = '';
     longitude.value = '';
-    dispatch(unMockPos());
+    // UnMock Actions are broken ATM and Result in Map-breaking errors
+    // dispatch(unMockPos());
+    // dispatch(updateMap());
+    // Workaround is to force reloading of the page when unMocking position
+    location.reload();
   }
   submit = (e) => {
     let {dispatch} = this.props;
@@ -32,6 +36,7 @@ export class MockLocation extends BaseComponent {
     let lng = toInt(longitude.value);
     if(!Number.isNaN(lat) && !Number.isNaN(lng)) {
       dispatch(mockPOS({coords: {latitude: lat, longitude: lng}}));
+      dispatch(updateMap());
     }
   }
   render() {
@@ -58,6 +63,13 @@ export class MockLocation extends BaseComponent {
                     <div className='input-group-addon'>Longitude</div>
                     <input type='text' className='form-control' ref='longitude' placeholder={`${longitude}`} />
                   </div>
+                  {/* <br />
+                    <br />
+                    <div className='input-group'>
+                    <label className='sr-only' htmlFor='latitude'>City to search near:</label>
+                    <div className='input-group-addon'>City</div>
+                    <input type='text' className='form-control' ref='city' placeholder={``} />
+                  </div> */}
                 </div>
               </form>
             </div>

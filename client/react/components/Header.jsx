@@ -29,7 +29,7 @@ export class Header extends BaseComponent {
         dispatch(actions.clearTrails());
       },
       error: function(jqXHR, status, err) {
-        console.log(`Error logging out: ${err}`, jqXHR);
+        console.error(`Error logging out: ${err}`, jqXHR);
       },
     });
   }

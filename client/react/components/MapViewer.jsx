@@ -1,5 +1,5 @@
 /*----------Modules----------*/
-import React from 'react';
+import React, {Component, PropTypes} from 'react';
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
 import {connect} from 'react-redux';
 import distance from '@turf/distance';
@@ -24,7 +24,7 @@ import * as actions from 'actions';
  * map into the div.  Manages the state of that map and handles any updates
  * to the map or its layers.
  */
-export class MapViewer extends React.Component {
+export class MapViewer extends Component {
   /**
    * Mapviewer.state stores information about the mapboxgl map being rendered.
    *
@@ -91,7 +91,7 @@ export class MapViewer extends React.Component {
       this.refreshMap(nextProps);
       dispatch(actions.completeUpdateMap());
     } else if (distanceFilter !== this.props.userSession.distanceFilter) {
-      console.log('Refreshing based on distanceFilter', distanceFilter, nextProps);
+      // console.log('Refreshing based on distanceFilter', distanceFilter, nextProps);
       this.refreshMap(nextProps);
     }
 
@@ -104,7 +104,7 @@ export class MapViewer extends React.Component {
       latitude,
     }, this.props.userSession.coords) && map.getSource('user') !== undefined) {
       // Update user's position on map to reflect new updated geolocation data
-      const {userSource, userLayer,} = mapConfig([
+      const {userSource} = mapConfig([
         longitude, latitude,
       ], null);
       // console.log('Updating user position');
@@ -113,10 +113,10 @@ export class MapViewer extends React.Component {
         .setData(userSource.data);
     }
 
-    if (mapCentering || initCenter && this.state.map) {
+    if ((mapCentering || initCenter) && this.state.map) {
       // Re-center map on user
       let {lng, lat} = map.getCenter();
-      console.log('Centering Map');
+      // console.log('Centering Map');
       if(positionChanged({longitude, latitude}, {longitude: lng, latitude: lat})) {
         this.centerMap(longitude, latitude, initCenter);
       }
@@ -178,7 +178,7 @@ export class MapViewer extends React.Component {
    * @param  {OBJECT} props receives props so that nextProps can be passed in for
    *                        certain situations.
    */
-  createMap(props) {
+  createMap = (props) => {
     const {
       userSession: {
         coords: {
@@ -210,9 +210,8 @@ export class MapViewer extends React.Component {
     map.addControl(new mapboxgl.ScaleControl({maxWidth: 120, unit: 'imperial'}));
 
     map.on('load', () => {
-      console.log('map load');
+      // console.log('map load');
       try {
-        const dummyFeatures = [];
         const {userSource, geoJSONSource} = mapConfig([
           longitude, latitude,
         ], []);
@@ -227,7 +226,7 @@ export class MapViewer extends React.Component {
     });
 
     map.on('moveend', () => {
-      console.log('map moveend');
+      // console.log('map moveend');
       dispatch(actions.storeCenter(map.getCenter()));
     });
 
@@ -242,7 +241,7 @@ export class MapViewer extends React.Component {
    *                        certain situations.
    */
   createMapLayers(features, props) {
-    // console.log('MapViewer createMapLayers');
+    // console.log('MapViewer createMapLayers called with:', features, props);
     const {layerIDs, map} = this.state;
     const {
       userSession: {
@@ -256,21 +255,25 @@ export class MapViewer extends React.Component {
     } = props;
     let newLayerIDs = [];
 
-    layerIDs.forEach(([id, type,]) => {
-      map.removeLayer(id);
+    layerIDs.forEach(([id, type]) => {
+      try {
+        map.removeLayer(id);
+      } catch(error) {
+        console.error(error);
+      }
     });
 
-    const {userSource, userLayer, geoJSONSource, addGeoJSONLayers,} = mapConfig([
+    const {userSource, userLayer, geoJSONSource, addGeoJSONLayers} = mapConfig([
       longitude, latitude,
     ], features);
 
     try {
-      // if(!gjv.valid(userSource.data)) console.log('WARNING: ', userSource);
+      if(!gjv.valid(userSource.data)) console.log('WARNING: ', userSource);
       map.getSource('user').setData(userSource.data);
       map.addLayer(userLayer);
       newLayerIDs.push(['You Are Here', 'user']);
       // Add Map Layers for GeoJSON Data
-      // if(!gjv.valid(geoJSONSource.data)) console.log('WARNING: ', geoJSONSource);
+      if(!gjv.valid(geoJSONSource.data)) console.log('WARNING: ', geoJSONSource);
       map.getSource('geoJSON').setData(geoJSONSource.data);
 
       features.forEach((feature) => {
@@ -278,25 +281,25 @@ export class MapViewer extends React.Component {
             name
           }, geometry: {
             type
-          },} = feature;
-        // console.log(feature, name, type);
+          }} = feature;
+        // console.log(feature, name, type, map);
         let layerType = type === 'Point'
           ? 'symbol'
           : 'line';
           addGeoJSONLayers(feature, map);
         if (type === 'Point') {
-          newLayerIDs.push([name, layerType,]);
+          newLayerIDs.push([name, layerType]);
         } else if (type === 'LineString') {
-          newLayerIDs.push([name, layerType,]);
-          newLayerIDs.push([name + ' label', layerType,]);
+          newLayerIDs.push([name, layerType]);
+          newLayerIDs.push([name + ' label', layerType]);
         }
       });
       this.setState({layerIDs: newLayerIDs});
     } catch (error) {
+      console.error(error);
       debugger;
     }
     // console.log('Finished createMapLayers');
-
   }
 
   /**
@@ -307,7 +310,7 @@ export class MapViewer extends React.Component {
    *                        new data is fetched from the server
    */
   refreshMap(props) {
-    // console.log('Mapviewer.refreshMap');
+    // console.log('Mapviewer.refreshMap', props);
     const {
       userSession: {
         coords: {
@@ -319,7 +322,7 @@ export class MapViewer extends React.Component {
       dispatch,
     } = props;
     fetchData(latitude, longitude, distanceFilter).then((data) => {
-      console.log('Fetching data within: ', distanceFilter);
+      // console.log('Fetching data within: ', distanceFilter);
       let features = data.reduce((acc, currentObject) => {
         let allObjects = [];
         for (let key in currentObject) {
@@ -344,7 +347,7 @@ export class MapViewer extends React.Component {
   shouldDisplay(layerName, search, props) {
     // Props should be passed in here to allow selection between current or
     // nextProps as appropriate
-    let {geoJSON, userSession,} = props;
+    let {geoJSON, userSession} = props;
     let onePoint = geoJSON
       .features
       .filter((point) => {
@@ -356,8 +359,14 @@ export class MapViewer extends React.Component {
   }
 
   render() {
-    return (<div id='mapviewer' className='mapviewer'/>);
+    return (<div id='mapviewer' className='mapviewer' />);
   }
 }
+
+MapViewer.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  userSession: PropTypes.object.isRequired,
+  map: PropTypes.object.isRequired,
+};
 
 export default connect((state) => state)(MapViewer);
