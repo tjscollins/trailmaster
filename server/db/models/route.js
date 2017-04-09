@@ -1,13 +1,13 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var routeSchema = new mongoose.Schema({
+const routeSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
     match: [/^Feature$/, 'Incorrect geoJSON type ({VALUE})']
   },
   properties: {
-    stroke: {
+    'stroke': {
       type: String,
       required: true,
       match: [/^\#[\d\w]+$/, '{VALUE} is not a valid HTML color']
@@ -18,24 +18,24 @@ var routeSchema = new mongoose.Schema({
     'stroke-opacity': {
       type: Number
     },
-    name: {
+    'name': {
       type: String,
       required: true,
       trim: true
     },
-    desc: {
+    'desc': {
       type: String,
       trim: true
     },
-    condition: {
+    'condition': {
       type: String,
       trim: true
     },
-    last: {
+    'last': {
       type: String,
       required: true
     },
-    displayed: {
+    'displayed': {
       type: Boolean,
       default: false
     }
@@ -62,8 +62,8 @@ var routeSchema = new mongoose.Schema({
 });
 
 routeSchema.statics.markForDelete = function(_id) {
-  var ROUTE = this;
-  return ROUTE.findOne({_id}).then(route => {
+  const ROUTE = this;
+  return ROUTE.findOne({_id}).then((route) => {
     if (!route) return null;
     return route.update({
       $set: {
@@ -73,8 +73,6 @@ routeSchema.statics.markForDelete = function(_id) {
   });
 };
 
-var routeModel = mongoose.model('Route', routeSchema);
+const RouteModel = mongoose.model('Route', routeSchema);
 
-module.exports = {
-  routeModel
-};
+module.exports = RouteModel;

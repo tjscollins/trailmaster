@@ -1,5 +1,5 @@
-var mongoose = require('mongoose');
-var poiSchema = new mongoose.Schema({
+const mongoose = require('mongoose');
+const poiSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
@@ -15,24 +15,24 @@ var poiSchema = new mongoose.Schema({
     'marker-symbol': {
       type: String
     },
-    name: {
+    'name': {
       type: String,
       required: true,
       trim: true
     },
-    desc: {
+    'desc': {
       type: String,
       trim: true
     },
-    condition: {
+    'condition': {
       type: String,
       trim: true
     },
-    last: {
+    'last': {
       type: String,
       required: true
     },
-    displayed: {
+    'displayed': {
       type: Boolean,
       default: false
     }
@@ -60,8 +60,8 @@ var poiSchema = new mongoose.Schema({
 });
 
 poiSchema.statics.markForDelete = function(_id) {
-  var POI = this;
-  return POI.findOne({_id}).then(poi => {
+  let POI = this;
+  return POI.findOne({_id}).then((poi) => {
     if (!poi) return null;
     return poi.update({
       $set: {
@@ -71,8 +71,6 @@ poiSchema.statics.markForDelete = function(_id) {
   });
 };
 
-var poiModel = mongoose.model('POI', poiSchema);
+const PoiModel = mongoose.model('POI', poiSchema);
 
-module.exports = {
-  poiModel
-}
+module.exports = PoiModel;

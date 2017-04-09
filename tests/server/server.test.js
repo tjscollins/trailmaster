@@ -6,9 +6,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const {app} = require('./../../server/server.js');
-const {poiModel} = require('./../../server/db/models/poi');
-const {routeModel} = require('./../../server/db/models/route');
-const {trailModel} = require('./../../server/db/models/trail');
+const PoiModel = require('./../../server/db/models/poi');
+const RouteModel = require('./../../server/db/models/route');
+const TrailModel = require('./../../server/db/models/trail');
 const UserModel = require('./../../server/db/models/user');
 const {
   pois,
@@ -63,7 +63,7 @@ describe('/pois', () => {
         },
         geometry: {
           type: 'Point',
-          coordinates: [-214.25509214401245, 15.10071455043649,]
+          coordinates: [-214.25509214401245, 15.10071455043649]
         }
       };
 
@@ -79,11 +79,11 @@ describe('/pois', () => {
         .end((err, res) => {
           if (err)
             return done(err);
-          poiModel
+          PoiModel
             .find({
             geometry: {
               type: 'Point',
-              coordinates: [-214.25509214401245, 15.10071455043649,]
+              coordinates: [-214.25509214401245, 15.10071455043649]
             }
           })
             .then((poisList) => {
@@ -121,7 +121,7 @@ describe('/pois', () => {
         .end((err, res) => {
           if (err)
             return done(err);
-          poiModel
+          PoiModel
             .find()
             .then((poiList) => {
               expect(poiList.length).toBe(pois.length);
@@ -139,7 +139,7 @@ describe('/pois', () => {
           ._id
           .toHexString();
         const newGeometry = Object.assign({}, pois[0].geometry, {
-          coordinates: [100, -25,]
+          coordinates: [100, -25]
         });
         const newPOI = Object.assign({}, pois[0], {geometry: newGeometry});
 
@@ -148,7 +148,7 @@ describe('/pois', () => {
           .send(newPOI)
           .expect(200)
           .expect((res) => {
-            expect(res.body.geometry.coordinates).toEqual([100, -25,]);
+            expect(res.body.geometry.coordinates).toEqual([100, -25]);
           })
           .end(done);
       });
@@ -184,7 +184,7 @@ describe('/pois', () => {
               return done(err);
             }
 
-            poiModel
+            PoiModel
               .findById(hexId)
               .then((poi) => {
                 expect(poi.delete).toBe(true);
@@ -284,7 +284,7 @@ describe('/routes', () => {
         .end((err, res) => {
           if (err)
             return done(err);
-          routeModel
+          RouteModel
             .find()
             .then((routeList) => {
               expect(routeList.length).toBe(2);
@@ -312,7 +312,7 @@ describe('/routes', () => {
         geometry: {
           type: 'Point',
           coordinates: [
-            [-214.27445769309995, 15.167432624111209,]
+            [-214.27445769309995, 15.167432624111209]
           ]
         }
       };
@@ -325,7 +325,7 @@ describe('/routes', () => {
         .end((err, res) => {
           if (err)
             return done(err);
-          routeModel
+          RouteModel
             .find()
             .then((routeList) => {
               expect(routeList.length).toBe(routes.length);
@@ -424,7 +424,7 @@ describe('/routes', () => {
               return done(err);
             }
 
-            routeModel
+            RouteModel
               .findById(hexId)
               .then((route) => {
                 expect(route.delete).toBe(true);
@@ -481,7 +481,7 @@ describe('/trails', () => {
             '__v': 0,
             'geometry': {
               'type': 'Point',
-              'coordinates': [-214.25509214401245, 15.10071455043649,]
+              'coordinates': [-214.25509214401245, 15.10071455043649]
             },
             'properties': {
               'marker-color': '#7e7e7e',
@@ -499,7 +499,7 @@ describe('/trails', () => {
             '__v': 0,
             'geometry': {
               'type': 'Point',
-              'coordinates': [-214.2152855, 15.167236099999998,]
+              'coordinates': [-214.2152855, 15.167236099999998]
             },
             'properties': {
               'marker-color': '#7e7e7e',
@@ -528,7 +528,7 @@ describe('/trails', () => {
         .end((err, res) => {
           if (err)
             return done(err);
-          trailModel
+          TrailModel
             .find()
             .then((trailList) => {
               expect(trailList.length).toBe(trails.length + 1);
@@ -552,7 +552,7 @@ describe('/trails', () => {
         .end((err, res) => {
           if (err)
             return done(err);
-          trailModel
+          TrailModel
             .find()
             .then((trailList) => {
               expect(trailList.length).toBe(trails.length);
@@ -578,7 +578,7 @@ describe('/trails', () => {
               return done(err);
             }
 
-            trailModel
+            TrailModel
               .findById(hexId)
               .then((trail) => {
                 expect(trail).toNotExist();

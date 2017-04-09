@@ -2,7 +2,7 @@
 import expect from 'expect';
 import df from 'deep-freeze-strict';
 
-import {configure} from 'configureStore'
+import {configure} from 'configureStore';
 import * as actions from 'actions';
 import * as reducers from 'reducers';
 
@@ -49,9 +49,10 @@ describe('redux', () => {
           type: 'SAVE_TRAIL',
           name: 'name',
           desc: 'desc',
-          list: 'list'
+          list: 'list',
+          bounds: 'bounds',
         };
-        let res = actions.saveTrail('list', 'name', 'desc');
+        let res = actions.saveTrail('list', 'name', 'desc', 'bounds');
         expect(res).toEqual(action);
       });
 
@@ -300,7 +301,7 @@ describe('redux', () => {
           id: 10
         };
         let state = {
-          visibleFeatures: [10, 1,]
+          visibleFeatures: [10, 1]
         };
 
         let res = reducers.userSessionReducer(df(state), df(action1));
@@ -436,7 +437,7 @@ describe('redux', () => {
       it('should DISPLAY TRAILS belonging to the logged in user', () => {
         let action = {
           type: 'DISPLAY_TRAILS',
-          trails: [1, 2, 3,]
+          trails: [1, 2, 3]
         };
         let state = {
           myTrails: []
@@ -452,7 +453,7 @@ describe('redux', () => {
           type: 'CLEAR_TRAILS'
         };
         let state = {
-          myTrails: [1, 2, 3,]
+          myTrails: [1, 2, 3]
         };
         let res = reducers.trailsReducer(df(state), df(action));
         expect(res.myTrails.length).toBe(0);
@@ -582,7 +583,7 @@ describe('redux', () => {
               },
               geometry: {
                 type: 'Point',
-                coordinates: [-214.2563098669052, 15.18629359866948,]
+                coordinates: [-214.2563098669052, 15.18629359866948]
               }
             }, {
               type: 'Feature',
@@ -599,7 +600,7 @@ describe('redux', () => {
               },
               geometry: {
                 type: 'Point',
-                coordinates: [-214.25509214401245, 15.10071455043649,]
+                coordinates: [-214.25509214401245, 15.10071455043649]
               }
             },
           ]
@@ -616,7 +617,6 @@ describe('redux', () => {
         expect(res.myTrails[0].desc).toEqual('desc');
         expect(res.myTrails[0].list).toEqual(action.list);
       });
-
     });
 
     describe('mapReducer', () => {
@@ -650,10 +650,10 @@ describe('redux', () => {
           ],
         };
         let state = {
-          center: [null, null,]
+          center: [null, null]
         };
         let res = reducers.mapReducer(df(state), df(action));
-        expect(res.center).toEqual([0, 1,]);
+        expect(res.center).toEqual([0, 1]);
       });
     });
 

@@ -1,6 +1,20 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var trailModel = mongoose.model('Trail', new mongoose.Schema({
+const TrailModel = mongoose.model('Trail', new mongoose.Schema({
+  bounds: {
+    latitude: {
+      type: Number,
+    },
+    longitude: {
+      type: Number,
+    },
+    latitudeDelta: {
+      type: Number,
+    },
+    longitudeDelta: {
+      type: Number,
+    },
+  },
   list: {
     type: Array,
     required: [
@@ -32,6 +46,4 @@ var trailModel = mongoose.model('Trail', new mongoose.Schema({
   }
 }));
 
-module.exports = {
-  trailModel
-};
+module.exports = TrailModel;

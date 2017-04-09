@@ -18,7 +18,7 @@ export class AddTrails extends BaseComponent {
     this._bind('submit', 'fillRoads');
   }
   currentTrail() {
-    var {geoJSON, userSession} = this.props;
+    let {geoJSON, userSession} = this.props;
     return geoJSON
       .features
       .filter((point) => {
@@ -27,10 +27,10 @@ export class AddTrails extends BaseComponent {
           .indexOf(point._id) > -1;
       })
       .map((point) => {
-        var id = point._id;
-        var {name, desc, condition, last} = point.properties;
+        let id = point._id;
+        let {name, desc, condition, last} = point.properties;
         return (
-          <tr onClick={this.remove(id)} id={id} className="point-of-interest" key={id} style={{
+          <tr onClick={this.remove(id)} id={id} className='point-of-interest' key={id} style={{
             cursor: 'pointer'
           }}>
             <td>{name}</td>
@@ -67,7 +67,7 @@ export class AddTrails extends BaseComponent {
     //Return new list
   }
   remove(id) {
-    var {dispatch} = this.props;
+    let {dispatch} = this.props;
     return () => {
       dispatch(actions.toggleVisibility(id));
     };
@@ -76,10 +76,10 @@ export class AddTrails extends BaseComponent {
     $('#save-trail-modal').modal('show');
   }
   submit() {
-    var {dispatch, geoJSON, userSession} = this.props;
-    var {xAuth} = userSession;
-    var {name, desc} = this.refs;
-    var trailList = geoJSON
+    let {dispatch, geoJSON, userSession} = this.props;
+    let {xAuth} = userSession;
+    let {name, desc} = this.refs;
+    let trailList = geoJSON
       .features
       .filter((point) => {
         return userSession
@@ -87,14 +87,15 @@ export class AddTrails extends BaseComponent {
           .indexOf(point._id) > -1;
       });
     // this.fillRoads(trailList);
-    var date = new Date();
-    var newTrail = {
+    let date = new Date();
+    let newTrail = {
+      bounds: {},
       list: trailList,
       name: name.value,
       desc: desc.value,
       date: `${month(date.getMonth())} ${date.getFullYear()}`
     };
-    var send = $.ajax({
+    let send = $.ajax({
       url: '/trails',
       type: 'post',
       data: JSON.stringify(newTrail),
@@ -123,17 +124,16 @@ export class AddTrails extends BaseComponent {
     send.fail((jqXHR, status, err) => {
       console.log(`Error saving new trail: ${err}`, jqXHR);
     });
-
   }
   render() {
     return (
       <div>
-        <button onClick={this.saveTrail} className="btn btn-info form-control" type="submit">
+        <button onClick={this.saveTrail} className='btn btn-info form-control' type='submit'>
           Save Currently Displayed Trail
         </button>
-        <br/><br/>
-        <h4 className="current-trail-header">Currently Displayed Trail</h4>
-        <table className="list-box table table-striped">
+        <br /><br />
+        <h4 className='current-trail-header'>Currently Displayed Trail</h4>
+        <table className='list-box table table-striped'>
           <thead>
             <tr>
               <th>Name</th>
@@ -153,23 +153,23 @@ export class AddTrails extends BaseComponent {
           </tbody>
         </table>
 
-        <div id="save-trail-modal" className="modal fade">
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
+        <div id='save-trail-modal' className='modal fade'>
+          <div className='modal-dialog' role='document'>
+            <div className='modal-content'>
+              <div className='modal-header'>
+                <button type='button' className='close' data-dismiss='modal' aria-label='Close'>
+                  <span aria-hidden='true'>&times;</span>
                 </button>
-                <h4 className="modal-title">Save Current Trail</h4>
+                <h4 className='modal-title'>Save Current Trail</h4>
               </div>
-              <div className="modal-body">
-                <form ref="addPOI">
-                  <input className="form-control" ref="name" type="text" placeholder="Name"/>
-                  <input className="form-control" ref="desc" type="text" placeholder="Description"/>
+              <div className='modal-body'>
+                <form ref='addPOI'>
+                  <input className='form-control' ref='name' type='text' placeholder='Name' />
+                  <input className='form-control' ref='desc' type='text' placeholder='Description' />
                 </form>
               </div>
-              <div className="modal-footer">
-                <button onClick={this.submit} type="submit" className="btn btn-primary" data-dismiss="modal">Save Trail</button>
+              <div className='modal-footer'>
+                <button onClick={this.submit} type='submit' className='btn btn-primary' data-dismiss='modal'>Save Trail</button>
               </div>
             </div>
           </div>
@@ -179,4 +179,4 @@ export class AddTrails extends BaseComponent {
   }
 }
 
-export default connect(state => state)(AddTrails);
+export default connect((state) => state)(AddTrails);

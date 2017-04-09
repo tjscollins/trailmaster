@@ -24,8 +24,8 @@ export const clearTrails = () => {
   return {type: 'CLEAR_TRAILS'};
 };
 
-export const saveTrail = (list, name, desc) => {
-  return {type: 'SAVE_TRAIL', list, name, desc};
+export const saveTrail = (list, name, desc, bounds) => {
+  return {type: 'SAVE_TRAIL', list, name, desc, bounds};
 };
 
 export const showTrail = (id) => {

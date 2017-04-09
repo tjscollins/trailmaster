@@ -1,7 +1,7 @@
 const {ObjectID} = require('mongodb');
-const {poiModel} = require('./../../../server/db/models/poi');
-const {routeModel} = require('./../../../server/db/models/route');
-const {trailModel} = require('./../../../server/db/models/trail');
+const PoiModel = require('./../../../server/db/models/poi');
+const RouteModel = require('./../../../server/db/models/route');
+const TrailModel = require('./../../../server/db/models/trail');
 const UserModel = require('./../../../server/db/models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -492,20 +492,20 @@ const trails = [
 ];
 
 const populateServer = (done) => {
-  poiModel
+  PoiModel
     .remove({})
     .then(() => {
-      return poiModel.insertMany(pois);
+      return PoiModel.insertMany(pois);
     });
-  routeModel
+  RouteModel
     .remove({})
     .then(() => {
-      return routeModel.insertMany(routes);
+      return RouteModel.insertMany(routes);
     });
-  trailModel
+  TrailModel
     .remove({})
     .then(() => {
-      return trailModel.insertMany(trails);
+      return TrailModel.insertMany(trails);
     })
     .then(() => done());
 };

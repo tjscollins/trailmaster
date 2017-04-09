@@ -11,9 +11,9 @@ const bcrypt = require('bcryptjs');
 const path = require('path');
 
 const {mongoose} = require('./db/mongoose');
-const {poiModel} = require('./db/models/poi');
-const {routeModel} = require('./db/models/route');
-const {trailModel} = require('./db/models/trail');
+const PoiModel = require('./db/models/poi');
+const RouteModel = require('./db/models/route');
+const TrailModel = require('./db/models/trail');
 const UserModel = require('./db/models/user');
 const {authenticate} = require('./middleware/authenticate');
 
@@ -237,7 +237,7 @@ app.get('/pois', (req, res) => {
     let lngDegPerMile = Math.cos(lat * Math.PI / 180) / 69;
     let latDegPerMile = 1 / 69;
 
-    poiModel.find({
+    PoiModel.find({
       'geometry.coordinates.0': {
         $lt: lng + dist*lngDegPerMile,
         $gt: lng - dist*lngDegPerMile
@@ -254,7 +254,7 @@ app.get('/pois', (req, res) => {
         .send(e);
     });
   } else {
-    poiModel
+    PoiModel
       .find()
       .then((pois) => {
         res.send({pois});
@@ -266,7 +266,7 @@ app.get('/pois', (req, res) => {
   }
 });
 app.post('/pois', (req, res) => {
-  const poi = new poiModel(req.body);
+  const poi = new PoiModel(req.body);
   poi
     .save()
     .then((doc) => {
@@ -285,7 +285,7 @@ app.delete('/pois/:id', (req, res) => {
       .send();
   }
 
-  poiModel
+  PoiModel
     .markForDelete(id)
     .then((point) => {
       if (!point) {
@@ -310,7 +310,7 @@ app.patch('/pois/:id', (req, res) => {
       .send();
   }
 
-  poiModel.findByIdAndUpdate(id, {
+  PoiModel.findByIdAndUpdate(id, {
     $set: req.body
   }, {
     new: true,
@@ -338,7 +338,7 @@ app.get('/routes', (req, res) => {
     [lat, lng] = [parseFloat(lat), parseFloat(lng)];
     let lngDegPerMile = Math.cos(lat * Math.PI / 180) / 69;
     let latDegPerMile = 1 / 69;
-    routeModel.find({
+    RouteModel.find({
       'geometry.coordinates.0.0': {
         $lt: lng + dist*lngDegPerMile,
         $gt: lng - dist*lngDegPerMile
@@ -356,7 +356,7 @@ app.get('/routes', (req, res) => {
         .send(e);
     });
   } else {
-    routeModel
+    RouteModel
       .find()
       .then((routes) => {
         res.send({routes});
@@ -369,7 +369,7 @@ app.get('/routes', (req, res) => {
 
 });
 app.post('/routes', (req, res) => {
-  var route = new routeModel(req.body);
+  var route = new RouteModel(req.body);
   route
     .save()
     .then((doc) => {
@@ -388,7 +388,7 @@ app.delete('/routes/:id', (req, res) => {
       .send();
   }
 
-  routeModel
+  RouteModel
     .markForDelete(id)
     .then((point) => {
       if (!point) {
@@ -413,7 +413,7 @@ app.patch('/routes/:id', (req, res) => {
       .send();
   }
 
-  routeModel.findByIdAndUpdate(id, {
+  RouteModel.findByIdAndUpdate(id, {
     $set: req.body
   }, {
     new: true,
@@ -436,7 +436,7 @@ app.patch('/routes/:id', (req, res) => {
 });
 
 app.get('/trails', authenticate, (req, res) => {
-  trailModel
+  TrailModel
     .find({_creator: req.user._id})
     .then((trails) => {
       res.send({trails});
@@ -449,7 +449,8 @@ app.get('/trails', authenticate, (req, res) => {
 });
 app.post('/trails', authenticate, (req, res) => {
   // console.log('Received newTrail:', req.body);
-  let trail = new trailModel({
+  let trail = new TrailModel({
+    bounds: req.body.bounds,
     list: req.body.list,
     name: req.body.name,
     desc: req.body.desc,
@@ -474,7 +475,7 @@ app.delete('/trails/:id', (req, res) => {
       .send();
   }
 
-  trailModel
+  TrailModel
     .findByIdAndRemove(id)
     .then((trail) => {
       if (!trail) {
