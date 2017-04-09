@@ -335,6 +335,7 @@ app.get('/routes', (req, res) => {
   let {query} = req;
   if (query.hasOwnProperty('lat') && query.hasOwnProperty('lng')) {
     let {lat, lng, dist} = query;
+    // console.log(query);
     [lat, lng] = [parseFloat(lat), parseFloat(lng)];
     let lngDegPerMile = Math.cos(lat * Math.PI / 180) / 69;
     let latDegPerMile = 1 / 69;
@@ -348,7 +349,7 @@ app.get('/routes', (req, res) => {
         $gt: lat - dist*latDegPerMile,
       },
     }).then((routes) => {
-      // console.log(routes);
+      // console.log('Routes', routes);
       res.send({routes});
     }, (e) => {
       res
@@ -366,7 +367,6 @@ app.get('/routes', (req, res) => {
           .send(e);
       });
   }
-
 });
 app.post('/routes', (req, res) => {
   var route = new RouteModel(req.body);
@@ -405,7 +405,7 @@ app.delete('/routes/:id', (req, res) => {
     });
 });
 app.patch('/routes/:id', (req, res) => {
-  var id = req.params.id;
+  let id = req.params.id;
 
   if (!ObjectID.isValid(id)) {
     return res
@@ -428,7 +428,7 @@ app.patch('/routes/:id', (req, res) => {
 
     res.send(point);
   }).catch((e) => {
-    // console.log('Bad PATCH request: ', req.body);
+    console.log('Bad PATCH request: ', req.body);
     res
       .status(400)
       .send();

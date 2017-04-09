@@ -337,6 +337,7 @@ export class MapViewer extends Component {
         }
         return acc.concat(allObjects);
       }, []);
+      console.log(features);
       dispatch(actions.replaceGeoJSON(features));
       this.createMapLayers(features, props);
     }).catch((error) => {

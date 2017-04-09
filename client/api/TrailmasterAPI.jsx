@@ -6,7 +6,7 @@ export const fetchData = (lat, lng, dist) => {
     $.get(`/pois?lat=${lat}&lng=${lng}&dist=${dist}`),
     $.get(`/routes?lat=${lat}&lng=${lng}&dist=${dist}`),
   ]).then((data) => {
-    // console.log('Fetched data: ', data);
+    console.log('Fetched data: ', data);
     return Promise.resolve(data);
   }).catch((error) => {
     return Promise.reject(error);
