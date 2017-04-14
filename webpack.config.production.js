@@ -1,71 +1,77 @@
 const webpack = require('webpack');
+const path = require('path');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   entry: [
-    'script!jquery/dist/jquery.min.js',
-    'script!bootstrap-sass/assets/javascripts/bootstrap.min.js',
-    './client/react/react-app.jsx',
+    'script-loader!jquery/dist/jquery.min.js', 'script-loader!bootstrap-sass/assets/javascripts/bootstrap.min.js', './client/react/react-app.jsx'
   ],
   externals: {
-    jquery: 'jQuery',
+    jquery: 'jQuery'
   },
   plugins: [
-    new webpack.ProvidePlugin({
-      '$': 'jquery',
-      'jQuery': 'jquery',
-      'jquery': 'jquery',
-    }),
-    new webpack
-      .optimize
-      .OccurenceOrderPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
-        'NODE_ENV': JSON.stringify('production'),
-      },
+        'NODE_ENV': JSON.stringify('production')
+      }
+    }),
+    new UglifyJSPlugin({
+      compressor: {
+        warnings: false
+      }
     }),
     new webpack
       .optimize
-      .UglifyJsPlugin({
-        compressor: {
-          warnings: false,
-        },
-      }),
-      new webpack.optimize.AggressiveMergingPlugin(),
+      .AggressiveMergingPlugin()
   ],
   output: {
     path: __dirname,
-    filename: './public/bundle.js',
+    filename: './public/bundle.min.js'
   },
   resolve: {
-    root: __dirname,
-    modulesDirectories: [
+    alias: {
+    },
+    modules: [
+      __dirname,
       'node_modules',
-      'client/react/components/',
-      'client/react/components/controls/PoI_Controls',
-      'client/react/components/controls/Route_Controls',
-      'client/react/components/controls/Trail_Controls',
-      'client/api',
-      'client/redux/',
+      path.join(__dirname, 'client/api'),
+      path.join(__dirname, 'client/react'),
+      path.join(__dirname, 'client/react/components'),
+      path.join(__dirname, 'client/react/components/controls/PoI_Controls'),
+      path.join(__dirname, 'client/react/components/controls/Route_Controls'),
+      path.join(__dirname, 'client/react/components/controls/Trail_Controls'),
+      path.join(__dirname, 'client/redux')
     ],
-    alias: {},
-    extensions: ['', '.js', '.jsx'],
+    extensions: ['.js', '.jsx'],
   },
   module: {
-    preLoaders: [
+    rules: [
+      // For loading Markdown
+      {
+        test: /\.(txt|md)$/,
+        loader: 'raw-loader'
+      },
+      // Loader for JSON, used in some tests
       {
         test: /\.json$/,
-        loader: 'json',
-      },
-    ],
-    loaders: [
-      {
-        loader: 'babel-loader',
-        query: {
-          presets: ['react', 'es2015', 'stage-0'],
-        },
+        loader: 'json-loader'
+      }, {
         test: /\.jsx?$/,
-        exclude: /(node_modules|bower_components)/,
-      },
-    ],
-  },
+        use: {
+          loader: 'babel-loader',
+          query: {
+            'presets': [
+              [
+                'es2015', {
+                  'modules': false
+                }
+              ],
+              ['react'],
+              ['stage-0']
+            ]
+          }
+        }
+      }
+    ]
+  }
 };
