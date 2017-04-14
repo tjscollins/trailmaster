@@ -4,8 +4,7 @@
 import expect from 'expect';
 
 import React from 'react';
-import ReactDOM from 'react-dom';
-import ReactTestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
 import {Provider} from 'react-redux';
 import {configure} from 'configureStore';
 import $ from 'jquery';
@@ -20,9 +19,9 @@ describe('SearchPOI', () => {
 
   it('should dispatch new POISearchText', () => {
     var spy = expect.createSpy();
-    var searchPoi = ReactTestUtils.renderIntoDocument(<SearchPOI dispatch={spy}/>);
+    var searchPoi = TestUtils.renderIntoDocument(<SearchPOI dispatch={spy}/>);
     searchPoi.refs.poisearchText.value = 'test';
-    ReactTestUtils
+    TestUtils
       .Simulate
       .change(searchPoi.refs.poisearchText);
     expect(spy).toHaveBeenCalledWith({type: 'SET_POI_SEARCH_TEXT', POISearchText: 'test'});

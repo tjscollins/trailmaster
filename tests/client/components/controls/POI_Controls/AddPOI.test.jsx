@@ -3,8 +3,7 @@
 /*----------Modules----------*/
 import expect from 'expect';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import ReactTestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
 import {Provider} from 'react-redux';
 import {configure} from 'configureStore';
 import $ from 'jquery';
@@ -13,18 +12,17 @@ import $ from 'jquery';
 import {AddPOI} from 'AddPOI';
 
 describe('AddPOI', () => {
-
   it('should exist', () => {
     expect(AddPOI).toExist();
   });
 
   it('should render and display add-poi-modal', () => {
-    var modalStub = sinon.stub(AddPOI.prototype, 'modal');
-    var addPoi = ReactTestUtils.renderIntoDocument(<AddPOI/>);
+    const modalStub = sinon.stub(AddPOI.prototype, 'modal');
+    const addPoi = TestUtils.renderIntoDocument(<AddPOI />);
 
-    var modal = ReactTestUtils.scryRenderedDOMComponentsWithClass(addPoi, 'modal fade');
-    var btnInfo = ReactTestUtils.scryRenderedDOMComponentsWithClass(addPoi, 'btn btn-info')[0];
-    ReactTestUtils
+    const modal = TestUtils.scryRenderedDOMComponentsWithClass(addPoi, 'modal fade');
+    const btnInfo = TestUtils.scryRenderedDOMComponentsWithClass(addPoi, 'btn btn-info')[0];
+    TestUtils
       .Simulate
       .click(btnInfo);
     sinon
@@ -36,11 +34,11 @@ describe('AddPOI', () => {
   });
 
   it('should submit data from add-poi-modal', () => {
-    var submitStub = sinon.stub(AddPOI.prototype, 'submit');
-    var addPoi = ReactTestUtils.renderIntoDocument(<AddPOI/>);
+    const submitStub = sinon.stub(AddPOI.prototype, 'submit');
+    const addPoi = TestUtils.renderIntoDocument(<AddPOI />);
 
-    var btnSubmit = ReactTestUtils.scryRenderedDOMComponentsWithClass(addPoi, 'btn btn-secondary')[0];
-    ReactTestUtils
+    const btnSubmit = TestUtils.scryRenderedDOMComponentsWithClass(addPoi, 'btn btn-secondary')[0];
+    TestUtils
       .Simulate
       .click(btnSubmit);
     sinon

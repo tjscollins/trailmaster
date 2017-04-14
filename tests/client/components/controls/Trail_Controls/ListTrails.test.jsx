@@ -3,8 +3,7 @@
 /*----------Modules----------*/
 import expect from 'expect';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import ReactTestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
 import {Provider} from 'react-redux';
 import {configure} from 'configureStore';
 
@@ -139,12 +138,12 @@ describe('ListTrails', ()=> {
   // });
   it('should compute total trail distance and add it to the table', () => {
     let store = configure(initialState);
-    let provider = ReactTestUtils.renderIntoDocument(
+    let provider = TestUtils.renderIntoDocument(
       <Provider store={store}>
         <ListTrails />
       </Provider>);
-    let listTrails = ReactTestUtils.findRenderedComponentWithType(provider, ListTrails);
-    let trailLength = ReactTestUtils.scryRenderedDOMComponentsWithClass(listTrails, 'trail-length');
+    let listTrails = TestUtils.findRenderedComponentWithType(provider, ListTrails);
+    let trailLength = TestUtils.scryRenderedDOMComponentsWithClass(listTrails, 'trail-length');
     expect(trailLength.length).toBe(1);
     expect(trailLength[0].children.length).toBe(1);
     expect(trailLength[0].children[0].innerHTML).toEqual('0.31 miles');

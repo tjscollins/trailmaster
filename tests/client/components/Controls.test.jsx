@@ -3,8 +3,7 @@
 /*----------Modules----------*/
 import expect from 'expect';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import ReactTestUtils from 'react-addons-test-utils';
+import ReactTestUtils from 'react-dom/test-utils';
 import {Provider} from 'react-redux';
 import {configure} from 'configureStore';
 import $ from 'jquery';
@@ -31,9 +30,34 @@ describe('Controls', () => {
   });
 
   it('should render all controls components', () => {
-    let store = configure({});
+    const initialState = {
+      geoJSON: {
+        type: 'FeatureCollection',
+        features: []
+      },
+      userSession: {
+        loading: true,
+        visibleFeatures: [],
+        distanceFilter: 50,
+        trackingRoute: false,
+        routeList: [],
+        mapCentering: false,
+        coords: {
+          latitude: 0,
+          longitude: 0
+        },
+        gpsTracking: {
+          enable: true,
+          watcher: null,
+          mock: false
+        }
+      }
+    };
+    const store = configure(initialState);
     let provider = ReactTestUtils.renderIntoDocument(
-      <Provider store={store}><Controls/></Provider>
+      <Provider store={store}>
+        <Controls />
+      </Provider>
     );
     let controls = ReactTestUtils.scryRenderedComponentsWithType(provider, Controls)[0];
     let addPOI = ReactTestUtils.scryRenderedComponentsWithType(controls, AddPOI);
@@ -64,7 +88,30 @@ describe('Controls', () => {
 
   it('should call toggleUI method when the hide-arrow is clicked', () => {
     let toggleUISpy = sinon.spy(api, 'toggleUI');
-    let store = configure({});
+    const initialState = {
+      geoJSON: {
+        type: 'FeatureCollection',
+        features: []
+      },
+      userSession: {
+        loading: true,
+        visibleFeatures: [],
+        distanceFilter: 50,
+        trackingRoute: false,
+        routeList: [],
+        mapCentering: false,
+        coords: {
+          latitude: 0,
+          longitude: 0
+        },
+        gpsTracking: {
+          enable: true,
+          watcher: null,
+          mock: false
+        }
+      }
+    };
+    const store = configure(initialState);
     let provider = ReactTestUtils.renderIntoDocument(
       <Provider store={store}>
         <Controls />

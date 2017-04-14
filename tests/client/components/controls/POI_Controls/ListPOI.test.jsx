@@ -4,8 +4,7 @@
 import expect from 'expect';
 
 import React from 'react';
-import ReactDOM from 'react-dom';
-import ReactTestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
 import {Provider} from 'react-redux';
 import {configure} from 'configureStore';
 import $ from 'jquery';
@@ -20,7 +19,7 @@ describe('ListPOI', () => {
 
   it('should render a list of geoJSON points', () => {
     var listPointsStub = sinon.stub(ListPOI.prototype, 'listPoints');
-    var listPoi = ReactTestUtils.renderIntoDocument(<ListPOI/>);
+    var listPoi = TestUtils.renderIntoDocument(<ListPOI/>);
     sinon
       .assert
       .called(listPointsStub);

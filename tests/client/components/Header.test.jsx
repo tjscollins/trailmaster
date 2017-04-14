@@ -3,8 +3,7 @@
 /*----------Modules----------*/
 import expect from 'expect';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import ReactTestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
 import $ from 'jquery';
 
 /*----------Components----------*/
@@ -16,7 +15,7 @@ describe('Header', () => {
   });
 
   it('should manageLoginDisplay', () => {
-    var props = {
+    let props = {
       userSession: {
         xAuth: false
       },
@@ -24,9 +23,10 @@ describe('Header', () => {
         mapCentering: false
       }
     };
-    var header = ReactTestUtils.renderIntoDocument(<Header {...props}/>);
-    var loggedInDisplay = ReactTestUtils.findRenderedDOMComponentWithClass(header, 'navbar-left');
-    expect(/Create Account/.test(loggedInDisplay.innerHTML) && /Sign\-in/.test(loggedInDisplay.innerHTML) && !/Log out/.test(loggedInDisplay.innerHTML)).toBe(true);
+    let header = TestUtils.renderIntoDocument(<Header {...props} />);
+    let loggedInDisplay = TestUtils.findRenderedDOMComponentWithClass(header, 'navbar-left');
+    expect(/Create Account/.test(loggedInDisplay.innerHTML)
+    && /Sign\-in/.test(loggedInDisplay.innerHTML) && !/Log out/.test(loggedInDisplay.innerHTML)).toBe(true);
 
     props = {
       userSession: {
@@ -36,15 +36,15 @@ describe('Header', () => {
         mapCentering: false
       }
     };
-    header = ReactTestUtils.renderIntoDocument(<Header {...props}/>);
-    loggedInDisplay = ReactTestUtils.findRenderedDOMComponentWithClass(header, 'navbar-left');
-    expect(/Create Account/.test(loggedInDisplay.innerHTML) && /Sign\-in/.test(loggedInDisplay.innerHTML) && !/Log out/.test(loggedInDisplay.innerHTML)).toBe(false);
-
+    header = TestUtils.renderIntoDocument(<Header {...props} />);
+    loggedInDisplay = TestUtils.findRenderedDOMComponentWithClass(header, 'navbar-left');
+    expect(/Create Account/.test(loggedInDisplay.innerHTML)
+    && /Sign\-in/.test(loggedInDisplay.innerHTML) && !/Log out/.test(loggedInDisplay.innerHTML)).toBe(false);
   });
 
   it('should toggle the auto-center property', () => {
-    var spy = expect.createSpy();
-    var props = {
+    const spy = expect.createSpy();
+    const props = {
       userSession: {
         xAuth: false
       },
@@ -53,11 +53,11 @@ describe('Header', () => {
       },
       dispatch: spy
     };
-    var header = ReactTestUtils.renderIntoDocument(<Header {...props}/>);
-    var autoCenterDisplay = ReactTestUtils.findRenderedDOMComponentWithClass(header, 'autocenter');
+    const header = TestUtils.renderIntoDocument(<Header {...props} />);
+    const autoCenterDisplay = TestUtils.findRenderedDOMComponentWithClass(header, 'autocenter');
     expect(/Enable Auto\-Center/.test(autoCenterDisplay.innerHTML) && !/Disable/.test(autoCenterDisplay.innerHTML)).toBe(true);
 
-    ReactTestUtils
+    TestUtils
       .Simulate
       .click(autoCenterDisplay);
 
