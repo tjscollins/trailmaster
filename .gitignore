@@ -3,8 +3,6 @@ node_modules/
 playground/
 todo
 .env
-key.txt
-crt.txt
-mern-gulpfile.js
 __tests__
 *test.html
+yarn*

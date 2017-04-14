@@ -27,11 +27,15 @@ const concat = require('gulp-concat');
 const autoprefixer = require('gulp-autoprefixer');
 const sourcemaps = require('gulp-sourcemaps');
 const sass = require('gulp-sass');
-const webpack = require('gulp-webpack');
+const cleanCss = require('gulp-clean-css');
 const nodemon = require('gulp-nodemon');
 const del = require('del');
 const gzip = require('gulp-gzip');
 
+const webpack = require('webpack');
+const webpackStream = require('webpack-stream');
+const WEBPACK_DEV = require('./webpack.config.dev.js');
+const WEBPACK_PROD = require('./webpack.config.production.js');
 
 // File Paths
 const CLIENT = './client/';
@@ -39,6 +43,7 @@ const DIST = './public/';
 const HTML = CLIENT + 'html/*.html';
 const REACT_REDUX = CLIENT + '/**/*.jsx';
 const STYLES = CLIENT + 'styles/';
+const JS_BUNDLE = 'bundle.min.js';
 
 // SCSS fonts
 const FONTS = {
@@ -65,7 +70,7 @@ const SCSS = {
     includePaths: [
       'node_modules/bootstrap-sass/assets/stylesheets/',
       'node_modules/font-awesome/css',
-      'node_modules/mapbox-gl/dist/',
+      'node_modules/mapbox-gl/dist',
       STYLES + 'base/',
       STYLES + 'components/',
     ],
@@ -100,7 +105,9 @@ gulp.task('styles', () => {
     .pipe(sourcemaps.init())
     .pipe(sass(SCSS.sassOpts))
     .pipe(autoprefixer())
+    .pipe(cleanCss())
     .pipe(sourcemaps.write())
+    // .pipe(gzip({threshold: 1024}))
     .pipe(gulp.dest(SCSS.out))
     .pipe(livereload());
 });
@@ -110,9 +117,10 @@ gulp.task('react-redux-dev', () => {
   return gulp
     .src(CLIENT + 'react/index.jsx')
     .pipe(sourcemaps.init())
-    .pipe(webpack(require('./webpack.config.dev.js')))
-    .pipe(concat('bundle.js'))
+    .pipe(webpackStream(WEBPACK_DEV, webpack))
+    .pipe(concat(JS_BUNDLE))
     .pipe(sourcemaps.write())
+    // .pipe(gzip({threshold: 1024}))
     .pipe(gulp.dest(DIST))
     .pipe(livereload());
 });
@@ -121,10 +129,10 @@ gulp.task('react-redux-production', () => {
   return gulp
     .src(CLIENT + 'react/index.jsx')
     .pipe(sourcemaps.init())
-    .pipe(webpack(require('./webpack.config.production.js')))
-    .pipe(concat('bundle.js'))
+    .pipe(webpackStream(WEBPACK_PROD, webpack))
+    .pipe(concat(JS_BUNDLE))
     .pipe(sourcemaps.write())
-    .pipe(gzip({threshold: 1024}))
+    // .pipe(gzip({threshold: 1024}))
     .pipe(gulp.dest(DIST))
     .pipe(livereload());
 });
@@ -145,7 +153,7 @@ gulp.task('watch', [
   gulp.watch(REACT_REDUX, ['react-redux-dev']);
   gulp.watch(STYLES + '**/*.scss', ['styles']);
   nodemon({
-    script: './server/server.js',
+    script: './server.js',
     ext: 'js json',
     ignore: ['*.scss', '*.jsx', './public/', 'gulpfile.js'],
   });
