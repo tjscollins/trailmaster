@@ -10,7 +10,6 @@ import {
 } from 'react-dom/server';
 import webpackConfiguration from '../../webpack.config.server.js';
 
-const {mongoose} = require('../db/mongoose');
 const PoiModel = require('../db/models/poi');
 const RouteModel = require('../db/models/route');
 const TrailModel = require('../db/models/trail');
@@ -26,7 +25,7 @@ const path = require('path');
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
 
-module.exports = function(app, passport) {
+module.exports = function(app, mongoose) {
   const compiler = webpack(webpackConfiguration);
 
   app.use(webpackDevMiddleware(compiler, {
