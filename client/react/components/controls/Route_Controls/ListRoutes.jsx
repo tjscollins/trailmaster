@@ -80,9 +80,12 @@ export class ListRoutes extends BaseComponent {
     });
   }
   listRoutes() {
-    let {geoJSON} = this.props;
+    let {geoJSON: {features}} = this.props;
     let {RoutesSearchText} = this.props.searchText;
-    return this.distanceFilter(geoJSON.features.filter((point) => {
+    if (features === undefined) {
+      return [];
+    }
+    return this.distanceFilter(features.filter((point) => {
       return point.geometry.type === 'LineString';
     })).map((point) => {
       let id = point._id;

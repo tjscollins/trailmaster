@@ -29,11 +29,12 @@ export class ListPOI extends BaseComponent {
   }
   displayStyle(id) {
     let {geoJSON, userSession} = this.props;
-    let thisPoint = geoJSON
+    const thisPoint = geoJSON
       .features
       .filter((point) => {
         return point._id === id;
       })[0];
+
     return userSession
       .visibleFeatures
       .indexOf(thisPoint._id) > -1
@@ -87,9 +88,12 @@ export class ListPOI extends BaseComponent {
     });
   }
   listPoints() {
-    let {searchText, geoJSON} = this.props;
+    let {searchText, geoJSON: {features}} = this.props;
     let {POISearchText} = searchText;
-    return this.distanceFilter(geoJSON.features.filter((point) => {
+    if (features === undefined) {
+      return [];
+    }
+    return this.distanceFilter(features.filter((point) => {
       return point.geometry.type === 'Point';
     })).map((point) => {
       let id = point._id;

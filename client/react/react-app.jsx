@@ -22,10 +22,11 @@ if (typeof ISOMORPHIC_WEBPACK === 'undefined') {
     },
     geoJSON: {
       type: 'FeatureCollection',
-      features: []
+      // features: []
     },
     userSession: {
       ...JSON.parse(sessionStorage.getItem('trailmaster-login')),
+      loading: true,
       visibleFeatures: [],
       distanceFilter: 50,
       trackingRoute: false,
@@ -92,7 +93,7 @@ if (typeof ISOMORPHIC_WEBPACK === 'undefined') {
     },
     geoJSON: {
       type: 'FeatureCollection',
-      features: []
+      // features: []
     },
     userSession: {
       loading: true,

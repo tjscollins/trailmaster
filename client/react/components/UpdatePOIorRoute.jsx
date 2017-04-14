@@ -89,10 +89,12 @@ export class UpdatePOIorRoute extends BaseComponent {
     return {};
   }
   listData() {
-    var {searchText, geoJSON,} = this.props;
-    var {updateSearchText} = searchText;
-    return geoJSON
-      .features
+    const {searchText, geoJSON: {features}} = this.props;
+    const {updateSearchText} = searchText;
+    if (features === undefined) {
+      return [];
+    }
+    return features
       .map((point) => {
         var id = point._id;
         var {name, desc, condition, last,} = point.properties;

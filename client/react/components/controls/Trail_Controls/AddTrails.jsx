@@ -18,9 +18,11 @@ export class AddTrails extends BaseComponent {
     this._bind('submit', 'fillRoads');
   }
   currentTrail() {
-    let {geoJSON, userSession} = this.props;
-    return geoJSON
-      .features
+    let {geoJSON: {features}, userSession} = this.props;
+    if (features === undefined) {
+      return [];
+    }
+    return features
       .filter((point) => {
         return userSession
           .visibleFeatures

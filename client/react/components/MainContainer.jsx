@@ -8,6 +8,7 @@ import DistanceFilter from 'DistanceFilter';
 import FAQ from 'FAQ';
 import Header from 'Header';
 import Import from 'Import';
+import LoadingIndicator from 'LoadingIndicator';
 import Login from 'Login';
 import MapViewer from 'MapViewer';
 import MockLocation from 'MockLocation';
@@ -31,6 +32,7 @@ export class MainContainer extends BaseComponent {
         <FAQ />
         <DistanceFilter />
         <MockLocation />
+        <LoadingIndicator />
       </div>
     );
   }

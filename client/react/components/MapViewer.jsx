@@ -8,13 +8,7 @@ import gjv from 'geojson-validation';
 /*----------Components----------*/
 
 /*----------API Functions----------*/
-import {
-  validateServerData,
-  fetchData,
-  mapConfig,
-  changedProps,
-  positionChanged,
-} from 'TrailmasterAPI';
+import {validateServerData, fetchData, mapConfig, changedProps, positionChanged} from 'TrailmasterAPI';
 
 /*----------Redux----------*/
 import * as actions from 'actions';
@@ -37,7 +31,7 @@ export class MapViewer extends Component {
   state = {
     map: null,
     layerIDs: [],
-    initCenter: true,
+    initCenter: true
   }
 
   constructor(props) {
@@ -53,12 +47,12 @@ export class MapViewer extends Component {
      * @param  {BOOLEAN} !this.state.map  Check if mapbox-gl map has been stored
      *                                    in the component's state.
      */
-    if (!this.state.map && !this.props.userSession.loading) {
+    if (!this.state.map) {
       this.createMap(this.props);
     }
   }
   componentWillReceiveProps(nextProps) {
-    const changes = changedProps(nextProps, this.props);
+    // const changes = changedProps(nextProps, this.props);
     // console.log('MapViewer componentWillReceiveProps', changes);
     const {
       dispatch,
@@ -78,8 +72,8 @@ export class MapViewer extends Component {
           longitude,
           latitude
         },
-        distanceFilter,
-      },
+        distanceFilter
+      }
     } = nextProps;
     const {map, layerIDs, initCenter} = this.state;
     const searchPOI = new RegExp(POISearchText || '!!!!!!', 'i');
@@ -100,11 +94,11 @@ export class MapViewer extends Component {
      */
     if (positionChanged({
       longitude,
-      latitude,
+      latitude
     }, this.props.userSession.coords) && map.getSource('user') !== undefined) {
       // Update user's position on map to reflect new updated geolocation data
       const {userSource} = mapConfig([
-        longitude, latitude,
+        longitude, latitude
       ], null);
       // console.log('Updating user position');
       map
@@ -116,19 +110,26 @@ export class MapViewer extends Component {
       // Re-center map on user
       let {lng, lat} = map.getCenter();
       // console.log('Centering Map');
-      if(positionChanged({longitude, latitude}, {longitude: lng, latitude: lat})) {
+      if (positionChanged({
+        longitude,
+        latitude
+      }, {
+        longitude: lng,
+        latitude: lat
+      })) {
         this.centerMap(longitude, latitude, initCenter);
       }
       this.setState({initCenter: false});
     }
 
     // Check Map Layer Visibility
+    if (features !== undefined)
     features.forEach(({
       properties: {
         name,
-        displayed,
+        displayed
       },
-      geometry,
+      geometry
     }) => {
       let i = layerIDs.map((id) => {
         return id[0];
@@ -154,7 +155,7 @@ export class MapViewer extends Component {
     if (instant) {
       map.jumpTo({
         center: [
-          lng, lat,
+          lng, lat
         ],
         zoom: map.getZoom()
       });
@@ -163,9 +164,9 @@ export class MapViewer extends Component {
         duration: 5000,
         animate: true,
         center: [
-          lng, lat,
+          lng, lat
         ],
-        zoom: map.getZoom(),
+        zoom: map.getZoom()
       });
     }
   }
@@ -197,7 +198,7 @@ export class MapViewer extends Component {
       container: 'mapviewer',
       style: 'mapbox://styles/mapbox/outdoors-v9',
       center: [
-        longitude, latitude,
+        longitude, latitude
       ],
       zoom: 12,
       hash: false,
@@ -212,7 +213,7 @@ export class MapViewer extends Component {
       // console.log('map load');
       try {
         const {userSource, geoJSONSource} = mapConfig([
-          longitude, latitude,
+          longitude, latitude
         ], []);
         // if(!gjv.valid(userSource.data)) console.log('WARNING: ', userSource);
         // if(!gjv.valid(geoJSONSource.data)) console.log('WARNING: ', geoJSONSource);
@@ -246,34 +247,40 @@ export class MapViewer extends Component {
       userSession: {
         coords: {
           latitude,
-          longitude,
+          longitude
         },
         distanceFilter
       },
-      dispatch,
+      dispatch
     } = props;
     let newLayerIDs = [];
 
     layerIDs.forEach(([id, type]) => {
       try {
         map.removeLayer(id);
-      } catch(error) {
+      } catch (error) {
         console.error(error);
       }
     });
 
     const {userSource, userLayer, geoJSONSource, addGeoJSONLayers} = mapConfig([
-      longitude, latitude,
+      longitude, latitude
     ], features);
 
     try {
-      if(!gjv.valid(userSource.data)) console.log('WARNING: ', userSource);
-      map.getSource('user').setData(userSource.data);
+      if (!gjv.valid(userSource.data))
+        console.log('WARNING: ', userSource);
+      map
+        .getSource('user')
+        .setData(userSource.data);
       map.addLayer(userLayer);
       newLayerIDs.push(['You Are Here', 'user']);
       // Add Map Layers for GeoJSON Data
-      if(!gjv.valid(geoJSONSource.data)) console.log('WARNING: ', geoJSONSource);
-      map.getSource('geoJSON').setData(geoJSONSource.data);
+      if (!gjv.valid(geoJSONSource.data))
+        console.log('WARNING: ', geoJSONSource);
+      map
+        .getSource('geoJSON')
+        .setData(geoJSONSource.data);
 
       features.forEach((feature) => {
         const {properties: {
@@ -285,12 +292,15 @@ export class MapViewer extends Component {
         let layerType = type === 'Point'
           ? 'symbol'
           : 'line';
-          addGeoJSONLayers(feature, map);
+        addGeoJSONLayers(feature, map);
         if (type === 'Point') {
           newLayerIDs.push([name, layerType]);
         } else if (type === 'LineString') {
           newLayerIDs.push([name, layerType]);
-          newLayerIDs.push([name + ' label', layerType]);
+          newLayerIDs.push([
+            name + ' label',
+            layerType
+          ]);
         }
       });
       this.setState({layerIDs: newLayerIDs});
@@ -314,11 +324,11 @@ export class MapViewer extends Component {
       userSession: {
         coords: {
           latitude,
-          longitude,
+          longitude
         },
         distanceFilter
       },
-      dispatch,
+      dispatch
     } = props;
     fetchData(latitude, longitude, distanceFilter).then((data) => {
       // console.log('Fetching data within: ', distanceFilter);
@@ -359,18 +369,16 @@ export class MapViewer extends Component {
   }
 
   render() {
-    const {loading} = this.props.userSession;
-    const html = loading
-    ? <div className='uil-poi-css' style={{transform: 'scale(0.51)'}}><div /></div>
-    : <div id='mapviewer' className='mapviewer' />;
-    return html;
+    return <div id='mapviewer' className='mapviewer' />;
   }
 }
 
 MapViewer.propTypes = {
   dispatch: PropTypes.func.isRequired,
   userSession: PropTypes.object.isRequired,
-  map: PropTypes.object.isRequired,
+  geoJSON: PropTypes.object.isRequired,
+  searchText: PropTypes.object.isRequired,
+  map: PropTypes.object.isRequired
 };
 
 export default connect((state) => state)(MapViewer);
