@@ -2,7 +2,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import $ from 'jquery';
-import mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
+import mapboxgl from 'mapboxgl';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';

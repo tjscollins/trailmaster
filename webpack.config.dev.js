@@ -19,6 +19,7 @@ module.exports = {
   },
   resolve: {
     alias: {
+      'mapboxgl': 'mapbox-gl/dist/mapbox-gl.js',
     },
     modules: [
       __dirname,

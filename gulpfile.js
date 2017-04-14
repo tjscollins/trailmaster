@@ -153,7 +153,7 @@ gulp.task('watch', [
   gulp.watch(REACT_REDUX, ['react-redux-dev']);
   gulp.watch(STYLES + '**/*.scss', ['styles']);
   nodemon({
-    script: './server.js',
+    script: '--exec babel-node -- ./server.js',
     ext: 'js json',
     ignore: ['*.scss', '*.jsx', './public/', 'gulpfile.js'],
   });

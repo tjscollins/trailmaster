@@ -1,6 +1,6 @@
 /*----------Modules----------*/
 import React, {Component, PropTypes} from 'react';
-import mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
+import mapboxgl from 'mapboxgl';
 import {connect} from 'react-redux';
 import distance from '@turf/distance';
 import gjv from 'geojson-validation';
