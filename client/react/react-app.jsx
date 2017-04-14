@@ -95,6 +95,7 @@ if (typeof ISOMORPHIC_WEBPACK === 'undefined') {
       features: []
     },
     userSession: {
+      loading: true,
       visibleFeatures: [],
       distanceFilter: 50,
       trackingRoute: false,

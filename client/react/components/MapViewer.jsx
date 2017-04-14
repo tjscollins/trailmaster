@@ -53,11 +53,10 @@ export class MapViewer extends Component {
      * @param  {BOOLEAN} !this.state.map  Check if mapbox-gl map has been stored
      *                                    in the component's state.
      */
-    if (!this.state.map) {
+    if (!this.state.map && !this.props.userSession.loading) {
       this.createMap(this.props);
     }
   }
-
   componentWillReceiveProps(nextProps) {
     const changes = changedProps(nextProps, this.props);
     // console.log('MapViewer componentWillReceiveProps', changes);
@@ -360,7 +359,11 @@ export class MapViewer extends Component {
   }
 
   render() {
-    return (<div id='mapviewer' className='mapviewer' />);
+    const {loading} = this.props.userSession;
+    const html = loading
+    ? <div className='uil-poi-css' style={{transform: 'scale(0.51)'}}><div /></div>
+    : <div id='mapviewer' className='mapviewer' />;
+    return html;
   }
 }
 
