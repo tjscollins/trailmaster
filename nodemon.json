@@ -1,9 +1,13 @@
 {
+  "script": "--exec babel-node -- ./server.js",
   "restartable": "rs",
   "ignore": [
     ".git",
     "node_modules/**/node_modules",
-    "public/bundle.js"
+    "*.scss",
+    "*.jsx",
+    "./public/",
+    "gulpfile.js"
   ],
   "verbose": true,
   "env": {

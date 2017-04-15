@@ -1,31 +1,28 @@
 'use strict';
 /*eslint-disable require-jsdoc*/
-import webpack from 'webpack';
-import webpackDevMiddleware from 'webpack-dev-middleware';
-import {
-  createIsomorphicWebpack
-} from 'isomorphic-webpack';
-import {
-  renderToString
-} from 'react-dom/server';
-import webpackConfiguration from '../../webpack.config.server.js';
+const path = require('path');
 
-const PoiModel = require('../db/models/poi');
-const RouteModel = require('../db/models/route');
-const TrailModel = require('../db/models/trail');
-const UserModel = require('../db/models/user');
-const {authenticate} = require('../middleware/authenticate');
+const webpack = require('webpack');
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const {createIsomorphicWebpack} = require('isomorphic-webpack');
+const {renderToString} = require('react-dom/server');
+import webpackConfiguration from '../../webpack.config.render.js';
+
+const PoiModel = require('./server/db/models/poi');
+const RouteModel = require('./server/db/models/route');
+const TrailModel = require('./server/db/models/trail');
+const UserModel = require('./server/db/models/user');
+const {authenticate} = require('./server/middleware/authenticate');
 const _ = require('lodash');
 const {ObjectID} = require('mongodb');
 const nodemailer = require('nodemailer');
 const mg = require('nodemailer-mailgun-transport');
 const bcrypt = require('bcryptjs');
-const path = require('path');
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
 
-module.exports = function(app, mongoose) {
+function routes(app, mongoose) {
   const compiler = webpack(webpackConfiguration);
 
   app.use(webpackDevMiddleware(compiler, {
@@ -870,5 +867,6 @@ width: 100%;
           .send();
       });
   });
+}
 
-};
+export default routes;

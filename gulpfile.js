@@ -30,7 +30,9 @@ const sass = require('gulp-sass');
 const cleanCss = require('gulp-clean-css');
 const nodemon = require('gulp-nodemon');
 const del = require('del');
-const gzip = require('gulp-gzip');
+const babel = require('rollup-plugin-babel');
+const rollup = require('rollup-stream');
+const source = require('vinyl-source-stream');
 
 const webpack = require('webpack');
 const webpackStream = require('webpack-stream');
@@ -39,6 +41,7 @@ const WEBPACK_PROD = require('./webpack.config.production.js');
 
 // File Paths
 const CLIENT = './client/';
+const SERVER = './server/';
 const DIST = './public/';
 const HTML = CLIENT + 'html/*.html';
 const REACT_REDUX = CLIENT + '/**/*.jsx';
@@ -107,7 +110,6 @@ gulp.task('styles', () => {
     .pipe(autoprefixer())
     .pipe(cleanCss())
     .pipe(sourcemaps.write())
-    // .pipe(gzip({threshold: 1024}))
     .pipe(gulp.dest(SCSS.out))
     .pipe(livereload());
 });
@@ -120,7 +122,6 @@ gulp.task('react-redux-dev', () => {
     .pipe(webpackStream(WEBPACK_DEV, webpack))
     .pipe(concat(JS_BUNDLE))
     .pipe(sourcemaps.write())
-    // .pipe(gzip({threshold: 1024}))
     .pipe(gulp.dest(DIST))
     .pipe(livereload());
 });
@@ -132,7 +133,6 @@ gulp.task('react-redux-production', () => {
     .pipe(webpackStream(WEBPACK_PROD, webpack))
     .pipe(concat(JS_BUNDLE))
     .pipe(sourcemaps.write())
-    // .pipe(gzip({threshold: 1024}))
     .pipe(gulp.dest(DIST))
     .pipe(livereload());
 });
@@ -142,21 +142,45 @@ gulp.task('clean', function() {
 });
 
 gulp.task('default', [
-  'static', 'html', 'styles', 'react-redux-dev',
+  'static', 'html', 'styles', 'react-redux-dev', 'build-server'
 ], () => {});
 
 gulp.task('watch', [
-  'default',
+  'default'
 ], () => {
   livereload.listen();
   gulp.watch(HTML, ['html']);
   gulp.watch(REACT_REDUX, ['react-redux-dev']);
   gulp.watch(STYLES + '**/*.scss', ['styles']);
+  gulp.watch(SERVER + '**/*js', ['build-server']);
   nodemon({
-    script: '--exec babel-node -- ./server.js',
-    ext: 'js json',
-    ignore: ['*.scss', '*.jsx', './public/', 'gulpfile.js'],
+    script: 'server.js',
   });
+});
+
+gulp.task('build-server', () => {
+  return rollup({
+    entry: 'server/server.js',
+    format: 'cjs',
+    plugins: [
+      babel({
+        'presets': [
+          [
+            'es2015',
+            {
+              'modules': false
+            }
+          ]
+        ],
+        'plugins': [
+          'external-helpers'
+        ],
+        'exclude': 'node_modules/**'
+      })
+    ],
+  })
+  .pipe(source('server.js'))
+  .pipe(gulp.dest('./'));
 });
 
 gulp.task('build', [
@@ -165,4 +189,5 @@ gulp.task('build', [
   'html',
   'styles',
   'react-redux-production',
+  'build-server'
 ], () => {});

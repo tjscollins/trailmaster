@@ -4,7 +4,9 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   entry: [
-    'script-loader!jquery/dist/jquery.min.js', 'script-loader!bootstrap-sass/assets/javascripts/bootstrap.min.js', './client/react/react-app.jsx'
+    'script-loader!jquery/dist/jquery.min.js',
+    'script-loader!bootstrap-sass/assets/javascripts/bootstrap.min.js',
+    './client/react/react-app.jsx'
   ],
   externals: {
     jquery: 'jQuery'
@@ -13,29 +15,23 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
-      }
+      },
     }),
     new UglifyJSPlugin({
-      compressor: {
-        warnings: false
-      }
+      mangle: true,
+      compressor: false, // causes errors if true
     }),
-    new webpack
-      .optimize
-      .AggressiveMergingPlugin()
   ],
   output: {
     path: __dirname,
-    filename: './public/bundle.min.js'
+    filename: './public/bundle.js'
   },
   resolve: {
     alias: {
-      'mapboxgl': 'mapbox-gl/dist/mapbox-gl.js',
+      'mapboxgl': 'mapbox-gl/dist/mapbox-gl.js'
     },
     modules: [
-      __dirname,
-      'node_modules',
-      path.join(__dirname, 'client/api'),
+      __dirname, 'node_modules', path.join(__dirname, 'client/api'),
       path.join(__dirname, 'client/react'),
       path.join(__dirname, 'client/react/components'),
       path.join(__dirname, 'client/react/components/controls/PoI_Controls'),
@@ -43,7 +39,7 @@ module.exports = {
       path.join(__dirname, 'client/react/components/controls/Trail_Controls'),
       path.join(__dirname, 'client/redux')
     ],
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx']
   },
   module: {
     rules: [
@@ -58,9 +54,11 @@ module.exports = {
         loader: 'json-loader'
       }, {
         test: /\.jsx?$/,
+        exclude: /(node_modules)/,
         use: {
           loader: 'babel-loader',
           query: {
+            'babelrc': false,
             'presets': [
               [
                 'es2015', {
@@ -69,7 +67,8 @@ module.exports = {
               ],
               ['react'],
               ['stage-0']
-            ]
+            ],
+            'plugins': []
           }
         }
       }

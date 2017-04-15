@@ -18,6 +18,4 @@ const options = {
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/TrailMaster', options);
 mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
 
-module.exports = {
-  mongoose
-};
+export default mongoose;

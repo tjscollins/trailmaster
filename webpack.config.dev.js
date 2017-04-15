@@ -51,6 +51,7 @@ module.exports = {
           {
             loader: 'babel-loader',
             query: {
+              'babelrc': false,
               'presets': [
                 [
                   'es2015', {
@@ -60,6 +61,7 @@ module.exports = {
                 ['react'],
                 ['stage-0']
               ],
+              'plugins': [],
               'env': {
                 'development': {
                   'plugins': ['istanbul']
