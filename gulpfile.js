@@ -170,7 +170,8 @@ gulp.task('build-server', () => {
             {
               'modules': false
             }
-          ]
+          ],
+          ['stage-0'],
         ],
         'plugins': [
           'external-helpers'

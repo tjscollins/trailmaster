@@ -93,6 +93,35 @@ var webpackConfiguration = {
   }
 };
 
+var asyncToGenerator = function (fn) {
+  return function () {
+    var gen = fn.apply(this, arguments);
+    return new Promise(function (resolve, reject) {
+      function step(key, arg) {
+        try {
+          var info = gen[key](arg);
+          var value = info.value;
+        } catch (error) {
+          reject(error);
+          return;
+        }
+
+        if (info.done) {
+          resolve(value);
+        } else {
+          return Promise.resolve(value).then(function (value) {
+            step("next", value);
+          }, function (err) {
+            step("throw", err);
+          });
+        }
+      }
+
+      return step("next");
+    });
+  };
+};
+
 /*eslint-disable require-jsdoc*/
 
 var path = require('path');
@@ -126,6 +155,8 @@ var bcrypt = require('bcryptjs');
 var NODE_ENV = process.env.NODE_ENV || 'development';
 
 function routes(app, mongoose) {
+  var _this = this;
+
   var compiler = webpack(webpackConfiguration);
 
   app.use(webpackDevMiddleware(compiler, {
@@ -149,10 +180,30 @@ function routes(app, mongoose) {
       createCompilationPromise = _createIsomorphicWebp.createCompilationPromise,
       evalBundleCode = _createIsomorphicWebp.evalBundleCode;
 
-  app.use(async function (req, res, next) {
-    await createCompilationPromise();
-    next();
-  });
+  app.use(function () {
+    var _ref = asyncToGenerator(regeneratorRuntime.mark(function _callee(req, res, next) {
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return createCompilationPromise();
+
+            case 2:
+              next();
+
+            case 3:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, _callee, _this);
+    }));
+
+    return function (_x, _x2, _x3) {
+      return _ref.apply(this, arguments);
+    };
+  }());
 
   var sendIndex = function sendIndex(req, res) {
     var index = function index(body) {
@@ -327,9 +378,9 @@ function routes(app, mongoose) {
       var lat = query.lat,
           lng = query.lng,
           dist = query.dist;
-      var _ref = [parseFloat(lat), parseFloat(lng)];
-      lat = _ref[0];
-      lng = _ref[1];
+      var _ref2 = [parseFloat(lat), parseFloat(lng)];
+      lat = _ref2[0];
+      lng = _ref2[1];
 
       var lngDegPerMile = Math.cos(lat * Math.PI / 180) / 69;
       var latDegPerMile = 1 / 69;
@@ -412,9 +463,9 @@ function routes(app, mongoose) {
           dist = query.dist;
       // console.log(query);
 
-      var _ref2 = [parseFloat(lat), parseFloat(lng)];
-      lat = _ref2[0];
-      lng = _ref2[1];
+      var _ref3 = [parseFloat(lat), parseFloat(lng)];
+      lat = _ref3[0];
+      lng = _ref3[1];
 
       var lngDegPerMile = Math.cos(lat * Math.PI / 180) / 69;
       var latDegPerMile = 1 / 69;
