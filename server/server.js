@@ -1,4 +1,5 @@
 // require('./config/config');
+import 'babel-polyfill';
 import './config/config';
 import mongoose from './db/mongoose';
 
