@@ -338,7 +338,6 @@ function routes(app, mongoose) {
     var _req$params = req.params,
         reqID = _req$params.reqID,
         email = _req$params.email;
-    // let toRemove = [];
 
     var toUse = -1;
     var invalid = true;
@@ -366,7 +365,7 @@ function routes(app, mongoose) {
         // console.log(user);
       });
     }).catch(function (e) {
-      console.log(e);
+      console.error(e);
       res.status(400).send(e);
     });
   });

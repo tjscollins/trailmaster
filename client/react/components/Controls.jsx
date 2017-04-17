@@ -2,6 +2,7 @@
 import React from 'react';
 import $ from 'jquery';
 import {toggleUI} from 'TrailmasterAPI';
+import uuid from 'uuid';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
@@ -19,6 +20,28 @@ import Tools from 'Tools';
 export class Controls extends BaseComponent {
   constructor() {
     super();
+  }
+  poiControls() {
+    const isMobile = window.navigator.userAgent.match(/Android|iPhone|iPod/i);
+    return isMobile ? [
+      <AddPOI key={uuid()} />,
+      <SearchPOI key={uuid()} />,
+      <ListPOI key={uuid()} />,
+    ] : [
+      <SearchPOI key={uuid()} />,
+      <ListPOI key={uuid()} />,
+    ];
+  }
+  routesControls() {
+    const isMobile = window.navigator.userAgent.match(/Android|iPhone|iPod/i);
+    return isMobile ? [
+      <AddRoutes key={uuid()} />,
+      <SearchRoutes key={uuid()} />,
+      <ListRoutes key={uuid()} />,
+    ] : [
+      <SearchRoutes key={uuid()} />,
+      <ListRoutes key={uuid()} />,
+    ];
   }
   render() {
     return (
@@ -51,9 +74,7 @@ export class Controls extends BaseComponent {
                 role='tabpanel'
                 aria-labelledby='headingOne'>
                 <div className='panel-body control-panel'>
-                  <AddPOI />
-                  <SearchPOI />
-                  <ListPOI />
+                  {this.poiControls()}
                 </div>
               </div>
             </div>
@@ -80,9 +101,7 @@ export class Controls extends BaseComponent {
                 role='tabpanel'
                 aria-labelledby='headingTwo'>
                 <div className='panel-body control-panel'>
-                  <AddRoutes />
-                  <SearchRoutes />
-                  <ListRoutes />
+                  {this.routesControls()}
                 </div>
               </div>
             </div>
