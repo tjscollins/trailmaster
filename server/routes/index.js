@@ -485,11 +485,7 @@ width: 100%;
           res
             .status(200)
             .send();
-        }, () => {
-          res
-            .status(400)
-            .send();
-        });
+        }, console.error);
     });
 
   app.route('/users/password')
@@ -508,11 +504,7 @@ width: 100%;
             .toLowerCase()
         }, {
           password: hash
-        }, (err, raw) => {
-          if (err)
-            console.log('Error patching password', err);
-          }
-        );
+        }, console.error);
       })
       .then(() => {
         res.redirect(303, '/');
@@ -553,10 +545,9 @@ width: 100%;
           html: `<p>The following is a single-use link to reset your password.</p><p>It will only work for 24 hours</p><a href=\"${url}/${reqID}-${encodeURI(email)}\">Reset Password</a>`
         };
         nodemailerMailgun.sendMail(message, function(err, info) {
+          /*istanbul ignore next*/
           if (err) {
-            console.log('Error: ' + err);
-          } else {
-            // console.log('Response: ' + info);
+            console.error(err);
           }
         });
         res
@@ -571,7 +562,6 @@ width: 100%;
   });
   app.get('/users/reset/:reqID-:email', (req, res) => {
     let {reqID, email} = req.params;
-    // let toRemove = [];
     let toUse = -1;
     let invalid = true;
     UserModel
@@ -604,7 +594,7 @@ width: 100%;
         });
       })
       .catch((e) => {
-        console.log(e);
+        console.error(e);
         res.status(400).send(e);
       });
   });

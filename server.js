@@ -5,8 +5,8 @@ require('dotenv');
 
 var env = process.env.NODE_ENV || 'development';
 if (env === 'development' || env === 'test') {
-  process.env.PORT = 3000;
-  process.env.MONGODB_URI = 'mongodb://localhost:27017/TrailMaster';
+  process.env.PORT = process.env.PORT || 3000;
+  process.env.MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/TrailMaster';
 }
 
 var mongoose = require('mongoose');
@@ -275,9 +275,7 @@ function routes(app, mongoose) {
     */
     req.user.removeToken(req.token).then(function () {
       res.status(200).send();
-    }, function () {
-      res.status(400).send();
-    });
+    }, console.error);
   });
 
   app.route('/users/password')
@@ -291,9 +289,7 @@ function routes(app, mongoose) {
         email: body.email.trim().toLowerCase()
       }, {
         password: hash
-      }, function (err, raw) {
-        if (err) console.log('Error patching password', err);
-      });
+      }, console.error);
     }).then(function () {
       res.redirect(303, '/');
     }).catch(function (err) {
@@ -328,10 +324,9 @@ function routes(app, mongoose) {
         html: '<p>The following is a single-use link to reset your password.</p><p>It will only work for 24 hours</p><a href="' + url + '/' + reqID + '-' + encodeURI(email) + '">Reset Password</a>'
       };
       nodemailerMailgun.sendMail(message, function (err, info) {
+        /*istanbul ignore next*/
         if (err) {
-          console.log('Error: ' + err);
-        } else {
-          // console.log('Response: ' + info);
+          console.error(err);
         }
       });
       res.status(200).send();
@@ -590,8 +585,6 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var compression = require('compression');
 
-var PORT = process.env.PORT || 3000;
-
 //Create our app
 var app = express();
 app.use(bodyParser.json());
@@ -599,8 +592,8 @@ app.use(compression());
 routes(app, mongoose);
 app.use(express.static('public'));
 mongoose.connection.once('open', function () {
-  // Wait for the database connection to establish, then start the app.
-  app.listen(PORT);
+  // Wait for the database connection to be established, then start the app.
+  app.listen(process.env.PORT);
 });
 
 module.exports = {
