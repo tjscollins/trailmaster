@@ -4,9 +4,9 @@
   "description": "Trail Mapping Application",
   "main": "server.js",
   "scripts": {
-    "server-test": "export NODE_ENV=test || SET NODE_ENV=test && istanbul cover _mocha tests/server/**/*test.js",
+    "server-test": "export NODE_ENV=test || SET NODE_ENV=test && istanbul cover _mocha tests/server/**/*test.js -- -t 10000",
     "client-test": "karma start",
-    "test": "export NODE_ENV=test || SET NODE_ENV=test && istanbul cover _mocha tests/server/**/*test.js && karma start",
+    "test": "export NODE_ENV=test || SET NODE_ENV=test && istanbul cover _mocha tests/server/**/*test.js -- -t 10000 && karma start",
     "test-watch": "nodemon --exec 'npm test'",
     "start": "export NODE_ENV=production || SET NODE_ENV=production && node --optimize_for_size --max_old_space_size=250 --gc_interval=100 ./server.js"
   },
@@ -33,7 +33,6 @@
     "@mapbox/mapbox-gl-directions": "^3.0.3",
     "@mapbox/togeojson": "^0.16.0",
     "@turf/turf": "^3.7.4",
-    "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
     "babel-eslint": "^7.1.1",
     "babel-loader": "^6.2.2",
@@ -48,6 +47,7 @@
     "bootstrap-sass": "^3.3.7",
     "compression": "^1.6.2",
     "crypto-js": "^3.1.8",
+    "dotenv": "^4.0.0",
     "express": "^4.14.0",
     "font-awesome": "^4.7.0",
     "geojson-validation": "^0.1.6",

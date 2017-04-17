@@ -1,9 +1,9 @@
 'use strict';
 
 require('babel-polyfill');
+require('dotenv');
 
 var env = process.env.NODE_ENV || 'development';
-
 if (env === 'development' || env === 'test') {
   process.env.PORT = 3000;
   process.env.MONGODB_URI = 'mongodb://localhost:27017/TrailMaster';
@@ -358,7 +358,7 @@ function routes(app, mongoose) {
           invalid = false;
           toUse = i;
           res.setHeader('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-che' + 'ck=0');
-          res.sendFile(path.join(__dirname, '/../restricted/password-reset.html'));
+          res.sendFile(path.join(__dirname, 'restricted/password-reset.html'));
         }
         return toUse !== i && interval > 0 && interval < 86400000;
       });
@@ -370,6 +370,9 @@ function routes(app, mongoose) {
       }, { resetRequests: remainingRequests }).then(function (person) {
         // console.log(user);
       });
+    }).catch(function (e) {
+      console.log(e);
+      res.status(400).send(e);
     });
   });
 
@@ -537,7 +540,6 @@ function routes(app, mongoose) {
 
       res.send(point);
     }).catch(function (e) {
-      console.log('Bad PATCH request: ', req.body);
       res.status(400).send();
     });
   });

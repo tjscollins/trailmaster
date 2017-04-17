@@ -590,7 +590,7 @@ width: 100%;
               toUse = i;
               res.setHeader('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-che' +
                   'ck=0');
-              res.sendFile(path.join(__dirname, '/../restricted/password-reset.html'));
+              res.sendFile(path.join(__dirname, 'restricted/password-reset.html'));
             }
             return toUse !== i && interval > 0 && interval < 86400000;
           });
@@ -602,6 +602,10 @@ width: 100%;
         }, {resetRequests: remainingRequests}).then((person) => {
           // console.log(user);
         });
+      })
+      .catch((e) => {
+        console.log(e);
+        res.status(400).send(e);
       });
   });
 
@@ -804,7 +808,6 @@ width: 100%;
 
       res.send(point);
     }).catch((e) => {
-      console.log('Bad PATCH request: ', req.body);
       res
         .status(400)
         .send();

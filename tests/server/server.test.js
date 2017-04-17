@@ -5,7 +5,37 @@ const {ObjectID} = require('mongodb');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const {app} = require('./../../server/server.js');
+const mongoose = require('mongoose');
+
+mongoose.Promise = global.Promise;
+const options = {
+  server: {
+    socketOptions: {
+      keepAlive: 300000,
+      connectTimeoutMS: 30000
+    }
+  },
+  replset: {
+    socketOptions: {
+      keepAlive: 300000,
+      connectTimeoutMS: 30000
+    }
+  }
+};
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/TrailMaster', options);
+mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
+
+require('dotenv').config();
+global.getApp = function() {
+  if (!process.env.UNIT_TEST_HOST) {
+    process.env.UNIT_TEST_HOST = 'http://127.0.0.1:3000';
+  }
+  const app = request(process.env.UNIT_TEST_HOST);
+  return {
+    app
+  };
+};
+
 const PoiModel = require('./../../server/db/models/poi');
 const RouteModel = require('./../../server/db/models/route');
 const TrailModel = require('./../../server/db/models/trail');
@@ -23,9 +53,10 @@ beforeEach(populateUsers);
 beforeEach(populateServer);
 
 describe('/pois', () => {
+  const {app} = getApp();
   describe('GET', () => {
     it('should get all POIs', (done) => {
-      request(app)
+      app
         .get('/pois')
         .set('x-auth', users[0].tokens[0].token)
         .expect(200)
@@ -36,7 +67,7 @@ describe('/pois', () => {
     });
 
     it('should only return POIs within DIST of LNG and LAT', (done) => {
-      request(app)
+      app
         .get('/pois?lng=110&lat=45&dist=50')
         .set('x-auth', users[0].tokens[0].token)
         .expect(200)
@@ -67,7 +98,7 @@ describe('/pois', () => {
         }
       };
 
-      request(app)
+      app
         .post('/pois')
         .set('x-auth', users[0].tokens[0].token)
         .send(poi)
@@ -113,7 +144,7 @@ describe('/pois', () => {
         }
       };
 
-      request(app)
+      app
         .post('/pois')
         .set('x-auth', users[0].tokens[0].token)
         .send(poi)
@@ -143,7 +174,7 @@ describe('/pois', () => {
         });
         const newPOI = Object.assign({}, pois[0], {geometry: newGeometry});
 
-        request(app)
+        app
           .patch(`/pois/${hexId}`)
           .send(newPOI)
           .expect(200)
@@ -160,7 +191,7 @@ describe('/pois', () => {
         const newGeometry = Object.assign({}, pois[0].geometry, {coordinates: [100]});
         const newPOI = Object.assign({}, pois[0], {geometry: newGeometry});
 
-        request(app)
+        app
           .patch(`/pois/${hexId}`)
           .send(newPOI)
           .expect(400)
@@ -173,7 +204,7 @@ describe('/pois', () => {
           ._id
           .toHexString();
 
-        request(app)
+        app
           .delete(`/pois/${hexId}`)
           .expect(200)
           .expect((res) => {
@@ -197,14 +228,14 @@ describe('/pois', () => {
       it('should return 404 if poi not found', (done) => {
         let hexId = new ObjectID().toHexString();
 
-        request(app)
+        app
           .delete(`/pois/${hexId}`)
           .expect(404)
           .end(done);
       });
 
       it('should return 404 if object id is invalid', (done) => {
-        request(app)
+        app
           .delete('/pois/123abc')
           .expect(404)
           .end(done);
@@ -214,9 +245,10 @@ describe('/pois', () => {
 });
 
 describe('/routes', () => {
+  const {app} = getApp();
   describe('GET', () => {
     it('should get all ROUTES', (done) => {
-      request(app)
+      app
         .get('/routes')
         .set('x-auth', users[0].tokens[0].token)
         .expect(200)
@@ -227,7 +259,7 @@ describe('/routes', () => {
     });
 
     it('should only return ROUTES within DIST of LNG and LAT', (done) => {
-      request(app)
+      app
         .get('/routes?lng=110&lat=45&dist=50')
         .set('x-auth', users[0].tokens[0].token)
         .expect(200)
@@ -256,22 +288,20 @@ describe('/routes', () => {
           type: 'LineString',
           coordinates: [
             [
-              -214.27445769309995, 15.167432624111209,
+              -214.27445769309995, 15.167432624111209
             ],
             [
-              -214.27433967590332, 15.167339428181535,
+              -214.27433967590332, 15.167339428181535
             ],
             [
-              -214.27423238754272, 15.16729800775516,
+              -214.27423238754272, 15.16729800775516
             ],
-            [
-              -214.27410364151, 15.167266942430045,
-            ],
+            [-214.27410364151, 15.167266942430045]
           ]
         }
       };
 
-      request(app)
+      app
         .post('/routes')
         .set('x-auth', users[0].tokens[0].token)
         .send(route)
@@ -317,7 +347,7 @@ describe('/routes', () => {
         }
       };
 
-      request(app)
+      app
         .post('/routes')
         .set('x-auth', users[0].tokens[0].token)
         .send(route)
@@ -345,39 +375,35 @@ describe('/routes', () => {
         const newGeometry = Object.assign({}, routes[0].geometry, {
           coordinates: [
             [
-              100, -25,
+              100, -25
             ],
             [
-              100, -26,
+              100, -26
             ],
             [
-              99, -26,
+              99, -26
             ],
-            [
-              99, -27,
-            ],
+            [99, -27]
           ]
         });
         const newRoute = Object.assign({}, routes[0], {geometry: newGeometry});
 
-        request(app)
+        app
           .patch(`/routes/${hexId}`)
           .send(newRoute)
           .expect(200)
           .expect((res) => {
             expect(res.body.geometry.coordinates).toEqual([
               [
-                100, -25,
+                100, -25
               ],
               [
-                100, -26,
+                100, -26
               ],
               [
-                99, -26,
+                99, -26
               ],
-              [
-                99, -27,
-              ],
+              [99, -27]
             ]);
           })
           .end(done);
@@ -391,19 +417,17 @@ describe('/routes', () => {
           coordinates: [
             [100],
             [
-              100, -26,
+              100, -26
             ],
             [
-              99, -26,
+              99, -26
             ],
-            [
-              99, -27,
-            ],
+            [99, -27]
           ]
         });
         const newRoute = Object.assign({}, routes[0], {geometry: newGeometry});
 
-        request(app)
+        app
           .patch(`/routes/${hexId}`)
           .send(newRoute)
           .expect(400)
@@ -416,7 +440,7 @@ describe('/routes', () => {
           ._id
           .toHexString();
 
-        request(app)
+        app
           .delete(`/routes/${hexId}`)
           .expect(200)
           .end((err, res) => {
@@ -437,14 +461,14 @@ describe('/routes', () => {
       it('should return 404 if route not found', (done) => {
         let hexId = new ObjectID().toHexString();
 
-        request(app)
+        app
           .delete(`/routes/${hexId}`)
           .expect(404)
           .end(done);
       });
 
       it('should return 404 if object id is invalid', (done) => {
-        request(app)
+        app
           .delete('/routes/123abc')
           .expect(404)
           .end(done);
@@ -454,9 +478,10 @@ describe('/routes', () => {
 });
 
 describe('/trails', () => {
+  const {app} = getApp();
   describe('GET', () => {
     it('should GET all Trails', (done) => {
-      request(app)
+      app
         .get('/trails')
         .set('x-auth', users[0].tokens[0].token)
         .expect(200)
@@ -511,11 +536,11 @@ describe('/trails', () => {
               'last': 'Dec 2016',
               'displayed': true
             }
-          },
+          }
         ]
       };
 
-      request(app)
+      app
         .post('/trails')
         .send(trail)
         .set('x-auth', users[0].tokens[0].token)
@@ -544,7 +569,7 @@ describe('/trails', () => {
     it('should not create a new Trail with invalid data', (done) => {
       let trail = {};
 
-      request(app)
+      app
         .post('/trails')
         .set('x-auth', users[0].tokens[0].token)
         .send(trail)
@@ -570,7 +595,7 @@ describe('/trails', () => {
           ._id
           .toHexString();
 
-        request(app)
+        app
           .delete(`/trails/${hexId}`)
           .expect(200)
           .end((err, res) => {
@@ -591,14 +616,14 @@ describe('/trails', () => {
       it('should return 404 if trail not found', (done) => {
         let hexId = new ObjectID().toHexString();
 
-        request(app)
+        app
           .delete(`/trails/${hexId}`)
           .expect(404)
           .end(done);
       });
 
       it('should return 404 if trail id is invalid', (done) => {
-        request(app)
+        app
           .delete('/trails/123abc')
           .expect(404)
           .end(done);
@@ -608,12 +633,13 @@ describe('/trails', () => {
 });
 
 describe('/users', () => {
+  const {app} = getApp();
   describe('POST', () => {
     it('should create a user', (done) => {
       let email = 'example@example.com';
       let password = '123mnb!';
 
-      request(app)
+      app
         .post('/users')
         .send({email, password})
         .expect(200)
@@ -641,7 +667,7 @@ describe('/users', () => {
       let email = 'EXample@example.com  ';
       let password = '123mnb!';
 
-      request(app)
+      app
         .post('/users')
         .send({email, password})
         .expect(200)
@@ -666,7 +692,7 @@ describe('/users', () => {
     });
 
     it('should return validation errors if request invalid', (done) => {
-      request(app)
+      app
         .post('/users')
         .send({email: 'and', password: '123'})
         .expect(400)
@@ -674,7 +700,7 @@ describe('/users', () => {
     });
 
     it('should not create user if email in use', (done) => {
-      request(app)
+      app
         .post('/users')
         .send({email: users[0].email, password: 'Password123!'})
         .expect(400)
@@ -685,7 +711,7 @@ describe('/users', () => {
   describe('/users/login', () => {
     describe('GET', () => {
       it('should return user if authenticated', (done) => {
-        request(app)
+        app
           .get('/users/login')
           .set('x-auth', users[0].tokens[0].token)
           .expect(200)
@@ -697,7 +723,7 @@ describe('/users', () => {
       });
 
       it('should return 401 if not authenticated', (done) => {
-        request(app)
+        app
           .get('/users/login')
           .expect(401)
           .expect((res) => {
@@ -708,7 +734,7 @@ describe('/users', () => {
     });
     describe('POST', () => {
       it('should login user and return auth token', (done) => {
-        request(app)
+        app
           .post('/users/login')
           .send({email: users[1].email, password: users[1].password})
           .expect(200)
@@ -731,7 +757,7 @@ describe('/users', () => {
       });
 
       it('should trim and toLowerCase email address before checking login', (done) => {
-        request(app)
+        app
           .post('/users/login')
           .send({
             email: users[1]
@@ -759,7 +785,7 @@ describe('/users', () => {
       });
 
       it('should reject invalid login', (done) => {
-        request(app)
+        app
           .post('/users/login')
           .send({
             email: users[1].email,
@@ -790,7 +816,7 @@ describe('/users', () => {
           .then((user) => {
             expect(user.tokens.length).toBe(3);
           });
-        request(app)
+        app
           .post('/users/login')
           .send({email: users[0].email, password: users[0].password})
           .expect(200)
@@ -813,7 +839,7 @@ describe('/users', () => {
   describe('/users/logout', () => {
     describe('GET', () => {
       it('should remove auth token on logout', (done) => {
-        request(app)
+        app
           .get('/users/logout')
           .set('x-auth', users[0].tokens[0].token)
           .expect(200)
@@ -832,11 +858,11 @@ describe('/users', () => {
           });
       });
 
-      it('should return 400 for nonexistent tokens', () => {
-        request(app)
+      it('should return 401 for nonexistent tokens', (done) => {
+        app
           .get('/users/logout')
           .set('x-auth', users[0].tokens[0].token + '123')
-          .expect(400)
+          .expect(401)
           .end((err, res) => {
             if (err) {
               return done(err);
@@ -852,7 +878,7 @@ describe('/users', () => {
       it('should update the hash of a user\'s password to match a new password', (done) => {
         let email = 'tjscollins@gmail.com';
         let newPass = 'hamsterdance2';
-        request(app)
+        app
           .patch('/users/password')
           .send({email, password: newPass})
           .expect(303)
@@ -885,7 +911,7 @@ describe('/users', () => {
           'here is a valid user email',
       (done) => {
         let email = 'tjscollins@gmail.com';
-        request(app)
+        app
           .post('/users/reset')
           .send({email})
           .expect(200)
@@ -908,7 +934,7 @@ describe('/users', () => {
 
       it('should trim and toLowerCase user email address before checking if valid', (done) => {
         let email = 'TJscollins@gmail.com  ';
-        request(app)
+        app
           .post('/users/reset')
           .send({email})
           .expect(200)
@@ -933,7 +959,7 @@ describe('/users', () => {
           'if there is an invalid user email',
       (done) => {
         let email = 'tjmail.com';
-        request(app)
+        app
           .post('/users/reset')
           .send({email})
           .expect(400)
@@ -947,12 +973,11 @@ describe('/users', () => {
       describe('GET ', () => {
         it('should send the reset page if there is a valid reset request for that user', (done) => {
           let route = '/users/reset/585b6cd587dd7e1b8323d8d7-test@test.test';
-          request(app)
+          app
             .get(route)
             .expect(200)
             .expect((res) => {
-              expect(res.headers['cache-control']).toEqual('no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-che' +
-                  'ck=0');
+              expect(res.headers['cache-control']).toEqual('no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
               expect(res.headers['content-type']).toEqual('text/html; charset=UTF-8');
               expect(res.body).toExist();
             })
@@ -967,7 +992,7 @@ describe('/users', () => {
             'er',
         (done) => {
           let route = '/users/reset/585b6cd587dd7e1b8323d8d7-ria@example.com';
-          request(app)
+          app
             .get(route)
             .expect(403)
             .end((err, res) => {

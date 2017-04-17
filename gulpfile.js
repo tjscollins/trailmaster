@@ -84,11 +84,13 @@ const SCSS = {
 gulp.task('static', [
   'fonts', 'img',
 ], () => {});
+
 gulp.task('fonts', () => {
   return gulp
     .src(FONTS. in)
     .pipe(gulp.dest(FONTS.out));
 });
+
 gulp.task('img', () => {
   return gulp
     .src(IMG. in)
