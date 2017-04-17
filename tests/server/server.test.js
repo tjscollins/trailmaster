@@ -33,12 +33,11 @@ beforeEach(populateServer);
 
 describe('/', () => {
   describe('GET', () => {
-    it('should respond with some rendered html', (done) => {
+    it('should respond with some valid rendered html', (done) => {
       request(app)
         .get('/')
         .expect(200)
         .expect((res) => {
-          expect(typeof res.text).toBe('string');
           expect(res.text.length > 0).toBe(true);
           expect(isHTML(res.text)).toBe(true);
         })

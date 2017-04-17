@@ -4,9 +4,21 @@ const TrailModel = mongoose.model('Trail', new mongoose.Schema({
   bounds: {
     latitude: {
       type: Number,
+      validate: {
+        validator: (lat) => {
+          return lat < 90 && lat > -90;
+        },
+        message: '{VALUE} is not a valid latitude',
+      }
     },
     longitude: {
       type: Number,
+      validate: {
+        validator: (lng) => {
+          return lng < 180 && lng > -180;
+        },
+        message: '{VALUE} is not a valid longitude',
+      }
     },
     latitudeDelta: {
       type: Number,
@@ -30,19 +42,19 @@ const TrailModel = mongoose.model('Trail', new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   desc: {
     type: String,
-    trim: true
+    trim: true,
   },
   date: {
     type: String,
-    required: true
+    required: true,
   },
   _creator: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true
+    required: true,
   }
 }));
 
