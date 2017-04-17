@@ -4,9 +4,9 @@
   "description": "Trail Mapping Application",
   "main": "server.js",
   "scripts": {
-    "server-test": "export NODE_ENV=test || SET NODE_ENV=test && istanbul cover _mocha tests/server/**/*test.js -- -t 10000",
+    "server-test": "export NODE_ENV=test || SET NODE_ENV=test && istanbul cover _mocha tests/server/**/*test.js --dir ./tests/server/coverage -- -t 10000",
     "client-test": "karma start",
-    "test": "export NODE_ENV=test || SET NODE_ENV=test && istanbul cover _mocha tests/server/**/*test.js -- -t 10000 && karma start",
+    "test": "export NODE_ENV=test || SET NODE_ENV=test && istanbul cover _mocha tests/server/**/*test.js --dir ./tests/server/coverage -- -t 10000 && karma start",
     "test-watch": "nodemon --exec 'npm test'",
     "start": "export NODE_ENV=production || SET NODE_ENV=production && node --optimize_for_size --max_old_space_size=250 --gc_interval=100 ./server.js"
   },
