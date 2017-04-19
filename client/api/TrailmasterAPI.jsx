@@ -1,5 +1,6 @@
 import $ from 'jquery';
 
+/*istanbul ignore next*/
 (function polyfills() {
   // Because PhantomJS is way behind on basic ES6 features
   if (!window.Promise) {
@@ -34,9 +35,8 @@ export const fetchData = (lat, lng, dist) => {
       }
       return acc.concat(allObjects);
     }, []);
-    // console.error(features);
     return Promise.resolve(features);
-  }).catch((error) => {
+  }).catch(/*istanbul ignore next*/ (error) => {
     return Promise.reject(error);
   });
 };
@@ -58,7 +58,6 @@ export const validateServerData = (data) => {
 };
 
 export const mapConfig = (coordinates, features) => {
-  // console.log('mapConfig called with: ', coordinates, features);
   const userSource = {
     type: 'geojson',
     data: {
@@ -247,6 +246,7 @@ export const toggleUI = (delay) => {
   }
 };
 
+/*istanbul ignore next*/
 export const month = (mo) => {
   return [
     'Jan',

@@ -64,9 +64,11 @@ module.exports = {
               'env': {
                 'development': {
                   'plugins': [
-                    'istanbul', {
-                      "exclude": ["**/*.test.js"]
-                    }
+                    [
+                      'istanbul', {
+                        'exclude': ['tests/**/*.test.jsx']
+                      }
+                    ]
                   ]
                 }
               }

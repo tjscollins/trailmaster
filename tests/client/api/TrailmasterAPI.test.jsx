@@ -11,7 +11,7 @@ import TestUtils from 'react-dom/test-utils';
 
 /*----------Components----------*/
 import {Header} from 'Header';
-import {validateServerData, fetchData} from 'TrailmasterAPI';
+import {validateServerData, fetchData, changedProps, toggleUI} from 'TrailmasterAPI';
 
 
 describe('TrailmasterAPI methods', () => {
@@ -231,6 +231,7 @@ describe('TrailmasterAPI methods', () => {
         .catch((err) => {
           done(err);
         });
+        $.get.restore();
     });
   });
 
@@ -276,6 +277,38 @@ describe('TrailmasterAPI methods', () => {
         }
       };
       expect(validateServerData(badData)).toBe(true);
+    });
+  });
+
+  describe('changedProps', () => {
+    it('should return an array of elements that have changed between two objects', () => {
+      const oldProps = {
+        a: 'a',
+        b: 'b',
+        c: 'c',
+      };
+      const nextProps = {
+        a: '1',
+        b: 'b',
+        c: '2',
+      };
+      const diffProps = [
+        ['a', '1', 'a'],
+        ['c', '2', 'c'],
+      ];
+      expect(changedProps(nextProps, oldProps)).toEqual(diffProps);
+    });
+  });
+
+  describe('toggleUI', () => {
+    it('should use jquery to manipulate DOM elements', (done) => {
+      TestUtils.renderIntoDocument(<div className='hidecontrols' />);
+      const spy = sinon.spy($('.hidecontrols'), 'hasClass');
+      toggleUI(0);
+      setTimeout(() => {
+        expect(spy.calledOnce).toBe(true);
+        done();
+      }, 10);
     });
   });
 });
