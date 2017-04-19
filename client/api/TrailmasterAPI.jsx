@@ -1,13 +1,41 @@
 import $ from 'jquery';
 
+(function polyfills() {
+  // Because PhantomJS is way behind on basic ES6 features
+  if (!window.Promise) {
+    require('es6-promise/auto');
+  }
+  if (!Array.isArray) {
+    window.Array.isArray = function(arg) {
+      return Object
+        .prototype
+        .toString
+        .call(arg) === '[object Array]';
+    };
+  }
+})();
+
 export const fetchData = (lat, lng, dist) => {
-  // console.log('Fetching data for: ', lat, lng, dist);
   return Promise.all([
     $.get(`/pois?lat=${lat}&lng=${lng}&dist=${dist}`),
-    $.get(`/routes?lat=${lat}&lng=${lng}&dist=${dist}`),
+    $.get(`/routes?lat=${lat}&lng=${lng}&dist=${dist}`)
   ]).then((data) => {
-    console.log('Fetched data: ', data);
-    return Promise.resolve(data);
+    let features = data.reduce((acc, currentObject) => {
+      let allObjects = [];
+      for (let key in currentObject) {
+        if (Array.isArray(currentObject[key])) {
+        // Validate Server Data BEFORE returning it for loading it into Redux Store
+          currentObject[key].forEach((item) => {
+            if (validateServerData(item))
+              allObjects.push(item);
+            }
+          );
+        }
+      }
+      return acc.concat(allObjects);
+    }, []);
+    // console.error(features);
+    return Promise.resolve(features);
   }).catch((error) => {
     return Promise.reject(error);
   });
@@ -42,15 +70,15 @@ export const mapConfig = (coordinates, features) => {
             'marker-color': 'cyan',
             'marker-size': 'large',
             'marker-symbol': 'icon-color',
-            'name': 'You',
+            'name': 'You'
           },
           geometry: {
             type: 'Point',
-            coordinates,
-          },
-        },
-      ],
-    },
+            coordinates
+          }
+        }
+      ]
+    }
   };
   const userLayer = {
     'id': 'You Are Here',
@@ -61,15 +89,15 @@ export const mapConfig = (coordinates, features) => {
       'icon-size': 2,
       'text-field': '{name}',
       'text-font': [
-        'Open Sans Regular', 'Arial Unicode MS Regular',
+        'Open Sans Regular', 'Arial Unicode MS Regular'
       ],
       'text-size': 10,
       'text-offset': [
-        0, 1,
+        0, 1
       ],
       'text-anchor': 'top',
-      'visibility': 'visible',
-    },
+      'visibility': 'visible'
+    }
   };
 
   const geoJSONSource = {
@@ -90,7 +118,9 @@ export const mapConfig = (coordinates, features) => {
    * @return {OBJECT}        passed to mapbox-gl.Map.addLayer
    */
   function addGeoJSONLayers(feature, map) {
-    const {properties: {name}, geometry} = feature;
+    const {properties: {
+        name
+      }, geometry} = feature;
     let type = '';
     let layout = {};
     switch (geometry.type) {
@@ -100,14 +130,14 @@ export const mapConfig = (coordinates, features) => {
           'icon-image': 'marker-15',
           'text-field': '{name}',
           'text-font': [
-            'Open Sans Regular', 'Arial Unicode MS Regular',
+            'Open Sans Regular', 'Arial Unicode MS Regular'
           ],
           'text-size': 10,
           'text-offset': [
-            0, 0.6,
+            0, 0.6
           ],
           'text-anchor': 'top',
-          'visibility': 'none',
+          'visibility': 'none'
         };
         break;
       case 'LineString':
@@ -115,7 +145,7 @@ export const mapConfig = (coordinates, features) => {
         layout = {
           'line-join': 'round',
           'line-cap': 'round',
-          'visibility': 'none',
+          'visibility': 'none'
         };
         // Create Text Label for LineString layers
         map.addLayer({
@@ -125,14 +155,14 @@ export const mapConfig = (coordinates, features) => {
           'layout': {
             'text-field': '{name}',
             'text-font': [
-              'Open Sans Regular', 'Arial Unicode MS Regular',
+              'Open Sans Regular', 'Arial Unicode MS Regular'
             ],
             'text-size': 10,
             'text-offset': [
-              0, 0.6,
+              0, 0.6
             ],
             'text-anchor': 'top',
-            'visibility': 'none',
+            'visibility': 'none'
           },
           'filter': ['==', 'name', name]
         });
@@ -145,15 +175,12 @@ export const mapConfig = (coordinates, features) => {
       type,
       'source': 'geoJSON',
       layout,
-      'filter': [
-        '==', 'name', name,
-      ],
+      'filter': ['==', 'name', name]
     });
   }
 
   return {userSource, userLayer, geoJSONSource, addGeoJSONLayers};
 };
-
 
 /**
  * changedProps - utility function to identify which properties have changed
@@ -188,8 +215,7 @@ export function positionChanged(posOne, posTwo, minDistance) {
    *              the number of minDistance intervals in one degree of latitude.
    */
   const SENSITIVITY = 364320 / minDistance;
-  return (Math.floor(posOne.latitude*SENSITIVITY) !== Math.floor(posTwo.latitude*SENSITIVITY) ||
-    Math.floor(posOne.latitude*SENSITIVITY) !== Math.floor(posTwo.latitude*SENSITIVITY));
+  return (Math.floor(posOne.latitude * SENSITIVITY) !== Math.floor(posTwo.latitude * SENSITIVITY) || Math.floor(posOne.latitude * SENSITIVITY) !== Math.floor(posTwo.latitude * SENSITIVITY));
 }
 
 /*istanbul ignore next*/
@@ -222,5 +248,18 @@ export const toggleUI = (delay) => {
 };
 
 export const month = (mo) => {
-  return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dev'][mo];
+  return [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dev'
+  ][mo];
 };

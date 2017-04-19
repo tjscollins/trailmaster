@@ -6,7 +6,8 @@ module.exports = {
     'script-loader!jquery/dist/jquery.min.js', 'script-loader!bootstrap-sass/assets/javascripts/bootstrap.min.js', './client/react/react-app.jsx'
   ],
   externals: {
-    jquery: 'jQuery'
+    jquery: 'jQuery',
+    // sinon: 'sinon',
   },
   plugins: [new webpack.DefinePlugin({
       'process.env': {

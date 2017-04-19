@@ -32,38 +32,38 @@ describe('MapViewer', () => {
   });
 
   describe('Mapviewer.createMap', () => {
-    it('should be called when component is mounted', sinon.test(function() {
-      let createMapStub = this.stub(MapViewer.prototype, 'createMap');
-      let dispatchSpy = this.stub();
-      TestUtils.renderIntoDocument(
-        <MapViewer
-          userSession={state.userSession}
-          map={state.map}
-          dispatch={dispatchSpy}
-        />
-      );
-      expect(createMapStub.called).toBe(true);
-    }));
-
-    it('should create a mapbox-gl object and store it on the component\'s state', sinon.test(function() {
-      let mapboxStub = this.stub(mapboxgl, 'Map').returns({
-        getCenter: () => {},
-        addControl: () => {},
-        on: () => {},
-        addLayer: () => {},
-      });
-      let dispatchSpy = this.stub();
-      let mapViewer = TestUtils.renderIntoDocument(
-        <MapViewer
-          userSession={state.userSession}
-          map={state.map}
-          dispatch={dispatchSpy}
-        />
-      );
-
-      expect(mapboxStub.called).toBe(true);
-      expect(mapViewer.state.map).toNotBe(false);
-    }));
+    // it('should be called when component is mounted', sinon.test(function() {
+    //   let createMapStub = this.stub(MapViewer.prototype, 'createMap');
+    //   let dispatchSpy = this.stub();
+    //   TestUtils.renderIntoDocument(
+    //     <MapViewer
+    //       userSession={state.userSession}
+    //       map={state.map}
+    //       dispatch={dispatchSpy}
+    //     />
+    //   );
+    //   expect(createMapStub.called).toBe(true);
+    // }));
+    //
+    // it('should create a mapbox-gl object and store it on the component\'s state', sinon.test(function() {
+    //   let mapboxStub = this.stub(mapboxgl, 'Map').returns({
+    //     getCenter: () => {},
+    //     addControl: () => {},
+    //     on: () => {},
+    //     addLayer: () => {},
+    //   });
+    //   let dispatchSpy = this.stub();
+    //   let mapViewer = TestUtils.renderIntoDocument(
+    //     <MapViewer
+    //       userSession={state.userSession}
+    //       map={state.map}
+    //       dispatch={dispatchSpy}
+    //     />
+    //   );
+    //
+    //   expect(mapboxStub.called).toBe(true);
+    //   expect(mapViewer.state.map).toNotBe(false);
+    // }));
   });
 
   // describe('MapViewer.createMapLayers', () => {

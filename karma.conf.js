@@ -3,10 +3,12 @@ const webpackConfig = require('./webpack.config.dev.js');
 module.exports = function(config) {
   config.set({
     autowatch: false,
-    browsers: [
-      'PhantomJS',
-    ],
+    browsers: ['PhantomJS'],
     browserNoActivityTimeout: 100000,
+    browserConsoleLogOptions: {
+      terminal: true,
+      level: '',
+    },
     client: {
       captureConsole: true,
       mocha: {
@@ -22,19 +24,23 @@ module.exports = function(config) {
           subdir: 'html'
         }, {
           type: 'text-summary'
-        },
+        }
       ]
     },
     files: [
-      'node_modules/jquery/dist/jquery.min.js',
-      'tests/client/**/*.test.js',
-      'tests/client/**/*.test.jsx',
+      'node_modules/jquery/dist/jquery.min.js', 'tests/client/**/*.test.js', 'tests/client/**/*.test.jsx'
     ],
     frameworks: [
-      'mocha', 'sinon',
+      'mocha', 'sinon'
     ],
     plugins: [
-      'karma-phantomjs-launcher', 'karma-mocha', 'karma-sourcemap-loader', 'karma-webpack', 'karma-coverage', 'karma-mocha-reporter', 'karma-sinon',
+      'karma-phantomjs-launcher',
+      'karma-mocha',
+      'karma-sourcemap-loader',
+      'karma-webpack',
+      'karma-coverage',
+      'karma-mocha-reporter',
+      'karma-sinon'
     ],
     preprocessors: {
       'tests/client/**/*.test.js': [
@@ -42,15 +48,15 @@ module.exports = function(config) {
       ],
       'tests/client/**/*.test.jsx': [
         'webpack', 'sourcemap', //'coverage',
-      ],
+      ]
     },
     reporters: [
-      'mocha', 'coverage',
+      'mocha', 'coverage'
     ],
     singleRun: true,
     webpack: webpackConfig,
     webpackServer: {
-      noInfo: true,
-    },
+      noInfo: true
+    }
   });
 };

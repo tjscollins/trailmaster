@@ -330,28 +330,13 @@ export class MapViewer extends Component {
       },
       dispatch
     } = props;
-    fetchData(latitude, longitude, distanceFilter).then((data) => {
-      // console.log('Fetching data within: ', distanceFilter);
-      let features = data.reduce((acc, currentObject) => {
-        let allObjects = [];
-        for (let key in currentObject) {
-          // Validate Server Data BEFORE loading it into Redux Store
-          if (Array.isArray(currentObject[key])) {
-            currentObject[key].forEach((item) => {
-              if (validateServerData(item))
-                allObjects.push(item);
-              }
-            );
-          }
-        }
-        return acc.concat(allObjects);
-      }, []);
-      console.log(features);
-      dispatch(actions.replaceGeoJSON(features));
-      this.createMapLayers(features, props);
-    }).catch((error) => {
-      throw error;
-    });
+    fetchData(latitude, longitude, distanceFilter)
+      .then((features) => {
+        dispatch(actions.replaceGeoJSON(features));
+        this.createMapLayers(features, props);
+      }).catch((error) => {
+        throw error;
+      });
   }
 
   shouldDisplay(layerName, search, props) {
