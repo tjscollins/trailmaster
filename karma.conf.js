@@ -28,7 +28,9 @@ module.exports = function(config) {
       ]
     },
     files: [
-      'node_modules/jquery/dist/jquery.min.js', 'tests/client/**/*.test.js', 'tests/client/**/*.test.jsx'
+      'node_modules/jquery/dist/jquery.min.js',
+      'tests/client/**/*.test.js',
+      'tests/client/**/*.test.jsx'
     ],
     frameworks: [
       'mocha', 'sinon'

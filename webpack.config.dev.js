@@ -20,12 +20,10 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'mapboxgl': 'mapbox-gl/dist/mapbox-gl.js',
+      'mapboxgl': 'mapbox-gl/dist/mapbox-gl.js'
     },
     modules: [
-      __dirname,
-      'node_modules',
-      path.join(__dirname, 'client/api'),
+      __dirname, 'node_modules', path.join(__dirname, 'client/api'),
       path.join(__dirname, 'client/react'),
       path.join(__dirname, 'client/react/components'),
       path.join(__dirname, 'client/react/components/controls/PoI_Controls'),
@@ -33,7 +31,7 @@ module.exports = {
       path.join(__dirname, 'client/react/components/controls/Trail_Controls'),
       path.join(__dirname, 'client/redux')
     ],
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx']
   },
   module: {
     rules: [
@@ -65,7 +63,11 @@ module.exports = {
               'plugins': [],
               'env': {
                 'development': {
-                  'plugins': ['istanbul']
+                  'plugins': [
+                    'istanbul', {
+                      "exclude": ["**/*.test.js"]
+                    }
+                  ]
                 }
               }
             }
