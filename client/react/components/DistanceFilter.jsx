@@ -1,5 +1,6 @@
 /*----------Modules----------*/
 import React from 'react';
+import PropTypes from 'prop-types';
 import $ from 'jquery';
 
 /*----------Components----------*/
@@ -57,5 +58,10 @@ export class DistanceFilter extends BaseComponent {
     );
   }
 }
+
+DistanceFilter.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  userSession: PropTypes.object.isRequired,
+};
 
 export default connect((state) => state)(DistanceFilter);
