@@ -6,7 +6,7 @@ import expect from 'expect';
 /*-----------React----------*/
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
 /*----------Components----------*/
 import {Header} from 'Header';
 import {validateServerData} from 'TrailmasterAPI';
