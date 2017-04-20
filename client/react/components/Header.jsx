@@ -1,5 +1,6 @@
 /*----------Modules----------*/
 import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import $ from 'jquery';
 import uuid from 'uuid';
@@ -29,7 +30,7 @@ export class Header extends BaseComponent {
         dispatch(actions.clearTrails());
       },
       error: function(jqXHR, status, err) {
-        console.error(`Error logging out: ${err}`, jqXHR);
+        console.error(`Error logging out: ${status} ${err}`, jqXHR);
       },
     });
   }
@@ -53,22 +54,37 @@ export class Header extends BaseComponent {
           <li key={uuid()}>
             <a href='#' onClick={this.showLogin}>Sign-in</a>
           </li>
-        ),];
+        )];
   }
+  /*istanbul ignore next*/
   setDistanceFilter() {
     $('#distance-filter').modal('show');
   }
+  /*istanbul ignore next*/
   setMockLocation() {
     $('#mock-location').modal('show');
   }
+  /*istanbul ignore next*/
   showAccountCreator() {
     $('#account-creator').modal('show');
   }
+  /*istanbul ignore next*/
   showFAQ() {
     $('#faq-modal').modal('show');
   }
+  /*istanbul ignore next*/
   showLogin() {
     $('#login-modal').modal('show');
+  }
+  /*istanbul ignore next*/
+  toggleHeader() {
+    if ($('button.navbar-toggle').hasClass('collapsed')) {
+      setTimeout(() => {
+        $('nav').css('height', '50px');
+      }, 350);
+    } else {
+      $('nav').css('height', 'auto');
+    }
   }
   toggleAutoCenter() {
     this
@@ -94,15 +110,7 @@ export class Header extends BaseComponent {
             data-toggle='collapse'
             data-target='#navbarui'
             aria-expanded='false'
-            onClick={() => {
-              if ($('button.navbar-toggle').hasClass('collapsed')) {
-                setTimeout(() => {
-                  $('nav').css('height', '50px');
-                }, 350);
-              } else {
-                $('nav').css('height', 'auto');
-              }
-            }}>
+            onClick={this.toggleHeader}>
             <span className='sr-only'>Toggle navigation</span>
             <span className='icon-bar' />
             <span className='icon-bar' />
@@ -123,7 +131,7 @@ export class Header extends BaseComponent {
                 role='button'
                 aria-haspopup='true'
                 aria-expanded='false'>Settings
-                <span className='caret'/></a>
+                <span className='caret' /></a>
               <ul className='dropdown-menu'>
                 <li>
                   <a
@@ -139,11 +147,6 @@ export class Header extends BaseComponent {
                 <li>
                   <a href='#' onClick={this.setMockLocation}>Search Near</a>
                 </li>
-                {/* <li><a href='#'>Something else here</a></li>
-                  <li role='separator' className='divider'></li>
-                  <li><a href='#'>Separated link</a></li>
-                  <li role='separator' className='divider'></li>
-                <li><a href='#'>One more separated link</a></li> */}
               </ul>
             </li>
 
@@ -151,8 +154,8 @@ export class Header extends BaseComponent {
               <a
                 onClick={this.showFAQ}
                 style={{
-                cursor: 'pointer'
-              }}>FAQ</a>
+                  cursor: 'pointer'
+                }}>FAQ</a>
             </li>
           </ul>
         </div>
@@ -160,5 +163,10 @@ export class Header extends BaseComponent {
     );
   }
 }
+
+Header.propTypes = {
+  dispatch: PropTypes.func,
+  userSession: PropTypes.object,
+};
 
 export default connect((state) => state)(Header);

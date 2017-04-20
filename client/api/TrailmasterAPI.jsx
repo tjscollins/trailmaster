@@ -1,20 +1,5 @@
 import $ from 'jquery';
-
-/*istanbul ignore next*/
-(function polyfills() {
-  // Because PhantomJS is way behind on basic ES6 features
-  if (!window.Promise) {
-    require('es6-promise/auto');
-  }
-  if (!Array.isArray) {
-    window.Array.isArray = function(arg) {
-      return Object
-        .prototype
-        .toString
-        .call(arg) === '[object Array]';
-    };
-  }
-})();
+import distance from '@turf/distance';
 
 export const fetchData = (lat, lng, dist) => {
   return Promise.all([
@@ -25,7 +10,7 @@ export const fetchData = (lat, lng, dist) => {
       let allObjects = [];
       for (let key in currentObject) {
         if (Array.isArray(currentObject[key])) {
-        // Validate Server Data BEFORE returning it for loading it into Redux Store
+          // Validate Server Data BEFORE returning it for loading it into Redux Store
           currentObject[key].forEach((item) => {
             if (validateServerData(item))
               allObjects.push(item);
@@ -36,7 +21,8 @@ export const fetchData = (lat, lng, dist) => {
       return acc.concat(allObjects);
     }, []);
     return Promise.resolve(features);
-  }).catch(/*istanbul ignore next*/ (error) => {
+  }).catch(/*istanbul ignore next*/
+  (error) => {
     return Promise.reject(error);
   });
 };
@@ -182,8 +168,8 @@ export const mapConfig = (coordinates, features) => {
 };
 
 /**
- * changedProps - utility function to identify which properties have changed
- *                in the props object
+ * changedProps - utility function to return a list of properties
+ *                that have changed in the props object
  *
  * @param  {OBJECT} nextProps new props object
  * @param  {OBJECT} oldProps  old props object
@@ -199,22 +185,34 @@ export function changedProps(nextProps, oldProps) {
   return list;
 }
 
+
 /**
- * positionChanged - returns true of position changed by more than a certain fraction
- *                    of a degree in either direction.
- *
- * @param  {type} posOne description
- * @param  {type} posTwo description
- * @return {type}        description
- */
+* positionChanged - returns true if position changed by more than a certain fraction
+*                    of a degree in either direction.
+*
+* @param  {object} posOne      {latitude, longitude}
+* @param  {object} posTwo      {latitude, longitude}
+* @param  {number} minDistance distance in feet
+* @return {BOOLEAN}
+*/
 export function positionChanged(posOne, posTwo, minDistance) {
-  /**
-   * minDistance determines the minimum position change to register as a new position.
-   *              Its value represents a distance in feet, while SENSITIVITY represents
-   *              the number of minDistance intervals in one degree of latitude.
-   */
-  const SENSITIVITY = 364320 / minDistance;
-  return (Math.floor(posOne.latitude * SENSITIVITY) !== Math.floor(posTwo.latitude * SENSITIVITY) || Math.floor(posOne.latitude * SENSITIVITY) !== Math.floor(posTwo.latitude * SENSITIVITY));
+  const point1 = {
+    'type': 'Feature',
+    'properties': {},
+    'geometry': {
+      'type': 'Point',
+      'coordinates': [posOne.latitude, posOne.longitude]
+    }
+  };
+  const point2 = {
+    'type': 'Feature',
+    'properties': {},
+    'geometry': {
+      'type': 'Point',
+      'coordinates': [posTwo.latitude, posTwo.longitude]
+    }
+  };
+  return distance(point1, point2, 'miles') >= minDistance/5280;
 }
 
 /*istanbul ignore next*/
@@ -246,7 +244,6 @@ export const toggleUI = (delay) => {
   }
 };
 
-/*istanbul ignore next*/
 export const month = (mo) => {
   return [
     'Jan',
@@ -260,6 +257,6 @@ export const month = (mo) => {
     'Sep',
     'Oct',
     'Nov',
-    'Dev'
+    'Dec'
   ][mo];
 };
