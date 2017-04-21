@@ -72,5 +72,6 @@ describe('Import', () => {
     importComponent.importData();
     expect(dispatch.calledTwice).toBe(true);
     expect(ajax.calledOnce).toBe(true);
+    ajax.restore();
   });
 });

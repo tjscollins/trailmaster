@@ -18,8 +18,8 @@ export class Login extends BaseComponent {
     };
   }
   create() {
-    var {dispatch} = this.props;
-    var createAccountRequest = $.ajax({
+    const {dispatch} = this.props;
+    const createAccountRequest = $.ajax({
       url: '/users',
       type: 'post',
       beforeSend: function(request) {
@@ -36,6 +36,7 @@ export class Login extends BaseComponent {
       console.error(`Error creating account: ${err}`, jqXHR);
     });
   }
+  /*istanbul ignore next*/
   forgotPassword() {
     $('#login-modal').modal('hide');
     $('#pw-recovery').modal('show');
@@ -83,11 +84,11 @@ export class Login extends BaseComponent {
               </div>
               <div className='modal-body'>
                 <form ref='loginForm' onSubmit={this.login}>
-                  <input className='form-control' ref='email' type='text' placeholder='Email'/>
-                  <input className='form-control' ref='password' type='password' placeholder='Password'/>
+                  <input className='form-control' ref='email' type='text' placeholder='Email' />
+                  <input className='form-control' ref='password' type='password' placeholder='Password' />
                   <button type='submit' style={{
                     display: 'none'
-                  }}/>
+                  }} />
                 </form>
               </div>
               <div className='modal-footer'>
@@ -116,12 +117,11 @@ export class Login extends BaseComponent {
               </div>
               <div className='modal-body'>
                 <form ref='loginForm'>
-                  <input className='form-control' ref='createEmail' type='text' placeholder='Email'/>
-                  <input className='form-control' ref='createPassword' type='password' placeholder='Password'/>
+                  <input className='form-control' ref='createEmail' type='text' placeholder='Email' />
+                  <input className='form-control' ref='createPassword' type='password' placeholder='Password' />
                 </form>
               </div>
               <div className='modal-footer'>
-
                 <div>
                   <button onClick={this.create} type='submit' className='btn btn-primary' data-dismiss='modal'>Create</button>
                 </div>
@@ -134,4 +134,4 @@ export class Login extends BaseComponent {
   }
 }
 
-export default connect(state => state)(Login);
+export default connect((state) => state)(Login);
