@@ -16,9 +16,8 @@ import PasswordRecovery from 'PasswordRecovery';
 import UpdatePOIorRoute from 'UpdatePOIorRoute';
 
 export class MainContainer extends BaseComponent {
-  constructor() {
-    super();
-  }
+  // Cannot test in PhantomJS due to mapbox issues in MapViewer
+  /*istanbul ignore next*/
   render() {
     return (
       <div>
