@@ -38,7 +38,7 @@ module.exports = {
   module: {
     rules: [
       { // For loading Markdown
-        test: /\.(txt|md)$/,
+        test: /\.(txt|md|gpx)$/,
         loader: 'raw-loader'
       },
       // Loader for JSON, used in some tests

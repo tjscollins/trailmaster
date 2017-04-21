@@ -215,8 +215,8 @@ export function positionChanged(posOne, posTwo, minDistance) {
   return distance(point1, point2, 'miles') >= minDistance/5280;
 }
 
-/*istanbul ignore next*/
-export const toggleUI = (delay) => {
+
+export const toggleUI = (delay) => /*istanbul ignore next*/{
   if ($('.hidecontrols').hasClass('fa-arrow-left')) {
     // hide UI
     if (!$('button.navbar-toggle').hasClass('collapsed')) {

@@ -1,5 +1,6 @@
 /*----------Modules----------*/
 import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import toGeoJSON from '@mapbox/togeojson';
 import {DOMParser} from 'xmldom';
@@ -24,27 +25,27 @@ export class Import extends BaseComponent {
     };
   }
   dataEntry() {
-    var {data} = this.refs;
-    var dataDOM = new DOMParser().parseFromString(data.value);
-    var importedGeoJSON = this.state.dataType === 'kml'
+    const {data} = this.refs;
+    const dataDOM = new DOMParser().parseFromString(data.value);
+    const importedGeoJSON = this.state.dataType === 'kml'
       ? toGeoJSON.kml(dataDOM)
       : toGeoJSON.gpx(dataDOM);
     this.setState({importedGeoJSON: importedGeoJSON});
   }
   formChange(e) {
-    var {
+    const {
       name, desc, cond,
       // data,
       gpx,
       kml,
     } = this.refs;
-    var {features} = this.state.importedGeoJSON;
+    const {features} = this.state.importedGeoJSON;
     if (Object.keys(features[0]).length === 0)
       return;
     if (e.target === gpx || e.target === kml) {
       this.setState({dataType: e.target.value});
     }
-    var newGeoJSON = {
+    const newGeoJSON = {
       ...this.state.importedGeoJSON,
       features: [
         {
@@ -61,14 +62,14 @@ export class Import extends BaseComponent {
     this.setState({importedGeoJSON: newGeoJSON});
   }
   importData() {
-    var {
+    const {
       name, desc, cond,
       // data,
       // gpx,
       // kml,
     } = this.refs;
-    var {dispatch} = this.props;
-    var routeList = this
+    const {dispatch} = this.props;
+    const routeList = this
       .state
       .importedGeoJSON
       .features[0]
@@ -80,18 +81,18 @@ export class Import extends BaseComponent {
           point[1],
         ];
       });
-    var date = new Date();
-    var newFeature = {
+    const date = new Date();
+    const newFeature = {
       type: 'Feature',
       properties: {
-        stroke: '#555555',
+        'stroke': '#555555',
         'stroke-width': 2,
         'stroke-opacity': 1,
-        name: name.value,
-        desc: desc.value,
-        condition: cond.value,
-        last: `${month(date.getMonth())} ${date.getFullYear()}`,
-        displayed: false,
+        'name': name.value,
+        'desc': desc.value,
+        'condition': cond.value,
+        'last': `${month(date.getMonth())} ${date.getFullYear()}`,
+        'displayed': false,
       },
       geometry: {
         type: 'LineString',
@@ -117,37 +118,46 @@ export class Import extends BaseComponent {
   }
   render() {
     return (
-      <div id="import-route" className="modal fade">
-        <div className="modal-dialog" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+      <div id='import-route' className='modal fade'>
+        <div className='modal-dialog' role='document'>
+          <div className='modal-content'>
+            <div className='modal-header'>
+              <button type='button' className='close' data-dismiss='modal' aria-label='Close'>
+                <span aria-hidden='true'>&times;</span>
               </button>
-              <h4 className="modal-title">Import Route from {/*KML or*/}
+              <h4 className='modal-title'>Import Route from {/*KML or*/}
               GPX file</h4>
             </div>
-            <div className="modal-body">
+            <div className='modal-body'>
               <p>Instructions:</p>
-              <p>Fill out name, description, and current known condition of the route. Paste the contents from your {/*KML or */}GPX file into the box below. Based on the map view of the route, you can delete/trim the series of GPS coordinates from your data until only the section you want remains</p>
-              <form onSubmit={this.importData} onChange={this.formChange} id="importform" ref="importform">
-                <input className="form-control" ref="name" type="text" placeholder="Name"/>
-                <input className="form-control" ref="desc" type="text" placeholder="Description"/>
-                <input className="form-control" ref="cond" type="text" placeholder="Condition"/>
-                <textarea onChange={this.dataEntry} className="form-control" ref="data" rows="10" wrap="soft" required placeholder="Paste Route Data Here"/>
+              <p>Fill out name, description, and current known condition of the route. Paste
+                the contents from your {/*KML or */}GPX file into the box below. Based on the
+                map view of the route, you can delete/trim the series of GPS coordinates from
+              your data until only the section you want remains</p>
+              <form onSubmit={this.importData} onChange={this.formChange} id='importform' ref='importform'>
+                <input className='form-control' ref='name' type='text' placeholder='Name' />
+                <input className='form-control' ref='desc' type='text' placeholder='Description' />
+                <input className='form-control' ref='cond' type='text' placeholder='Condition' />
+                <textarea
+                  onChange={this.dataEntry}
+                  className='form-control'
+                  ref='data'
+                  rows='10'
+                  wrap='soft'
+                  required placeholder='Paste Route Data Here' />
 
-                <div className="form-check">
-                  <label className="form-check-label">
+                <div className='form-check'>
+                  <label className='form-check-label'>
                     Data Type: &nbsp;
-                    <input type="radio" name="data-type" ref="gpx" value="gpx" defaultChecked={this.state.dataType === 'gpx'}/>
-                    GPX &nbsp; {/* <input type="radio" name="data-type" ref="kml" value="kml" checked={this.state.dataType === 'kml'}/>
+                    <input type='radio' name='data-type' ref='gpx' value='gpx' defaultChecked={this.state.dataType === 'gpx'} />
+                    GPX &nbsp; {/* <input type='radio' name='data-type' ref='kml' value='kml' checked={this.state.dataType === 'kml'}/>
                     KML */}
                   </label>
                 </div>
               </form>
             </div>
-            <div className="modal-footer">
-              <button onClick={this.importData} type="submit" className="btn btn-secondary" data-dismiss="modal">Import</button>
+            <div className='modal-footer'>
+              <button onClick={this.importData} type='submit' className='btn btn-secondary' data-dismiss='modal'>Import</button>
             </div>
           </div>
         </div>
@@ -156,4 +166,8 @@ export class Import extends BaseComponent {
   }
 }
 
-export default connect(state => state)(Import);
+Import.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+};
+
+export default connect((state) => state)(Import);
