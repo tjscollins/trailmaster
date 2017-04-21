@@ -241,7 +241,6 @@ export class MapViewer extends Component {
    *                        certain situations.
    */
   createMapLayers(features, props) {
-    // console.log('MapViewer createMapLayers called with:', features, props);
     const {layerIDs, map} = this.state;
     const {
       userSession: {
@@ -288,7 +287,6 @@ export class MapViewer extends Component {
           }, geometry: {
             type
           }} = feature;
-        // console.log(feature, name, type, map);
         let layerType = type === 'Point'
           ? 'symbol'
           : 'line';
@@ -308,7 +306,6 @@ export class MapViewer extends Component {
       console.error(error);
       debugger;
     }
-    // console.log('Finished createMapLayers');
   }
 
   /**

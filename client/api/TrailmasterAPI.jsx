@@ -212,7 +212,12 @@ export function positionChanged(posOne, posTwo, minDistance) {
       'coordinates': [posTwo.latitude, posTwo.longitude]
     }
   };
-  return distance(point1, point2, 'miles') >= minDistance/5280;
+
+  if (posOne.latitude && posOne.longitude && posTwo.latitude && posTwo.longitude) {
+    return distance(point1, point2, 'miles') >= minDistance/5280;
+  } else {
+    return false;
+  }
 }
 
 

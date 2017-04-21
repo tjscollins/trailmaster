@@ -1,19 +1,9 @@
 /*----------Modules----------*/
-import React from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import $ from 'jquery';
 
-/*----------Components----------*/
-import BaseComponent from 'BaseComponent';
-
-/*----------Redux----------*/
-import * as actions from 'actions';
-
-export class LoadingIndicator extends BaseComponent {
-  constructor() {
-    super();
-  }
-
+export class LoadingIndicator extends Component {
   render() {
     const {loading} = this.props;
     const loadingStyle = {
@@ -26,42 +16,49 @@ export class LoadingIndicator extends BaseComponent {
       'background': 'rgba(0,0,0,0.5)'
     };
     return loading
-      ? (<div className='loading-indicator' style={loadingStyle}>
-        <div
-          className='uil-spin-css'
-          style={{
-            transform: 'scale(0.6)'
-          }}>
-          <div>
-            <div />
-          </div>
-          <div>
-            <div />
-          </div>
-          <div>
-            <div />
-          </div>
-          <div>
-            <div />
-          </div>
-          <div>
-            <div />
-          </div>
-          <div>
-            <div />
-          </div>
-          <div>
-            <div />
-          </div>
-          <div>
-            <div />
+      ? (
+        <div>
+          <div className='loading-indicator' style={loadingStyle}>
+            <div
+              className='uil-spin-css'
+              style={{
+                transform: 'scale(0.6)'
+              }}>
+              <div>
+                <div />
+              </div>
+              <div>
+                <div />
+              </div>
+              <div>
+                <div />
+              </div>
+              <div>
+                <div />
+              </div>
+              <div>
+                <div />
+              </div>
+              <div>
+                <div />
+              </div>
+              <div>
+                <div />
+              </div>
+              <div>
+                <div />
+              </div>
+            </div>
           </div>
         </div>
-      </div>)
+      )
       : <div />;
   }
 }
 
+LoadingIndicator.propTypes = {
+  loading: PropTypes.bool
+};
 
 /**
  * mapStateToProps - convert redux store to component props
