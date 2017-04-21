@@ -192,10 +192,13 @@ export function changedProps(nextProps, oldProps) {
 *
 * @param  {object} posOne      {latitude, longitude}
 * @param  {object} posTwo      {latitude, longitude}
-* @param  {number} minDistance distance in feet
+* @param  {number} minDistance distance in feet, defaults to ~10m
 * @return {BOOLEAN}
 */
-export function positionChanged(posOne, posTwo, minDistance) {
+export function positionChanged(posOne, posTwo, minDistance = 30) {
+  const validInput = [posOne.latitude, posOne.longitude, posTwo.latitude, posTwo.longitude].every((n) => {
+    return !Number.isNaN(n);
+  });
   const point1 = {
     'type': 'Feature',
     'properties': {},
@@ -212,12 +215,7 @@ export function positionChanged(posOne, posTwo, minDistance) {
       'coordinates': [posTwo.latitude, posTwo.longitude]
     }
   };
-
-  if (posOne.latitude && posOne.longitude && posTwo.latitude && posTwo.longitude) {
-    return distance(point1, point2, 'miles') >= minDistance/5280;
-  } else {
-    return false;
-  }
+  return validInput && distance(point1, point2, 'miles') >= minDistance/5280;
 }
 
 

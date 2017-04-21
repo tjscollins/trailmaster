@@ -56,14 +56,13 @@ if (typeof ISOMORPHIC_WEBPACK === 'undefined') {
         },
         gpsTracking: {
           mock
-        }
+        },
       }
     } = store.getState();
     if (positionChanged({
       latitude,
       longitude
-    }, pos) && !mock) {
-      // console.log('positionChanged', pos);
+    }, pos.coords) && !mock) {
       store.dispatch(actions.updatePOS(pos));
     }
     if (store.getState().userSession.trackingRoute)

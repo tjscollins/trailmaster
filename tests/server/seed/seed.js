@@ -240,27 +240,7 @@ const routes = [
         [145.729629993439, 15.1659725498252]
       ]
     }
-  },
-{
-  _creator: userOneID,
-  _id: new ObjectID('587df765d96e98209375e82a'),
-  type: 'Feature',
-  properties: {
-    'stroke': '#555555',
-    'stroke-width': 2,
-    'stroke-opacity': 1,
-    'name': 'Damaged Data',
-    'desc': 'garbage',
-    'condition': 'needs to be ignored by map',
-    'last': 'Dec 2015',
-    'displayed': false,
-    'id': '1'
-  },
-  geometry: {
-    type: 'LineString',
-    coordinates: []
   }
-}
 ];
 
 const trails = [

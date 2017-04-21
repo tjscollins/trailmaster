@@ -34,10 +34,6 @@ export class MapViewer extends Component {
     initCenter: true
   }
 
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     /**
      * if - Determine whether to create a new map
@@ -51,6 +47,7 @@ export class MapViewer extends Component {
       this.createMap(this.props);
     }
   }
+
   componentWillReceiveProps(nextProps) {
     // const changes = changedProps(nextProps, this.props);
     // console.log('MapViewer componentWillReceiveProps', changes);

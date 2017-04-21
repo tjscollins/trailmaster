@@ -64,7 +64,7 @@ module.exports = {
               ],
               'plugins': [],
               'env': {
-                'development': {
+                'test': {
                   'plugins': [
                     [
                       'istanbul', {

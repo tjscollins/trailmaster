@@ -1,6 +1,7 @@
 const webpackConfig = require('./webpack.config.dev.js');
 
 module.exports = function(config) {
+  process.env.NODE_ENV = 'test';
   config.set({
     autowatch: false,
     browsers: ['PhantomJS'],

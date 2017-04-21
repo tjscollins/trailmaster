@@ -29,6 +29,7 @@ const state = {
 describe('MapViewer', () => {
   it('should exist', () => {
     expect(MapViewer).toExist();
+    expect(CMapViewer).toExist();
   });
 
   describe('Mapviewer.createMap', () => {
