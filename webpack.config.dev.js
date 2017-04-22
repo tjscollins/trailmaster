@@ -9,7 +9,6 @@ module.exports = {
   ],
   externals: {
     jquery: 'jQuery',
-    // sinon: 'sinon',
   },
   plugins: [new webpack.DefinePlugin({
       'process.env': {

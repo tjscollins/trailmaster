@@ -1,6 +1,6 @@
 /*----------Modules----------*/
 import React from 'react';
-import $ from 'jquery';
+import PropTypes from 'prop-types';
 
 /*----------Components----------*/
 import BaseComponent from 'BaseComponent';
@@ -8,12 +8,10 @@ import BaseComponent from 'BaseComponent';
 /*----------Redux----------*/
 import {mockPOS, unMockPos, updateMap} from 'actions';
 import {connect} from 'react-redux';
-import {toInt} from 'validator';
+import {toFloat} from 'validator';
+import {isValidGPS} from 'TrailmasterAPI';
 
 export class MockLocation extends BaseComponent {
-  constructor() {
-    super();
-  }
   clear = (e) => {
     let {dispatch} = this.props;
     e.preventDefault();
@@ -25,16 +23,16 @@ export class MockLocation extends BaseComponent {
     // dispatch(unMockPos());
     // dispatch(updateMap());
     // Workaround is to force reloading of the page when unMocking position
-    location.reload();
+    window.location.reload();
   }
   submit = (e) => {
     let {dispatch} = this.props;
     e.preventDefault();
     $('#mock-location').modal('hide');
     let {latitude, longitude} = this.refs;
-    let lat = toInt(latitude.value);
-    let lng = toInt(longitude.value);
-    if(!Number.isNaN(lat) && !Number.isNaN(lng)) {
+    let lat = toFloat(latitude.value);
+    let lng = toFloat(longitude.value);
+    if(isValidGPS(lat, lng)) {
       dispatch(mockPOS({coords: {latitude: lat, longitude: lng}}));
       dispatch(updateMap());
     }
@@ -84,5 +82,10 @@ export class MockLocation extends BaseComponent {
     );
   }
 }
+
+MockLocation.propTypes = {
+  dispatch: PropTypes.func,
+  userSession: PropTypes.object,
+};
 
 export default connect((state) => state)(MockLocation);

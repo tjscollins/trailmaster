@@ -1,6 +1,24 @@
 import $ from 'jquery';
 import distance from '@turf/distance';
 
+
+/**
+ * isValidGPS - GPS validator that checks whether a lat & lng pair are validator
+ *              coordinates
+ *
+ * @param  {Float|Int} lat latitude value
+ * @param  {Float|Int} lng longitude value
+ * @return {Bool}     Whether lat, lng pair is valid coordinate
+ */
+export function isValidGPS(lat, lng) {
+  return !Number.isNaN(lat)
+    && !Number.isNaN(lng)
+    && lat <= 90
+    && lat >= -90
+    && lng <= 180
+    && lng >= -180;
+}
+
 export const fetchData = (lat, lng, dist) => {
   return Promise.all([
     $.get(`/pois?lat=${lat}&lng=${lng}&dist=${dist}`),
