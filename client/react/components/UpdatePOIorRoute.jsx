@@ -23,15 +23,19 @@ export class UpdatePOIorRoute extends BaseComponent {
       deletes: [],
     };
   }
+  /*istanbul ignore next*/
   deleteLast() {
     this.setState({del: 'last'});
   }
+  /*istanbul ignore next*/
   deleteFirst() {
     this.setState({del: 'first'});
   }
+  /*istanbul ignore next*/
   deleteTen() {
     this.setState({deleteN: 10});
   }
+  /*istanbul ignore next*/
   deleteHund() {
     this.setState({deleteN: 100});
   }
@@ -53,12 +57,12 @@ export class UpdatePOIorRoute extends BaseComponent {
     });
   }
   formSubmit() {
-    var {dispatch} = this.props;
+    const {dispatch} = this.props;
     this
       .state
       .map
       .remove();
-    var type = this.state.point.geometry.type === 'Point'
+    const type = this.state.point.geometry.type === 'Point'
       ? 'pois'
       : 'routes';
     $.ajax({
@@ -78,7 +82,7 @@ export class UpdatePOIorRoute extends BaseComponent {
     });
   }
   isRoute() {
-    var {point} = this.state;
+    const {point} = this.state;
     if (point) {
       return point.geometry.type === 'Point'
         ? {
@@ -96,8 +100,8 @@ export class UpdatePOIorRoute extends BaseComponent {
     }
     return features
       .map((point) => {
-        var id = point._id;
-        var {name, desc, condition, last,} = point.properties;
+        const id = point._id;
+        const {name, desc, condition, last} = point.properties;
         return name.match(new RegExp(updateSearchText, 'i'))
           ? (
             <tr onClick={this.select(point, id)} id={id} style={{
@@ -113,9 +117,9 @@ export class UpdatePOIorRoute extends BaseComponent {
       });
   }
   markForDelete() {
-    var {id} = this.state;
-    var {userSession} = this.props;
-    var type = this.state.point.geometry.type === 'Point'
+    const {id} = this.state;
+    const {userSession} = this.props;
+    const type = this.state.point.geometry.type === 'Point'
       ? 'pois'
       : 'routes';
     if (!userSession.xAuth) {
@@ -124,7 +128,7 @@ export class UpdatePOIorRoute extends BaseComponent {
     }
     if (confirm('Are you sure you want to delete this item?')) {
       $
-        .ajax({url: `/${type}/${id}`, type: 'delete',})
+        .ajax({url: `/${type}/${id}`, type: 'delete'})
         .done((data) => {
           window
             .location
@@ -134,10 +138,10 @@ export class UpdatePOIorRoute extends BaseComponent {
   }
   quickDelete(e) {
     e.preventDefault();
-    var {del, deleteN, point,} = this.state;
-    var {coordinates} = point.geometry;
+    const {del, deleteN, point} = this.state;
+    const {coordinates} = point.geometry;
     if (del === 'first') {
-      var newCoords = coordinates.slice(deleteN);
+      const newCoords = coordinates.slice(deleteN);
       this.setState({
         point: {
           ...this.state.point,
@@ -154,7 +158,7 @@ export class UpdatePOIorRoute extends BaseComponent {
         ],
       });
     } else if (del === 'last') {
-      var newCoords = coordinates.slice(0, coordinates.length - deleteN);
+      const newCoords = coordinates.slice(0, coordinates.length - deleteN);
       this.setState({
         point: {
           ...this.state.point,
@@ -174,7 +178,7 @@ export class UpdatePOIorRoute extends BaseComponent {
   }
   select(point, id) {
     return () => {
-      this.setState({id: id, point: point,});
+      this.setState({id: id, point: point});
       $('#select-poi-route').modal('hide');
       $('#update-poi-route').modal('show');
     };
@@ -187,7 +191,7 @@ export class UpdatePOIorRoute extends BaseComponent {
   }
   undoDelete(e) {
     e.preventDefault();
-    var {deletes, point,} = this.state;
+    var {deletes, point} = this.state;
     var mostRecent = deletes.pop();
     if (mostRecent.side === 'first') {
       this.setState({
@@ -220,11 +224,12 @@ export class UpdatePOIorRoute extends BaseComponent {
     }
   }
   render() {
-    var {dispatch} = this.props;
-    var {point} = this.state;
+    const {dispatch} = this.props;
+    const {point} = this.state;
     if (point) {
-      var {properties, geometry,} = point;
-      var {name, desc, condition,} = properties;
+      /*eslint-disable no-var*/
+      var {properties, geometry} = point;
+      var {name, desc, condition} = properties;
       mapboxgl.accessToken = 'pk.eyJ1IjoidGpzY29sbGlucyIsImEiOiJjaXdhZjl4b3AwM2h5MzNwbzZ0eDg0YWZsIn0.uR5NCLn73_X2M9PxDO_4KA';
       if (this.state.map !== null) {
         this
@@ -294,7 +299,7 @@ export class UpdatePOIorRoute extends BaseComponent {
           default:
             throw new Error(`Unknown feature type ${layerType}`);
         }
-        map.addLayer({'id': 'preview', 'type': layerType, 'source': 'preview', 'layout': layout,});
+        map.addLayer({'id': 'preview', 'type': layerType, 'source': 'preview', 'layout': layout});
         this.setState({map});
       });
     }
@@ -360,7 +365,7 @@ export class UpdatePOIorRoute extends BaseComponent {
                 <p>Instructions:</p>
                 <p>Make changes to the geoJSON data for the selected POI or Route and view them in the preview map. When you are satisfied with your changes, click save.</p>
 
-                <form onChange={this.formChange} id='updateform' ref='updateform' className='form-horizontal'>
+                <form onSubmit={this.formSubmit.bind(this)} onChange={this.formChange} id='updateform' ref='updateform' className='form-horizontal'>
                   <div className='form-group'>
                     <label htmlFor='name' className='col-xs-2 control-label'>Name</label>
                     <div className='col-xs-10'>
