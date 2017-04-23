@@ -73,7 +73,7 @@ export class UpdatePOIorRoute extends BaseComponent {
       },
       dataType: 'json',
       data: JSON.stringify(this.state.point),
-    }).done((data) => {
+    }).done( /*istanbul ignore next*/(data) => {
       window
         .location
         .reload(true);
@@ -139,7 +139,8 @@ export class UpdatePOIorRoute extends BaseComponent {
   quickDelete(e) {
     e.preventDefault();
     const {del, deleteN, point} = this.state;
-    const {coordinates} = point.geometry;
+    const {coordinates, type} = point.geometry;
+    if(type !== 'LineString') return;
     if (del === 'first') {
       const newCoords = coordinates.slice(deleteN);
       this.setState({
@@ -177,22 +178,21 @@ export class UpdatePOIorRoute extends BaseComponent {
     }
   }
   select(point, id) {
-    return () => {
+    return /*istanbul ignore next*/ () => {
       this.setState({id: id, point: point});
       $('#select-poi-route').modal('hide');
       $('#update-poi-route').modal('show');
     };
   }
+  /*ignore istanbul next*/
   shouldComponentUpdate(nextProps, nextState) {
     //Don't re-render whole component when Preview Map updates
-    var {map} = this.state;
-    var shouldUpdate = (map === nextState.map);
-    return shouldUpdate;
+    return this.state.map === nextState.map;
   }
   undoDelete(e) {
     e.preventDefault();
-    var {deletes, point} = this.state;
-    var mostRecent = deletes.pop();
+    const {deletes, point} = this.state;
+    const mostRecent = deletes.pop();
     if (mostRecent.side === 'first') {
       this.setState({
         point: {
