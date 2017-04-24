@@ -226,6 +226,7 @@ export class UpdatePOIorRoute extends BaseComponent {
   render() {
     const {dispatch} = this.props;
     const {point} = this.state;
+    console.log(point);
     if (point) {
       /*eslint-disable no-var*/
       var {properties, geometry} = point;
@@ -369,26 +370,32 @@ export class UpdatePOIorRoute extends BaseComponent {
                   <div className='form-group'>
                     <label htmlFor='name' className='col-xs-2 control-label'>Name</label>
                     <div className='col-xs-10'>
-                      <input className='form-control' id='name' ref='name' type='text' defaultValue={name}/>
+                      <input className='form-control' id='name' ref='name' type='text' value={name} />
                     </div>
                   </div>
                   <div className='form-group '>
                     <label htmlFor='desc' className='col-xs-2 control-label'>Description</label>
                     <div className='col-xs-10'>
-                      <input className='form-control' id='desc' ref='desc' type='text' defaultValue={desc}/>
+                      <input className='form-control' id='desc' ref='desc' type='text' value={desc} />
                     </div>
                   </div>
                   <div className='form-group'>
                     <label htmlFor='cond' className='col-xs-2 control-label'>Condition</label>
                     <div className='col-xs-10'>
-                      <input className='form-control' id='cond' ref='cond' type='text' defaultValue={condition}/>
+                      <input className='form-control' id='cond' ref='cond' type='text' value={condition} />
                     </div>
                   </div>
                   <div className='form-group'>
                     <div className='col-xs-8'>
-                      <textarea id='edit-json-coordinates' className='form-control col-xs-8' ref='geometry' rows='10' wrap='soft' required defaultValue={JSON.stringify(geometry
-                        ? geometry.coordinates
-                        : null, null, 2)}/>
+                      <textarea id='edit-json-coordinates'
+                        className='form-control col-xs-8'
+                        ref='geometry'
+                        rows='10'
+                        wrap='soft'
+                        required
+                        value={JSON.stringify(geometry
+                          ? geometry.coordinates
+                        : null, null, 2)} />
                     </div>
 
                     <div style={this.isRoute()} className='col-xs-4'>
