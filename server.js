@@ -208,15 +208,9 @@ function routes(app, mongoose) {
   }());
 
   var sendIndex = function sendIndex(req, res) {
-    var index = function index(body) {
-      // const htmlHead = require('./htmlHead.txt');
-      return '<!doctype html>\n      <html>\n        <head>\n          <meta charset="utf-8" />\n          <meta name="viewport" content = "width = device-width, initial-scale = 1.0, minimum-scale = 1, maximum-scale = 1, user-scalable = no" />\n          <meta name="mobile-web-app-capable" content="yes">\n          <meta name="apple-mobile-web-app-title" content="TrailMaster" />\n          <meta name="apple-mobile-web-app-capable" content="yes">\n          <title>Trailmaster - Share Trail Running and Mountain Biking Trails</title>\n          <link rel="stylesheet" href="css/app.css"/>\n      </head\n      <body>\n        <div id=\'app\'>' + body + '</div>\n </style>\n    <script src=\'bundle.min.js\' type="text/javascript"></script>\n  </body>\n</html>';
-    };
     var requestUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
     var appBody = renderToString(evalBundleCode(requestUrl).default);
-    // res.send(index(appBody));
-    console.log(appBody);
-    res.render('index', { appBody: appBody });
+    res.render(__dirname + '/server/views/index', { appBody: appBody });
   };
 
   app.route('*')

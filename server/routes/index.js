@@ -54,31 +54,9 @@ app.use(async (req, res, next) => {
 
 
   const sendIndex = (req, res) => {
-    const index = (body) => {
-      // const htmlHead = require('./htmlHead.txt');
-      return `<!doctype html>
-      <html>
-        <head>
-          <meta charset="utf-8" />
-          <meta name="viewport" content = "width = device-width, initial-scale = 1.0, minimum-scale = 1, maximum-scale = 1, user-scalable = no" />
-          <meta name="mobile-web-app-capable" content="yes">
-          <meta name="apple-mobile-web-app-title" content="TrailMaster" />
-          <meta name="apple-mobile-web-app-capable" content="yes">
-          <title>Trailmaster - Share Trail Running and Mountain Biking Trails</title>
-          <link rel="stylesheet" href="css/app.css"/>
-      </head
-      <body>
-        <div id='app'>${body}</div>
- </style>
-    <script src='bundle.min.js' type="text/javascript"></script>
-  </body>
-</html>`;
-    };
     const requestUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
     const appBody = renderToString(evalBundleCode(requestUrl).default);
-    // res.send(index(appBody));
-    // console.log(appBody);
-    res.render('index', {appBody});
+    res.render(__dirname + '/server/views/index', {appBody});
   };
 
   app.route('*')
@@ -226,7 +204,9 @@ app.use(async (req, res, next) => {
           to: `${email}`,
           subject: 'Password Recovery',
           text: 'Fix Your Password Here',
-          html: `<p>The following is a single-use link to reset your password.</p><p>It will only work for 24 hours</p><a href=\"${url}/${reqID}-${encodeURI(email)}\">Reset Password</a>`
+          html: `<p>The following is a single-use link to reset your password.</p>
+          <p>It will only work for 24 hours</p>
+          <a href=\"${url}/${reqID}-${encodeURI(email)}\">Reset Password</a>`
         };
         nodemailerMailgun.sendMail(message, function(err, info) {
           /*istanbul ignore next*/
@@ -356,7 +336,7 @@ app.use(async (req, res, next) => {
       });
   });
   app.patch('/pois/:id', (req, res) => {
-    var id = req.params.id;
+    const id = req.params.id;
 
     if (!ObjectID.isValid(id)) {
       return res
@@ -423,7 +403,7 @@ app.use(async (req, res, next) => {
     }
   });
   app.post('/routes', (req, res) => {
-    var route = new RouteModel(req.body);
+    const route = new RouteModel(req.body);
     route
       .save()
       .then((doc) => {
@@ -435,7 +415,7 @@ app.use(async (req, res, next) => {
       });
   });
   app.delete('/routes/:id', (req, res) => {
-    var id = req.params.id;
+    const id = req.params.id;
     if (!ObjectID.isValid(id)) {
       return res
         .status(404)
