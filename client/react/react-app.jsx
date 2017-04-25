@@ -12,6 +12,7 @@ import MainContainer from 'MainContainer';
 
 /*----------API----------*/
 import {positionChanged} from 'TrailmasterAPI';
+import {toFloat} from 'validator';
 
 let store = null;
 if (typeof ISOMORPHIC_WEBPACK === 'undefined') {
@@ -39,7 +40,8 @@ if (typeof ISOMORPHIC_WEBPACK === 'undefined') {
       gpsTracking: {
         enable: true,
         watcher: null,
-        mock: false
+        mock: false,
+        mode: 'native',
       }
     }
   };
@@ -55,9 +57,9 @@ if (typeof ISOMORPHIC_WEBPACK === 'undefined') {
           longitude
         },
         gpsTracking: {
-          mock
+          mock,
         },
-      }
+      },
     } = store.getState();
     if (positionChanged({
       latitude,
@@ -71,6 +73,20 @@ if (typeof ISOMORPHIC_WEBPACK === 'undefined') {
 
   const geolocationError = (err) => {
     console.error('Error tracking user position', err);
+    store.dispatch(actions.stopGPS());
+    $.getJSON('https://ipinfo.io', function(data) {
+      const parse = /([\d\.]+)/g;
+      const latitude = toFloat(parse.exec(data.loc)[0]);
+      const longitude = toFloat(parse.exec(data.loc)[0]);
+      const pos = {
+        coords: {
+          latitude,
+          longitude,
+        },
+      };
+      store.dispatch(actions.updatePOS(pos));
+      const {map} = store.getState();
+    });
   };
 
   const watcher = navigator

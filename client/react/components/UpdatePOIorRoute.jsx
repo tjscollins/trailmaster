@@ -226,7 +226,7 @@ export class UpdatePOIorRoute extends BaseComponent {
   render() {
     const {dispatch} = this.props;
     const {point} = this.state;
-    console.log(point);
+    // console.log(point);
     if (point) {
       /*eslint-disable no-var*/
       var {properties, geometry} = point;

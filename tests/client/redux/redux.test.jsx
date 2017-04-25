@@ -148,6 +148,12 @@ describe('redux', () => {
         let res = actions.addToRouteList('position');
         expect(res).toEqual(action);
       });
+
+      it('should generate the STOP_GPS action', () => {
+        const action = {type: 'STOP_GPS'};
+        const res = actions.stopGPS();
+        expect(res).toEqual(action);
+      });
     });
 
     describe('geoJSON actions', () => {
@@ -430,6 +436,23 @@ describe('redux', () => {
         expect(res.routeList[0]).toBeA('array');
         expect(res.routeList[0][0]).toBe(210);
         expect(res.routeList[0][1]).toBe(10);
+      });
+
+      it('should STOP tracking GPS through navigator.geolocation', () => {
+        const action = {type: 'STOP_GPS'};
+        const state = {
+          gpsTracking: {
+            watcher: 'watcher',
+            mode: 'native',
+          },
+        };
+        window.navigator.geolocation = {
+          clearWatch: sinon.spy(),
+        };
+        const res = reducers.userSessionReducer(df(state), df(action));
+        expect(res.gpsTracking.mode).toBe('ipinfo');
+        expect(res.gpsTracking.watcher).toBe(null);
+        sinon.assert.calledWith(window.navigator.geolocation.clearWatch, 'watcher');
       });
     });
 

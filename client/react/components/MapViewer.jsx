@@ -77,6 +77,12 @@ export class MapViewer extends Component {
     const searchRoutes = new RegExp(RoutesSearchText || '!!!!!!', 'i');
 
     if (update && this.state.map) {
+      let {lng, lat} = map.getCenter();
+      if (lat === 0 && lng === 0) {
+        // Map was never properly centered
+        const {longitude, latitude} = this.props.userSession.coords;
+        this.centerMap(longitude, latitude, true);
+      }
       // Remove existing map layers, fetch new data, generate new map layers
       this.refreshMap(nextProps);
       dispatch(actions.completeUpdateMap());
@@ -207,36 +213,35 @@ export class MapViewer extends Component {
     map.addControl(new mapboxgl.ScaleControl({maxWidth: 120, unit: 'imperial'}));
 
     map.on('load', () => {
-      // console.log('map load');
       try {
         const {userSource, geoJSONSource} = mapConfig([
           longitude, latitude
         ], []);
-        // if(!gjv.valid(userSource.data)) console.log('WARNING: ', userSource);
-        // if(!gjv.valid(geoJSONSource.data)) console.log('WARNING: ', geoJSONSource);
         map.addSource('user', userSource);
         map.addSource('geoJSON', geoJSONSource);
       } catch (error) {
         debugger;
       }
       dispatch(actions.updateMap());
+      dispatch(actions.storeCenter(map.getCenter()));
     });
 
     map.on('moveend', () => {
-      // console.log('map moveend');
       dispatch(actions.storeCenter(map.getCenter()));
     });
 
     this.setState({map});
   }
 
+
   /**
-   * createMapLayers -  Parses geoJSON data from the Redux store and uses it to build
-   *                    map layers that display routes and pois from the store.
-   *
-   * @param  {OBJECT} props receives props so that nextProps can be passed in for
-   *                        certain situations.
-   */
+  * createMapLayers -  Parses geoJSON data from the Redux store and uses it to build
+  *                    map layers that display routes and pois from the store.
+  *
+  * @param  {Object} features geoJSON features to be added to map
+  * @param  {Object} props receives props so that nextProps can be passed in for
+  *                        certain situations.
+  */
   createMapLayers(features, props) {
     const {layerIDs, map} = this.state;
     const {

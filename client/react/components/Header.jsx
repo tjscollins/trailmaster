@@ -153,6 +153,7 @@ export class Header extends BaseComponent {
             <li>
               <a
                 onClick={this.showFAQ}
+                href='#'
                 style={{
                   cursor: 'pointer'
                 }}>FAQ</a>

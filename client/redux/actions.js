@@ -15,33 +15,16 @@ export const updateDistanceFilter = (distance) => {
   return {type: 'UPDATE_DISTANCE_FILTER', distance};
 };
 
-//trails actions
-export const displayTrails = (trails) => {
-  return {type: 'DISPLAY_TRAILS', trails};
-};
-
-export const clearTrails = () => {
-  return {type: 'CLEAR_TRAILS'};
-};
-
-export const saveTrail = (list, name, desc, bounds) => {
-  return {type: 'SAVE_TRAIL', list, name, desc, bounds};
-};
-
-export const delTrail = (name) => {
-  return {
-    type: 'DEL_TRAIL',
-    name,
-  };
-};
-
 export const showTrail = (id) => {
   return {type: 'SHOW_TRAIL', id};
 };
 
-//userLocation actions
 export const watchGPS = (watcher) => {
   return {type: 'WATCH_GPS', watcher};
+};
+
+export const stopGPS = () => {
+  return {type: 'STOP_GPS'};
 };
 
 export const updatePOS = (position) => {
@@ -74,6 +57,26 @@ export const clearRouteList = () => {
 
 export const addToRouteList = (position) => {
   return {type: 'ADD_TO_ROUTE_LIST', position};
+};
+
+//trails actions
+export const displayTrails = (trails) => {
+  return {type: 'DISPLAY_TRAILS', trails};
+};
+
+export const clearTrails = () => {
+  return {type: 'CLEAR_TRAILS'};
+};
+
+export const saveTrail = (list, name, desc, bounds) => {
+  return {type: 'SAVE_TRAIL', list, name, desc, bounds};
+};
+
+export const delTrail = (name) => {
+  return {
+    type: 'DEL_TRAIL',
+    name,
+  };
 };
 
 //geoJSON actions

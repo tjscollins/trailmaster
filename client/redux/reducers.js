@@ -12,6 +12,7 @@ export const userSessionReducer = (state = {
   routeList: [],
   mapCentering: false,
   gpsTracking: {
+    mode: 'native',
     enable: true,
     watcher: null,
     mock: false,
@@ -114,8 +115,18 @@ export const userSessionReducer = (state = {
         ...state,
         gpsTracking: {
           ...state.gpsTracking,
-          watcher: action.watcher
+          watcher: action.watcher,
+          mode: 'native',
         }
+      };
+    case 'STOP_GPS':
+      navigator.geolocation.clearWatch(state.gpsTracking.watcher);
+      return {
+        ...state,
+        gpsTracking: {
+          watcher: null,
+          mode: 'ipinfo',
+        },
       };
     case 'TOGGLE_MAP_CENTERING':
       return {
@@ -155,7 +166,7 @@ export const trailsReducer = (state = {
 }, action) => {
   switch (action.type) {
     case 'DISPLAY_TRAILS':
-      var {trails} = action;
+      const {trails} = action;
       return {
         ...state,
         myTrails: trails
