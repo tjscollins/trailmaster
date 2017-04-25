@@ -1,12 +1,12 @@
 {
-  "script": "--exec babel-node -- ./server.js",
+  "script": "server.js",
   "restartable": "rs",
   "ignore": [
     ".git",
     "node_modules/**/node_modules",
     "*.scss",
-    "*.jsx",
-    "./public/",
+    "public/**/*",
+    "tests/**/*",
     "gulpfile.js"
   ],
   "verbose": true,
@@ -14,8 +14,8 @@
     "NODE_ENV": "development"
   },
   "watch": [
-    ".",
-    "server/"
+    "server.js",
+    "client/react/"
   ],
   "ext": "js json"
 }

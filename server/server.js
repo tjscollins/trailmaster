@@ -11,6 +11,7 @@ import routes from './routes/index';
 
 //Create our app
 const app = express();
+app.set('view engine', 'pug');
 app.use(bodyParser.json());
 app.use(compression());
 routes(app, mongoose);

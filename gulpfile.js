@@ -155,9 +155,7 @@ gulp.task('watch', [
   gulp.watch(REACT_REDUX, ['react-redux-dev']);
   gulp.watch(STYLES + '**/*.scss', ['styles']);
   gulp.watch(SERVER + '**/*js', ['build-server']);
-  nodemon({
-    script: 'server.js',
-  });
+  nodemon();
 });
 
 gulp.task('build-server', () => {
