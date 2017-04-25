@@ -8,3 +8,4 @@ __tests__
 yarn*
 util/
 webdriverio-test
+errorShots/

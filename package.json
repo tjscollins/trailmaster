@@ -4,6 +4,7 @@
   "description": "Trail Mapping Application",
   "main": "server.js",
   "scripts": {
+    "integration-test": "export NODE_ENV=test || SET NODE_ENV=test && mocha tests/integration/**/*test.js",
     "server-test": "export NODE_ENV=test || SET NODE_ENV=test && istanbul cover _mocha tests/server/**/*test.js --dir ./tests/server/coverage -- -t 10000",
     "client-test": "karma start",
     "test": "export NODE_ENV=test || SET NODE_ENV=test && istanbul cover _mocha tests/server/**/*test.js --dir ./tests/server/coverage -- -t 10000 && karma start",
@@ -134,17 +135,13 @@
     "rollup-stream": "^1.19.0",
     "sass-loader": "^3.1.2",
     "script-loader": "^0.7.0",
+    "selenium-webdriver": "^3.4.0",
     "sinon": "^2.1.0",
     "style-loader": "^0.16.1",
     "supertest": "^2.0.1",
     "uglifyjs-webpack-plugin": "^0.4.2",
     "url-loader": "^0.5.7",
-    "vinyl-source-stream": "^1.1.0",
-    "wdio-junit-reporter": "^0.3.0",
-    "wdio-mocha-framework": "^0.5.10",
-    "wdio-selenium-standalone-service": "0.0.8",
-    "wdio-spec-reporter": "^0.1.0",
-    "webdriverio": "^4.7.1"
+    "vinyl-source-stream": "^1.1.0"
   },
   "jest": {
     "moduleDirectories": [

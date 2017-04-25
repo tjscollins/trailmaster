@@ -48,11 +48,17 @@ export class Header extends BaseComponent {
         ),]
       : [(
           <li key={uuid()}>
-            <a href='#' onClick={this.showAccountCreator}>Create Account</a>
+            <a
+              id='create-account-link'
+              href='#'
+              onClick={this.showAccountCreator}>Create Account</a>
           </li>
         ), (
           <li key={uuid()}>
-            <a href='#' onClick={this.showLogin}>Sign-in</a>
+            <a
+              id='login-link'
+              href='#'
+              onClick={this.showLogin}>Sign-in</a>
           </li>
         )];
   }
@@ -125,6 +131,7 @@ export class Header extends BaseComponent {
           <ul className='nav navbar-nav navbar-right'>
             <li className='dropdown'>
               <a
+                id='settings-link'
                 href='#'
                 className='dropdown-toggle'
                 data-toggle='dropdown'
@@ -152,6 +159,7 @@ export class Header extends BaseComponent {
 
             <li>
               <a
+                id='faq-link'
                 onClick={this.showFAQ}
                 href='#'
                 style={{

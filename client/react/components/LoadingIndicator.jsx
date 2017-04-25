@@ -52,7 +52,7 @@ export class LoadingIndicator extends Component {
           </div>
         </div>
       )
-      : <div />;
+      : <div id='done-loading' />;
   }
 }
 

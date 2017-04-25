@@ -317,7 +317,7 @@ function routes(app, mongoose) {
         to: '' + email,
         subject: 'Password Recovery',
         text: 'Fix Your Password Here',
-        html: '<p>The following is a single-use link to reset your password.</p><p>It will only work for 24 hours</p><a href="' + url + '/' + reqID + '-' + encodeURI(email) + '">Reset Password</a>'
+        html: '<p>The following is a single-use link to reset your password.</p>\n          <p>It will only work for 24 hours</p>\n          <a href="' + url + '/' + reqID + '-' + encodeURI(email) + '">Reset Password</a>'
       };
       nodemailerMailgun.sendMail(message, function (err, info) {
         /*istanbul ignore next*/
