@@ -38,7 +38,7 @@ describe('load Trailmaster site', function() {
         expect(title).toEqual('Trailmaster - Share Trail Running and Mountain Biking Trails');
       });
     // wait for page to finish loading
-    browser.wait(until.elementLocated(By.id('done-loading')), 5000, 'Page took longer than 5seconds to load');
+    browser.wait(until.elementLocated(By.id('done-loading')), 15000, 'Page took longer than 10 seconds to load');
   });
 
   // John sees a header bar with controls to create an account, login, change
@@ -89,6 +89,41 @@ describe('load Trailmaster site', function() {
       });
   });
 
-  // Finish user story and test
-  expect(false).toBe(true);
+  // Satisfied, he looks over at the control frames and sees accordion panels for
+  // points of interest, routes, trails, and tools
+  it('should display an accordion with POIs, Routes, Trails, and Tools panels', () => {
+    const accordion = browser
+      .findElement(By.className('controls'))
+      .findElement(By.id('accordion'));
+
+    accordion
+      .findElement(By.id('poi-controls'))
+      .getText()
+      .then((text) => {
+        expect(text).toBe('  Points of Interest');
+      });
+
+    accordion
+      .findElement(By.id('routes-controls'))
+      .getText()
+      .then((text) => {
+        expect(text).toBe('  Routes');
+      });
+
+    accordion
+      .findElement(By.id('trails-controls'))
+      .getText()
+      .then((text) => {
+        expect(text).toBe('  Your Trails');
+      });
+
+    accordion
+      .findElement(By.id('tools-controls'))
+      .getText()
+      .then((text) => {
+        expect(text).toBe('  Tools');
+      });
+  });
+
+  // Finish user story and test expect(false).toBe(true);
 });

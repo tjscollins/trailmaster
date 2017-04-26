@@ -11,7 +11,7 @@ export class FAQ extends BaseComponent {
         <div className='modal-dialog' role='document'>
           <div className='modal-content'>
             <div className='modal-header'>
-              <button type='button' className='close' data-dismiss='modal' aria-label='Close'>
+              <button id='faq-modal-close' type='button' className='close' data-dismiss='modal' aria-label='Close'>
                 <span aria-hidden='true'>&times;</span>
               </button>
               <h4 className='modal-title'>Frequently Asked Questions</h4>
@@ -20,7 +20,9 @@ export class FAQ extends BaseComponent {
               <ol>
                 <li>
                   <h5>What is Trailmaster?</h5>
-                  <p>Trailmaster is a publicly accessible, open-source web application for storing, sharing, and using GPS data from wearable athletic devices to plan new trail running and mountain biking courses.</p>
+                  <p>Trailmaster is a publicly accessible, open-source web application for storing,
+                    sharing, and using GPS data from wearable athletic devices to plan new trail
+                  running and mountain biking courses.</p>
                 </li>
                 <li>
                   <h5>How Do I Use TrailMaster?</h5>

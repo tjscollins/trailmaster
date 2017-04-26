@@ -52,6 +52,7 @@ export class Controls extends BaseComponent {
               <div className='panel-heading' role='tab' id='headingOne'>
                 <h3 className='controls-title'>
                   <a
+                    id='poi-controls'
                     data-toggle='collapse'
                     data-parent='#accordion'
                     href='#collapseOne'
@@ -83,6 +84,7 @@ export class Controls extends BaseComponent {
               <div className='panel-heading' role='tab' id='headingTwo'>
                 <h3 className='controls-title'>
                   <a
+                    id='routes-controls'
                     className='collapsed'
                     data-toggle='collapse'
                     data-parent='#accordion'
@@ -110,6 +112,7 @@ export class Controls extends BaseComponent {
               <div className='panel-heading' role='tab' id='headingThree'>
                 <h3 className='controls-title'>
                   <a
+                    id='trails-controls'
                     className='collapsed'
                     data-toggle='collapse'
                     data-parent='#accordion'
@@ -139,6 +142,7 @@ export class Controls extends BaseComponent {
               <div className='panel-heading' role='tab' id='headingFour'>
                 <h3 className='controls-title'>
                   <a
+                    id='tools-controls'
                     className='collapsed'
                     data-toggle='collapse'
                     data-parent='#accordion'
