@@ -2,14 +2,17 @@ const https = require('https');
 const fs = require('fs');
 const http = require('http');
 
+const LOCAL_SERVER = 'localhost';
+const TEST_SERVER = 'trailmaster-test-server.herokuapp.com';
+const PROD_SERVER = 'trailmaster.herokuapp.com';
+
 (function() {
   const requestPoIsOptions = {
-    host: 'trailmaster.herokuapp.com',
+    host: PROD_SERVER,
     path: '/pois',
-    // port: 3000
   };
   const requestRoutesOptions = {
-    host: 'trailmaster.herokuapp.com',
+    host: PROD_SERVER,
     path: '/routes',
   };
   const getPoIs = https.get(requestPoIsOptions, collectResponse.bind(this, processPoIs));
@@ -51,15 +54,20 @@ function processPoIs(poiCollection) {
 }
 
 function sendPoIs(poi) {
+  const host = process.argv[2] === 'local' ? LOCAL_SERVER : TEST_SERVER;
   const requestOptions = {
-    host: 'trailmaster-test-server.herokuapp.com',
+    host,
     path: `/pois`,
     method: 'POST',
     headers: {
       'Content-type': 'application/json',
     },
   };
-  const postRequest = https.request(requestOptions, (res) => {
+  const req = process.argv[2] === 'local' ? http : https;
+  if (process.argv[2] === 'local') {
+    requestOptions.port = 3000;
+  }
+  const postRequest = req.request(requestOptions, (res) => {
     res.setEncoding('utf8');
     res.on('data', function(chunk) {
         console.log('Response: ' + chunk);
@@ -93,15 +101,20 @@ function processRoutes(routeCollection) {
 }
 
 function sendRoutes(route) {
+  const host = process.argv[2] === 'local' ? LOCAL_SERVER : TEST_SERVER;
   const requestOptions = {
-    host: 'trailmaster-test-server.herokuapp.com',
+    host,
     path: `/routes`,
     method: 'POST',
     headers: {
       'Content-type': 'application/json',
     },
   };
-  const postRequest = https.request(requestOptions, (res) => {
+  const req = process.argv[2] === 'local' ? http : https;
+  if (process.argv[2] === 'local') {
+    requestOptions.port = 3000;
+  }
+  const postRequest = req.request(requestOptions, (res) => {
     res.setEncoding('utf8');
     res.on('data', function(chunk) {
         console.log('Response: ' + chunk);
