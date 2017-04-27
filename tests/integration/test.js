@@ -85,7 +85,12 @@ describe('load Trailmaster site', function() {
       .click()
       .then(() => {
         browser
-          .wait(until.elementLocated(By.className('modal fade in')), 1000, 'FAQ modal was not toggled');
+          .wait(until.elementLocated(By.className('modal fade in')), 1500, 'FAQ modal was not toggled')
+          .then(() => {
+            browser
+              .findElement(By.id('faq-modal-close'))
+              .click();
+          });
       });
   });
 
@@ -124,6 +129,37 @@ describe('load Trailmaster site', function() {
         expect(text).toBe('  Tools');
       });
   });
+
+  // John notices that he can minimize and expand the UI, so he clicks the arrow
+  // minimize the ui
+  // it('should hide control panels when #hide-arrow is clicked', () => {
+  //   const hideArrow = browser
+  //     .findElement(By.id('hide-arrow'));
+  //
+  //   hideArrow
+  //     .getAttribute('class')
+  //     .then((cls) => {
+  //       expect(cls).toBe('hidecontrols fa fa-2x fa-arrow-left');
+  //     });
+  //
+  //   hideArrow
+  //     .click()
+  //     .then(() => {
+  //       browser.wait(until.elementLocated(By.className('fa-arrow-right')), 1000, 'Controls panel was not toggled')
+  //       .then(() => {
+  //         hideArrow.getAttribute('class')
+  //         .then((cls) => {
+  //           expect(cls).toBe('hidecontrols fa fa-2x fa-arrow-right');
+  //         });
+  //         browser
+  //         .findElement(By.id('Header'))
+  //         .getAttribute('class')
+  //         .then((cls) => {
+  //           expect(cls).toBe('navbar navbar-default navbar-fixed-top minified-header');
+  //         });
+  //       });
+  //     });
+  // });
 
   // Finish user story and test expect(false).toBe(true);
 });
