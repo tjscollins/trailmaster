@@ -3,8 +3,6 @@ const path = require('path');
 
 module.exports = {
   entry: [
-    'script-loader!jquery/dist/jquery.min.js',
-    'script-loader!bootstrap-sass/assets/javascripts/bootstrap.min.js',
     './client/react/react-app.jsx'
   ],
   externals: {
