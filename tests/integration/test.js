@@ -77,7 +77,7 @@ describe('load and view Trailmaster site', function() {
 
   // Wondering how the site works, John decides to view the FAQ and clicks on the
   // link
-  it.only('should toggle the FAQ modal', () => {
+  it('should toggle the FAQ modal', (done) => {
     browser
       .findElement(By.id('faq-modal'))
       .getAttribute('class')
@@ -93,8 +93,11 @@ describe('load and view Trailmaster site', function() {
           browser
             .findElement(By.id('faq-modal-close'))
             .click()
+            .then(() => {
+              done();
+            })
             .catch((err) => {
-              console.error(err);
+              done(err);
             });
         });
       });
@@ -102,7 +105,7 @@ describe('load and view Trailmaster site', function() {
 
   // Satisfied, he looks over at the control frames and sees accordion panels for
   // points of interest, routes, trails, and tools
-  it('should display an accordion with POIs, Routes, Trails, and Tools panels', () => {
+  it('should display an accordion with POIs, Routes, Trails, and Tools panels', (done) => {
     const accordion = browser
       .findElement(By.className('controls'))
       .findElement(By.id('accordion'));
@@ -134,22 +137,43 @@ describe('load and view Trailmaster site', function() {
       .then((text) => {
         expect(text).toBe('  Tools');
       });
+
+    setTimeout(done, 500);
   });
 
   // John notices that he can minimize and expand the UI, so he clicks the arrow
-  // minimize the ui it('should hide control panels when #hide-arrow is clicked',
-  // () => {   const hideArrow = browser     .findElement(By.id('hide-arrow'));
-  //
-  //   hideArrow     .getAttribute('class')     .then((cls) => {
-  // expect(cls).toBe('hidecontrols fa fa-2x fa-arrow-left');     });
-  //
-  //   hideArrow     .click()     .then(() => {
-  // browser.wait(until.elementLocated(By.className('fa-arrow-right')), 1000,
-  // 'Controls panel was not toggled')       .then(() => {
-  // hideArrow.getAttribute('class')         .then((cls) => {
-  // expect(cls).toBe('hidecontrols fa fa-2x fa-arrow-right');         }); browser
-  //         .findElement(By.id('Header'))         .getAttribute('class')
-  // .then((cls) => {           expect(cls).toBe('navbar navbar-default
-  // navbar-fixed-top minified-header');         });       });     }); }); Finish
-  // user story and test expect(false).toBe(true);
+  // minimize the ui
+  it('should hide control panels when #hide-arrow is clicked', (done) => {
+    browser
+      .findElement(By.id('hide-arrow'))
+      .click()
+      .then(() => {
+        browser
+          .findElement(By.id('hide-arrow'))
+          .getAttribute('class')
+          .then((cls) => {
+            expect(cls).toBe('hidecontrols fa fa-2x fa-arrow-right');
+          })
+          .catch(done);
+      });
+    setTimeout(done, 500);
+  });
+
+  // John re-expands the UI by clicking on the expand arrow
+  it('should expand control panels when .navbar-brand is clicked', (done) => {
+    browser
+      .findElement(By.className('navbar-brand'))
+      .click()
+      .then(() => {
+        browser
+          .findElement(By.id('hide-arrow'))
+          .getAttribute('class')
+          .then((cls) => {
+            expect(cls).toBe('hidecontrols fa fa-2x fa-arrow-left');
+          })
+          .catch(done);
+      });
+    setTimeout(done, 500);
+  });
+  // Finish user story and test expect(false).toBe(true);
 });
