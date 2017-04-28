@@ -2,17 +2,25 @@ const expect = require('expect');
 const {describe, it, before, after, afterEach} = require('selenium-webdriver/testing');
 const webdriver = require('selenium-webdriver');
 const {By, until, Key} = webdriver;
+const firefox = require('selenium-webdriver/firefox');
 let browser;
-
-const URL = 'http://localhost:3000';
 const mochaTimeOut = 30000;
+const URL = 'http://localhost:3000';
 
 before(function() {
   this.timeout(mochaTimeOut);
+  let profile = new firefox.Profile('/home/tjscollins/.mozilla/firefox/iy86r53n.Selenium');
+  let options = new firefox
+    .Options()
+    .setProfile(profile);
   browser = new webdriver
     .Builder()
     .forBrowser('firefox')
+    .setFirefoxOptions(options)
     .build();
+  browser.get(URL);
+  // wait for page to finish loading React-App and Mapbox-gl map
+  browser.wait(until.elementLocated(By.id('done-loading')), 20000, 'Page took longer than 20 seconds to load');
 });
 
 afterEach(function() {
@@ -22,23 +30,20 @@ afterEach(function() {
 });
 
 after(function() {
-  browser.quit();
+  // browser.quit();
 });
 
-describe('load Trailmaster site', function() {
+describe('load and view Trailmaster site', function() {
   this.timeout(mochaTimeOut);
 
   // John has heard about this awesome new site for sharing GPS data of mountain
   // biking trails, so he decides to go check it out
   it('should have the right title', () => {
-    browser.get(URL);
     browser
       .getTitle()
       .then((title) => {
         expect(title).toEqual('Trailmaster - Share Trail Running and Mountain Biking Trails');
       });
-    // wait for page to finish loading
-    browser.wait(until.elementLocated(By.id('done-loading')), 15000, 'Page took longer than 10 seconds to load');
   });
 
   // John sees a header bar with controls to create an account, login, change
@@ -72,7 +77,7 @@ describe('load Trailmaster site', function() {
 
   // Wondering how the site works, John decides to view the FAQ and clicks on the
   // link
-  it('should toggle the FAQ modal', () => {
+  it.only('should toggle the FAQ modal', () => {
     browser
       .findElement(By.id('faq-modal'))
       .getAttribute('class')
@@ -84,13 +89,14 @@ describe('load Trailmaster site', function() {
       .findElement(By.id('faq-link'))
       .click()
       .then(() => {
-        browser
-          .wait(until.elementLocated(By.className('modal fade in')), 1500, 'FAQ modal was not toggled')
-          .then(() => {
-            browser
-              .findElement(By.id('faq-modal-close'))
-              .click();
-          });
+        browser.wait(until.elementLocated(By.className('modal fade in')), 1500, 'FAQ modal was not toggled').then(() => {
+          browser
+            .findElement(By.id('faq-modal-close'))
+            .click()
+            .catch((err) => {
+              console.error(err);
+            });
+        });
       });
   });
 
@@ -131,35 +137,19 @@ describe('load Trailmaster site', function() {
   });
 
   // John notices that he can minimize and expand the UI, so he clicks the arrow
-  // minimize the ui
-  // it('should hide control panels when #hide-arrow is clicked', () => {
-  //   const hideArrow = browser
-  //     .findElement(By.id('hide-arrow'));
+  // minimize the ui it('should hide control panels when #hide-arrow is clicked',
+  // () => {   const hideArrow = browser     .findElement(By.id('hide-arrow'));
   //
-  //   hideArrow
-  //     .getAttribute('class')
-  //     .then((cls) => {
-  //       expect(cls).toBe('hidecontrols fa fa-2x fa-arrow-left');
-  //     });
+  //   hideArrow     .getAttribute('class')     .then((cls) => {
+  // expect(cls).toBe('hidecontrols fa fa-2x fa-arrow-left');     });
   //
-  //   hideArrow
-  //     .click()
-  //     .then(() => {
-  //       browser.wait(until.elementLocated(By.className('fa-arrow-right')), 1000, 'Controls panel was not toggled')
-  //       .then(() => {
-  //         hideArrow.getAttribute('class')
-  //         .then((cls) => {
-  //           expect(cls).toBe('hidecontrols fa fa-2x fa-arrow-right');
-  //         });
-  //         browser
-  //         .findElement(By.id('Header'))
-  //         .getAttribute('class')
-  //         .then((cls) => {
-  //           expect(cls).toBe('navbar navbar-default navbar-fixed-top minified-header');
-  //         });
-  //       });
-  //     });
-  // });
-
-  // Finish user story and test expect(false).toBe(true);
+  //   hideArrow     .click()     .then(() => {
+  // browser.wait(until.elementLocated(By.className('fa-arrow-right')), 1000,
+  // 'Controls panel was not toggled')       .then(() => {
+  // hideArrow.getAttribute('class')         .then((cls) => {
+  // expect(cls).toBe('hidecontrols fa fa-2x fa-arrow-right');         }); browser
+  //         .findElement(By.id('Header'))         .getAttribute('class')
+  // .then((cls) => {           expect(cls).toBe('navbar navbar-default
+  // navbar-fixed-top minified-header');         });       });     }); }); Finish
+  // user story and test expect(false).toBe(true);
 });

@@ -7,7 +7,9 @@ All notable changes to this project will be documented in this file.
 - Added WebdriverIO integration tests to overall dev workflow
 
 ### Changed
-- Fixed initial mapcentering to recenter if geolocation info takes longer than normal to load
+- Changed LoadingIndicator.jsx to finish when geoJSON API calls return instead of waiting for Mapbox to finish loading.
+- Refactored FAQ.jsx to use Markdown for internal content
+- Fixed initial mapcentering to re-center if geolocation info takes longer than normal to load
 - Improved test coverage of a number of methods
 - Switched to using Pug for initial server rendering
 

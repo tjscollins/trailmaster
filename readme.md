@@ -1,6 +1,6 @@
 # TrailMaster App
 
-##Background
+## Background
 
 Runners equipped with modern GPS devices produce a tremendous amount of geolocation data regarding their activities.  Especially for trail running, this data is potentially immensely useful to organizations interested in planning courses for future running events; however, the data is held in the hands of individual runners and no central database of worthwhile running routes exists.
 

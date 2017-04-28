@@ -4,9 +4,9 @@
   "description": "Trail Mapping Application",
   "main": "server.js",
   "scripts": {
-    "integration-test": "export NODE_ENV=test || SET NODE_ENV=test && mocha tests/integration/**/*test.js",
-    "server-test": "export NODE_ENV=test || SET NODE_ENV=test && istanbul cover _mocha tests/server/**/*test.js --dir ./tests/server/coverage -- -t 10000",
-    "client-test": "karma start",
+    "integration": "export NODE_ENV=test || SET NODE_ENV=test && mocha tests/integration/**/*test.js",
+    "server": "export NODE_ENV=test || SET NODE_ENV=test && istanbul cover _mocha tests/server/**/*test.js --dir ./tests/server/coverage -- -t 10000",
+    "client": "karma start",
     "test": "export NODE_ENV=test || SET NODE_ENV=test && istanbul cover _mocha tests/server/**/*test.js --dir ./tests/server/coverage -- -t 10000 && karma start",
     "test-watch": "nodemon --exec 'npm test'",
     "start": "export NODE_ENV=production || SET NODE_ENV=production && node --optimize_for_size --max_old_space_size=250 --gc_interval=100 ./server.js"
@@ -58,6 +58,7 @@
     "jsonwebtoken": "^7.2.1",
     "lodash": "^4.17.2",
     "mapbox-gl": "^0.28.0",
+    "markdown-to-jsx": "^5.3.3",
     "mongodb": "^2.2.15",
     "mongoose": "^4.7.2",
     "nodemailer": "^2.7.0",

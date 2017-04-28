@@ -51,7 +51,7 @@ var webpackConfiguration = {
       'mapboxgl': path$1.resolve(__dirname, 'client/api/mockmapbox')
     },
     modules: [__dirname, 'node_modules', path$1.join(__dirname, 'client/api'), path$1.join(__dirname, 'client/react'), path$1.join(__dirname, 'client/react/components'), path$1.join(__dirname, 'client/react/components/controls/PoI_Controls'), path$1.join(__dirname, 'client/react/components/controls/Route_Controls'), path$1.join(__dirname, 'client/react/components/controls/Trail_Controls'), path$1.join(__dirname, 'client/redux')],
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx', '.json']
   },
   module: {
     rules: [

@@ -32,7 +32,7 @@ module.exports = {
       path.join(__dirname, 'client/react/components/controls/Trail_Controls'),
       path.join(__dirname, 'client/redux')
     ],
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx', '.json']
   },
   module: {
     rules: [
