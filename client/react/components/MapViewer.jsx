@@ -90,7 +90,11 @@ export class MapViewer extends Component {
         // New mock position has been set
         // Perform an initCenter
         this.centerMap(longitude, latitude, true);
+      } else if( !gpsTracking.mock && this.props.userSession.gpsTracking.mock) {
+        // Mock location was just turned off
+        this.centerMap(longitude, latitude, true);
       }
+
       // Remove existing map layers, fetch new data, generate new map layers
       this.refreshMap(nextProps);
       dispatch(actions.completeUpdateMap());

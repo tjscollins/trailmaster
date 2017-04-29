@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - Added WebdriverIO integration tests to overall dev workflow
 
 ### Changed
+- Fixed unMockPos action/reducer to instantly recenter map when clearing mocked position
 - When setting Mock Locations the map now zooms instantly to the new location.
 - Reduced auto-center time for map to 250 ms from 5000 ms to solve a ui bug caused by dragging map while it eases.
 - Switched to using CDNs for jQuery, Bootstrap, and Font Awesome rather than bundling with app

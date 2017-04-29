@@ -19,11 +19,8 @@ export class MockLocation extends BaseComponent {
     let {latitude, longitude} = this.refs;
     latitude.value = '';
     longitude.value = '';
-    // UnMock Actions are broken ATM and Result in Map-breaking errors
-    // dispatch(unMockPos());
-    // dispatch(updateMap());
-    // Workaround is to force reloading of the page when unMocking position
-    window.location.reload();
+    dispatch(unMockPos());
+    dispatch(updateMap());
   }
   submit = (e) => {
     let {dispatch} = this.props;
