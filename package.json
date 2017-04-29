@@ -1,6 +1,6 @@
 {
   "name": "trailmaster",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Trail Mapping Application",
   "main": "server.js",
   "scripts": {

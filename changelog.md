@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.2.2] - 2017-04-29
 ### Added
 - Added ipinfo.io fallback for user geolocation if native browser geolocation fails
 - Added WebdriverIO integration tests to overall dev workflow
