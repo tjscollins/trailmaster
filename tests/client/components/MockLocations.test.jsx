@@ -100,8 +100,8 @@ describe('MockLocation', () => {
       <MockLocation dispatch={dispatch} userSession={userSession} />
     );
     mockLocation.clear(event);
-    sinon.assert.calledOnce(reload);
-    sinon.assert.notCalled(dispatch);
+    sinon.assert.calledTwice(dispatch);
+    sinon.assert.notCalled(reload);
     reload.restore();
   });
 });

@@ -67,7 +67,6 @@ LoadingIndicator.propTypes = {
  * @return {object}       component props
  */
 function mapStateToProps(state) {
-  console.log('Loading based on: ', state.map.loaded, state.geoJSON.features);
   const loading = !state.map.loaded || state.geoJSON.features === undefined;
   return {loading};
 }

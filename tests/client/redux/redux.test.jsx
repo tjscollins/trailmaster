@@ -154,6 +154,19 @@ describe('redux', () => {
         const res = actions.stopGPS();
         expect(res).toEqual(action);
       });
+
+      it('should generate the MOCK_POS action', () => {
+        const action = {
+          type: 'MOCK_POS',
+          position: 'position',
+        };
+        expect(actions.mockPOS('position')).toEqual(action);
+      });
+
+      it('should generate the UNMOCK_POS action', () => {
+        const action = {type: 'UNMOCK_POS'};
+        expect(actions.unMockPos()).toEqual(action);
+      });
     });
 
     describe('geoJSON actions', () => {
@@ -460,6 +473,54 @@ describe('redux', () => {
         expect(res.gpsTracking.mode).toBe('ipinfo');
         expect(res.gpsTracking.watcher).toBe(null);
         sinon.assert.calledWith(window.navigator.geolocation.clearWatch, 'watcher');
+      });
+
+      it('should MOCK a user\'s POSition', () => {
+        const action = {
+          type: 'MOCK_POS',
+          position: {
+            coords: {
+              latitude: 'lat',
+              longitude: 'lon',
+            },
+          },
+        };
+        const state = {
+          gpsTracking: {
+            mock: false,
+          },
+          coords: {
+            latitude: 1,
+            longitude: 2,
+          },
+        };
+        const res = reducers.userSessionReducer(df(state), df(action));
+        expect(res.gpsTracking.mock).toBe(true);
+        expect(res.coords.latitude).toBe('lat');
+        expect(res.coords.longitude).toBe('lon');
+      });
+
+      it('should UNMOCK a user\'s POSition', () => {
+        const action = {
+          type: 'UNMOCK_POS',
+        };
+        const state = {
+          gpsTracking: {
+            trueLocation: {
+              latitude: 15,
+              longitude: -145
+            },
+            mock: true,
+          },
+          coords: {
+            latitude: 1,
+            longitude: 2,
+          },
+        };
+        const res = reducers.userSessionReducer(df(state), df(action));
+        expect(res.gpsTracking.mock).toBe(false);
+        expect(res.coords.latitude).toBe(15);
+        expect(res.coords.longitude).toBe(-145);
       });
     });
 
