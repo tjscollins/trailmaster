@@ -69,7 +69,8 @@ export class MapViewer extends Component {
           longitude,
           latitude
         },
-        distanceFilter
+        distanceFilter,
+        gpsTracking
       }
     } = nextProps;
     const {map, layerIDs, initCenter} = this.state;
@@ -80,7 +81,14 @@ export class MapViewer extends Component {
       let {lng, lat} = map.getCenter();
       if (lat === 0 && lng === 0) {
         // Map was never properly centered
-        const {longitude, latitude} = this.props.userSession.coords;
+        this.centerMap(longitude, latitude, true);
+      }
+
+      if (gpsTracking.mock
+        && (latitude !== this.props.userSession.coords.latitude
+          || longitude !== this.props.userSession.coords.longitude)) {
+        // New mock position has been set
+        // Perform an initCenter
         this.centerMap(longitude, latitude, true);
       }
       // Remove existing map layers, fetch new data, generate new map layers
@@ -164,7 +172,7 @@ export class MapViewer extends Component {
       });
     } else {
       map.easeTo({
-        duration: 5000,
+        duration: 250,
         animate: true,
         center: [
           lng, lat
