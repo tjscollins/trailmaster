@@ -7,7 +7,8 @@ All notable changes to this project will be documented in this file.
 - Added WebdriverIO integration tests to overall dev workflow
 
 ### Changed
-- Changed LoadingIndicator.jsx to finish when geoJSON API calls return instead of waiting for Mapbox to finish loading.
+- Switched to using CDNs for jQuery, Bootstrap, and Font Awesome rather than bundling with app
+- Changed LoadingIndicator.jsx to finish when geoJSON API calls return instead of waiting for Mapbox to also finish loading.
 - Refactored FAQ.jsx to use Markdown for internal content
 - Fixed initial mapcentering to re-center if geolocation info takes longer than normal to load
 - Improved test coverage of a number of methods

@@ -202,6 +202,13 @@ describe('redux', () => {
     });
 
     describe('map actions', () => {
+      it('should generate the MAP_LOADED action', () => {
+          const action = {
+            type: 'MAP_LOADED',
+          };
+          expect(actions.mapLoaded()).toEqual(action);
+      });
+
       it('should generate the UPDATE_MAP action', () => {
         let action = {
           type: 'UPDATE_MAP'
@@ -643,6 +650,17 @@ describe('redux', () => {
     });
 
     describe('mapReducer', () => {
+      it('should register that MAP is LOADED', () => {
+        const state = {
+          loaded: false,
+        };
+        const action = {
+          type: 'MAP_LOADED',
+        };
+
+        expect(reducers.mapReducer(df(state), df(action)).loaded).toEqual(true);
+      });
+
       it('should set the UPDATE MAP value', () => {
         let action = {
           type: 'UPDATE_MAP'

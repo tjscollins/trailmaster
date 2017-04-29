@@ -97,6 +97,10 @@ export const replaceGeoJSON = (features) => {
 };
 
 //map actions
+export const mapLoaded = () => {
+    return {type: 'MAP_LOADED'};
+};
+
 export const updateMap = () => {
   return {type: 'UPDATE_MAP'};
 };

@@ -231,6 +231,7 @@ export class MapViewer extends Component {
     });
 
     this.setState({map});
+    dispatch(actions.mapLoaded());
   }
 
 

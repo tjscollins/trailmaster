@@ -14,40 +14,42 @@ import MainContainer from 'MainContainer';
 import {positionChanged} from 'TrailmasterAPI';
 import {toFloat} from 'validator';
 
-let store = null;
-if (typeof ISOMORPHIC_WEBPACK === 'undefined') {
-  const initialState = {
-    map: {
-      accessToken: 'pk.eyJ1IjoidGpzY29sbGlucyIsImEiOiJjaXdhZjl4b3AwM2h5MzNwbzZ0eDg0YWZsIn0.uR5NCLn73' +
-          '_X2M9PxDO_4KA'
+const session = typeof ISOMORPHIC_WEBPACK === 'undefined'
+  ? JSON.parse(sessionStorage.getItem('trailmaster-login'))
+  : {};
+
+const initialState = {
+  map: {
+    accessToken: 'pk.eyJ1IjoidGpzY29sbGlucyIsImEiOiJjaXdhZjl4b3AwM2h5MzNwbzZ0eDg0YWZsIn0.uR5NCLn73' +
+        '_X2M9PxDO_4KA',
+    loaded: false
+  },
+  geoJSON: {
+    type: 'FeatureCollection'
+  },
+  userSession: {
+    ...session,
+    loading: true,
+    visibleFeatures: [],
+    distanceFilter: 50,
+    trackingRoute: false,
+    routeList: [],
+    mapCentering: false,
+    coords: {
+      latitude: 0,
+      longitude: 0
     },
-    geoJSON: {
-      type: 'FeatureCollection',
-      // features: []
-    },
-    userSession: {
-      ...JSON.parse(sessionStorage.getItem('trailmaster-login')),
-      loading: true,
-      visibleFeatures: [],
-      distanceFilter: 50,
-      trackingRoute: false,
-      routeList: [],
-      mapCentering: false,
-      coords: {
-        latitude: 0,
-        longitude: 0
-      },
-      gpsTracking: {
-        enable: true,
-        watcher: null,
-        mock: false,
-        mode: 'native',
-      }
+    gpsTracking: {
+      enable: true,
+      watcher: null,
+      mock: false,
+      mode: 'native'
     }
-  };
+  }
+};
+const store = configure(initialState);
 
-  store = configure(initialState);
-
+if (typeof ISOMORPHIC_WEBPACK === 'undefined') {
   //Initialize User Location Monitoring
   const processGeolocation = (pos) => {
     let {
@@ -57,9 +59,9 @@ if (typeof ISOMORPHIC_WEBPACK === 'undefined') {
           longitude
         },
         gpsTracking: {
-          mock,
-        },
-      },
+          mock
+        }
+      }
     } = store.getState();
     if (positionChanged({
       latitude,
@@ -81,8 +83,8 @@ if (typeof ISOMORPHIC_WEBPACK === 'undefined') {
       const pos = {
         coords: {
           latitude,
-          longitude,
-        },
+          longitude
+        }
       };
       store.dispatch(actions.updatePOS(pos));
       const {map} = store.getState();
@@ -100,40 +102,10 @@ if (typeof ISOMORPHIC_WEBPACK === 'undefined') {
     });
 
   store.dispatch(actions.watchGPS(watcher));
-} else {
-  const initialState = {
-    map: {
-      accessToken: 'pk.eyJ1IjoidGpzY29sbGlucyIsImEiOiJjaXdhZjl4b3AwM2h5MzNwbzZ0eDg0YWZsIn0.uR5NCLn73' +
-          '_X2M9PxDO_4KA'
-    },
-    geoJSON: {
-      type: 'FeatureCollection',
-      // features: []
-    },
-    userSession: {
-      loading: true,
-      visibleFeatures: [],
-      distanceFilter: 50,
-      trackingRoute: false,
-      routeList: [],
-      mapCentering: false,
-      coords: {
-        latitude: 0,
-        longitude: 0
-      },
-      gpsTracking: {
-        enable: true,
-        watcher: null,
-        mock: false
-      }
-    }
-  };
-
-  store = configure(initialState);
 }
 
 const reactApp = <Provider store={store}>
-  <MainContainer />
+  <MainContainer/>
 </Provider>;
 
 if (typeof ISOMORPHIC_WEBPACK === 'undefined') {

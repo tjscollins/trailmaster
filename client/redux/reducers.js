@@ -209,6 +209,11 @@ export const mapReducer = (state = {
   center: []
 }, action) => {
   switch (action.type) {
+    case 'MAP_LOADED':
+      return {
+        ...state,
+        loaded: true
+      };
     case 'UPDATE_MAP':
       return {
         ...state,
