@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+### Added
+
+### Changed
+
 ## [0.2.2] - 2017-04-29
 ### Added
 - Added ipinfo.io fallback for user geolocation if native browser geolocation fails

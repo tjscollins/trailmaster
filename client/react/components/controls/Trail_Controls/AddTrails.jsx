@@ -130,7 +130,11 @@ export class AddTrails extends BaseComponent {
   render() {
     return (
       <div>
-        <button onClick={this.saveTrail} className='btn btn-info form-control' type='submit'>
+        <button
+          id='save-current-trail-btn'
+          onClick={this.saveTrail}
+          className='btn btn-info form-control'
+          type='submit'>
           Save Currently Displayed Trail
         </button>
         <br /><br />

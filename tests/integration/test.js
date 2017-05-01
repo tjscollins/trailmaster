@@ -1,4 +1,5 @@
 const expect = require('expect');
+const sinon = require('sinon');
 const {describe, it, before, after, afterEach} = require('selenium-webdriver/testing');
 const webdriver = require('selenium-webdriver');
 const {By, until, Key} = webdriver;
@@ -9,6 +10,7 @@ const URL = 'http://localhost:3000';
 
 before(function() {
   this.timeout(mochaTimeOut);
+
   let profile = new firefox.Profile('/home/tjscollins/.mozilla/firefox/iy86r53n.Selenium');
   let options = new firefox
     .Options()
@@ -33,7 +35,7 @@ after(function() {
   // browser.quit();
 });
 
-describe('load and view Trailmaster site', function() {
+describe('load and view Trailmaster site:\n', function() {
   this.timeout(mochaTimeOut);
 
   // John has heard about this awesome new site for sharing GPS data of mountain
@@ -175,5 +177,89 @@ describe('load and view Trailmaster site', function() {
       });
     setTimeout(done, 500);
   });
-  // Finish user story and test expect(false).toBe(true);
+
+  // John sees that he can search for POIs by text and tries searching for 'Rabbit Hole'
+  it('should filter listed POIs by POISearchText', () => {
+    const poiSearchBox = browser.findElement(By.id('poi-searchText'));
+    poiSearchBox.sendKeys('Rabbit Hole');
+
+    browser
+      .findElements(By.className('point-of-interest'))
+      .then((list)=> {
+        let once = true;
+        list.forEach((el) => {
+          el.isDisplayed().then((disp) => {
+            if(disp) {
+              el.getText().then((text) => {
+                expect(once).toBe(true);
+                once = false;
+                expect(text.slice(0, 11)).toBe('Rabbit Hole');
+              });
+            }
+          });
+        });
+      });
+  });
+
+  // John notices that he can click on POIs to display them on the map
+  it('should make pois/routes visible when clicked', (done) => {
+    const rabbitHolePOI = browser.findElement(By.className('point-of-interest'));
+    rabbitHolePOI.click();
+    rabbitHolePOI.getAttribute('style')
+      .then((style) => {
+        expect(style).toBe('font-weight: bold; cursor: pointer;');
+        browser.findElement(By.id('poi-searchText')).sendKeys(Key.chord(Key.CONTROL, 'a'));
+        browser.findElement(By.id('poi-searchText')).sendKeys(Key.BACK_SPACE);
+      });
+
+    browser.findElement(By.id('routes-controls')).click().then(() => {
+      setTimeout(() => {
+        const routesSearchBox = browser.findElement(By.id('routes-searchText'));
+        routesSearchBox.sendKeys('Chalan kiya to');
+
+        const ckToKt = browser.findElement(By.className('routes'));
+        ckToKt.click();
+        ckToKt.getAttribute('style')
+        .then((style) => {
+          expect(style).toBe('font-weight: bold; cursor: pointer;');
+          browser.findElement(By.id('routes-searchText')).sendKeys(Key.chord(Key.CONTROL, 'a'));
+          browser.findElement(By.id('routes-searchText')).sendKeys(Key.BACK_SPACE);
+          done();
+        });
+      }, 500);
+    });
+  });
+
+  // John goes to the Your Trails panel and sees the items he previously selected
+  it('should show selected pois/routes in Your Trails/Currently Selected Trail display', (done) => {
+    browser.findElement(By.id('trails-controls')).click().then(() => {
+      browser.findElements(By.className('point-of-interest'))
+        .then((selectedFeatures) => {
+          selectedFeatures.forEach((feature) => {
+            feature.getText().then((text) => {
+              // Either text is empty, or matches one of the two elements that
+              // should be displayed.
+              expect(text.length > 0
+                && !(text.match(/Rabbit/i)
+                    || text.match(/Chalan kiya to kannat/i))).toBe(false);
+            });
+            feature.getTagName().then((tag) => {
+              expect(tag).toEqual('tr');
+            });
+          });
+        });
+    });
+    setTimeout(done, 500);
+  });
+
+  // John tries to save his trail, but fails, because he does not have an account.
+  // He is prompted to sign-in or create an account.
+  it('should fail to save new trails for unauthenticated users and prompt them to login or create an account.', () => {
+    browser
+      .findElement(By.id('save-current-trail-btn'))
+      .click()
+      .then(() => {
+        browser.wait(until.alertIsPresent(), 1000, 'Page did not alert user to their unauthenticated status');
+      });
+  });
 });

@@ -51,7 +51,7 @@ const store = configure(initialState);
 
 if (typeof ISOMORPHIC_WEBPACK === 'undefined') {
   //Initialize User Location Monitoring
-  const processGeolocation = (pos) => {
+  let processGeolocation = (pos) => {
     let {
       userSession: {
         coords: {
@@ -63,17 +63,14 @@ if (typeof ISOMORPHIC_WEBPACK === 'undefined') {
         }
       }
     } = store.getState();
-    if (positionChanged({
-      latitude,
-      longitude
-    }, pos.coords) && !mock) {
+    if (positionChanged({latitude, longitude}, pos.coords) && !mock) {
       store.dispatch(actions.updatePOS(pos));
     }
     if (store.getState().userSession.trackingRoute)
       store.dispatch(actions.addToRouteList(pos));
     };
 
-  const geolocationError = (err) => {
+  let geolocationError = (err) => {
     console.error('Error tracking user position', err);
     store.dispatch(actions.stopGPS());
     $.getJSON('https://ipinfo.io', function(data) {
@@ -87,9 +84,28 @@ if (typeof ISOMORPHIC_WEBPACK === 'undefined') {
         }
       };
       store.dispatch(actions.updatePOS(pos));
-      const {map} = store.getState();
     });
   };
+
+  if (location.hostname === 'localhost') {
+    // Testing, so mock user location with static position
+    navigator.geolocation.watchPosition = (success, error, opts) => {
+      success({
+        coords: {
+          latitude: 15.151515,
+          longitude: 145.729789,
+        },
+      });
+      return setInterval(() => {
+        success({
+          coords: {
+            latitude: 15.151515,
+            longitude: 145.729789,
+          },
+        });
+      }, 15000);
+    };
+  }
 
   const watcher = navigator
     .geolocation
@@ -105,7 +121,7 @@ if (typeof ISOMORPHIC_WEBPACK === 'undefined') {
 }
 
 const reactApp = <Provider store={store}>
-  <MainContainer/>
+  <MainContainer />
 </Provider>;
 
 if (typeof ISOMORPHIC_WEBPACK === 'undefined') {
