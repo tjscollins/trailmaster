@@ -254,12 +254,20 @@ describe('load and view Trailmaster site:\n', function() {
 
   // John tries to save his trail, but fails, because he does not have an account.
   // He is prompted to sign-in or create an account.
-  it('should fail to save new trails for unauthenticated users and prompt them to login or create an account.', () => {
+  it('should fail to save new trails for unauthenticated users and prompt them to login or create an account.', (done) => {
     browser
       .findElement(By.id('save-current-trail-btn'))
       .click()
       .then(() => {
-        browser.wait(until.alertIsPresent(), 1000, 'Page did not alert user to their unauthenticated status');
+        browser.wait(until.alertIsPresent(), 1000, 'Page did not alert user to their unauthenticated status').then(() => {
+          const 
+        });
       });
   });
+
+  // John decides to create an account later, and closes the browser.
 });
+
+describe('create an account and login:\n', () => {});
+
+describe('create and save a custom trail:\n', () => {});

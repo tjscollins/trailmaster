@@ -74,8 +74,16 @@ export class AddTrails extends BaseComponent {
       dispatch(actions.toggleVisibility(id));
     };
   }
-  saveTrail() {
-    $('#save-trail-modal').modal('show');
+  saveTrail = () => {
+    const {xAuth} = this.props.userSession;
+    if(xAuth) {
+      // user is authenticated, so allow them to save their trail
+      $('#save-trail-modal').modal('show');
+    } else {
+      // user is not authenticated, so show login first
+      alert('You must be logged in to save a custom trail');
+      $('#login-modal').modal('show');
+    }
   }
   submit() {
     let {dispatch, geoJSON, userSession} = this.props;
@@ -88,7 +96,6 @@ export class AddTrails extends BaseComponent {
           .visibleFeatures
           .indexOf(point._id) > -1;
       });
-    // this.fillRoads(trailList);
     let date = new Date();
     let newTrail = {
       bounds: {},

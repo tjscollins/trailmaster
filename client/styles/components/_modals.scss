@@ -1,5 +1,9 @@
 .modal.fade {
   overflow: auto;
+  
+  .form-control {
+    margin-bottom: 5px;
+  }
 }
 
 #preview-map {

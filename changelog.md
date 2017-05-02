@@ -3,8 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 ### Added
+- Attempting to save a trail when not logged in now produces an alert advising the user to login and then displays the login prompt.
 
 ### Changed
+- Improved integration tests.
+- Minor CSS fixes.
+
 
 ## [0.2.2] - 2017-04-29
 ### Added

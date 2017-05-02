@@ -70,6 +70,14 @@ export class Login extends BaseComponent {
       }, 1500);
     });
   }
+  switchToCreate() {
+    $('#login-modal').modal('hide');
+    $('#account-creator').modal('show');
+  }
+  switchToLogin() {
+    $('#account-creator').modal('hide');
+    $('#login-modal').modal('show');
+  }
   render() {
     return (
       <div>
@@ -84,8 +92,16 @@ export class Login extends BaseComponent {
               </div>
               <div className='modal-body'>
                 <form ref='loginForm' onSubmit={this.login}>
-                  <input className='form-control' ref='email' type='text' placeholder='Email' />
-                  <input className='form-control' ref='password' type='password' placeholder='Password' />
+                  <input
+                    className='form-control'
+                    ref='email'
+                    type='text'
+                    placeholder='Email' />
+                  <input
+                    className='form-control'
+                    ref='password'
+                    type='password'
+                    placeholder='Password' />
                   <button type='submit' style={{
                     display: 'none'
                   }} />
@@ -100,7 +116,13 @@ export class Login extends BaseComponent {
                 <div className='wrong-password'>
                   <p>Incorrect email or password</p>
                 </div>
-                <button onClick={this.login} type='submit' className='btn btn-primary'>Login</button>
+                <button
+                  onClick={this.switchToCreate}
+                  className='btn btn-default'>Create Account</button>
+                <button
+                  onClick={this.login}
+                  type='submit'
+                  className='btn btn-primary'>Login</button>
               </div>
             </div>
           </div>
@@ -117,12 +139,23 @@ export class Login extends BaseComponent {
               </div>
               <div className='modal-body'>
                 <form ref='loginForm'>
-                  <input className='form-control' ref='createEmail' type='text' placeholder='Email' />
-                  <input className='form-control' ref='createPassword' type='password' placeholder='Password' />
+                  <input
+                    className='form-control'
+                    ref='createEmail'
+                    type='text'
+                    placeholder='Email' />
+                  <input
+                    className='form-control'
+                    ref='createPassword'
+                    type='password'
+                    placeholder='Password' />
                 </form>
               </div>
               <div className='modal-footer'>
                 <div>
+                  <button
+                    onClick={this.switchToLogin}
+                    className='btn btn-default'>Login</button>
                   <button onClick={this.create} type='submit' className='btn btn-primary' data-dismiss='modal'>Create</button>
                 </div>
               </div>
