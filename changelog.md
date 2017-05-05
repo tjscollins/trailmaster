@@ -3,9 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 ### Added
+- Added displayFeatureOnMap and hideFeatureOnMap in addition to the existing toggleVisibility to allow more fine-grained control of what is displayed on the map.
 - Attempting to save a trail when not logged in now produces an alert advising the user to login and then displays the login prompt.
 
 ### Changed
+- Renamed toggleVisibility to toggleFeatureOnMap for more consistent naming
+- Fixed distance calculation of trails with PoIs but no routes
 - Fixed AddTrails component to display lengths of routes included in the new saved trail.
 - Improved integration tests.
 - Minor CSS fixes.

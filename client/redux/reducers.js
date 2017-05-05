@@ -1,6 +1,6 @@
 // import {geoJSON} from 'geoJSON';
-import uuid from 'uuid';
-import $ from 'jquery';
+// import uuid from 'uuid';
+// import $ from 'jquery';
 
 export const userSessionReducer = (state = {
   xAuth: '',
@@ -16,7 +16,7 @@ export const userSessionReducer = (state = {
     enable: true,
     watcher: null,
     mock: false,
-    trueLocation: { }
+    trueLocation: {}
   },
   coords: {
     latitude: 15,
@@ -66,6 +66,37 @@ export const userSessionReducer = (state = {
             action.id
           ]
         };
+    case 'DISPLAY_FEAT_ON_MAP':
+      let displayIndex = state
+        .visibleFeatures
+        .indexOf(action.id);
+      return displayIndex > -1
+        ? {
+          ...state
+        }
+        : {
+          ...state,
+          visibleFeatures: [
+            ...state.visibleFeatures,
+            action.id
+          ]
+        };
+    case 'HIDE_FEAT_ON_MAP':
+      let hideIndex = state
+        .visibleFeatures
+        .indexOf(action.id);
+      return hideIndex > -1
+        ? {
+          ...state,
+          visibleFeatures: state
+            .visibleFeatures
+            .filter((id) => {
+              return id !== action.id;
+            })
+        }
+        : {
+          ...state,
+        };
     case 'UPDATE_DISTANCE_FILTER':
       return {
         ...state,
@@ -96,18 +127,18 @@ export const userSessionReducer = (state = {
         coords: {
           latitude: action.position.coords.latitude,
           longitude: action.position.coords.longitude
-        },
+        }
       };
     case 'UNMOCK_POS':
       return {
         ...state,
         gpsTracking: {
           ...state.gpsTracking,
-          mock: false,
+          mock: false
         },
         coords: {
           latitude: state.gpsTracking.trueLocation.latitude,
-          longitude: state.gpsTracking.trueLocation.longitude,
+          longitude: state.gpsTracking.trueLocation.longitude
         }
       };
     case 'WATCH_GPS':
@@ -116,17 +147,19 @@ export const userSessionReducer = (state = {
         gpsTracking: {
           ...state.gpsTracking,
           watcher: action.watcher,
-          mode: 'native',
+          mode: 'native'
         }
       };
     case 'STOP_GPS':
-      navigator.geolocation.clearWatch(state.gpsTracking.watcher);
+      navigator
+        .geolocation
+        .clearWatch(state.gpsTracking.watcher);
       return {
         ...state,
         gpsTracking: {
           watcher: null,
-          mode: 'ipinfo',
-        },
+          mode: 'ipinfo'
+        }
       };
     case 'TOGGLE_MAP_CENTERING':
       return {
@@ -196,7 +229,9 @@ export const trailsReducer = (state = {
     case 'DEL_TRAIL':
       return {
         ...state,
-        myTrails: state.myTrails.filter((trail) => trail.name !== action.name),
+        myTrails: state
+          .myTrails
+          .filter((trail) => trail.name !== action.name)
       };
       // case 'SHOW_TRAIL':   return state;
     default:
@@ -275,8 +310,8 @@ export const geoJSONReducer = (state = initialGeoState, action) => {
         features: features
       };
     case 'UPDATE_GEO_JSON':
-      var {point} = action;
-      var unchangedFeatures = state
+      const {point} = action;
+      const unchangedFeatures = state
         .features
         .filter((data) => {
           return data._id !== point._id;
@@ -289,21 +324,19 @@ export const geoJSONReducer = (state = initialGeoState, action) => {
         ]
       };
     case 'ADD_POI':
-      var {feature} = action;
       return {
         ...state,
         features: [
           ...state.features,
-          feature
+          action.feature
         ]
       };
     case 'ADD_ROUTE':
-      var {feature} = action;
       return {
         ...state,
         features: [
           ...state.features,
-          feature
+          action.feature
         ]
       };
     default:
@@ -312,7 +345,7 @@ export const geoJSONReducer = (state = initialGeoState, action) => {
   }
 };
 
-var initialGeoState = {
+const initialGeoState = {
 
   type: 'FeatureCollection',
   features: [
@@ -320,15 +353,15 @@ var initialGeoState = {
       _id: '1',
       type: 'Feature',
       properties: {
-        stroke: '#555555',
+        'stroke': '#555555',
         'stroke-width': 2,
         'stroke-opacity': 1,
-        name: 'Chalan Kiya to Kannat Tabla Connector',
-        desc: 'Trail to move from Kannat Tabla area down into Chalan Kiya near the start of the' +
+        'name': 'Chalan Kiya to Kannat Tabla Connector',
+        'desc': 'Trail to move from Kannat Tabla area down into Chalan Kiya near the start of the' +
             ' Chalan Kiya ravine',
-        condition: 'Uncut, overgrown',
-        last: 'Dec 2015',
-        displayed: false
+        'condition': 'Uncut, overgrown',
+        'last': 'Dec 2015',
+        'displayed': false
       },
       geometry: {
         type: 'LineString',
@@ -424,11 +457,11 @@ var initialGeoState = {
         'marker-color': '#7e7e7e',
         'marker-size': 'medium',
         'marker-symbol': '',
-        name: 'Concrete Jesus',
-        desc: 'Concrete statue of Jesus at the peak of Mt. Tapotchau',
-        condition: 'Rough dirt road, easy access on foot',
-        last: 'June 2016',
-        displayed: false
+        'name': 'Concrete Jesus',
+        'desc': 'Concrete statue of Jesus at the peak of Mt. Tapotchau',
+        'condition': 'Rough dirt road, easy access on foot',
+        'last': 'June 2016',
+        'displayed': false
       },
       geometry: {
         type: 'Point',
@@ -444,11 +477,11 @@ var initialGeoState = {
         'marker-color': '#7e7e7e',
         'marker-size': 'medium',
         'marker-symbol': '',
-        name: 'Rabbit Hole',
-        desc: 'Hole descends from top of cliff to bottom, forming climbable cave',
-        condition: 'Rope in good condition',
-        last: 'June 2014',
-        displayed: false
+        'name': 'Rabbit Hole',
+        'desc': 'Hole descends from top of cliff to bottom, forming climbable cave',
+        'condition': 'Rope in good condition',
+        'last': 'June 2014',
+        'displayed': false
       },
       geometry: {
         type: 'Point',
@@ -461,14 +494,14 @@ var initialGeoState = {
       _id: '3',
       type: 'Feature',
       properties: {
-        stroke: '#555555',
+        'stroke': '#555555',
         'stroke-width': 2,
         'stroke-opacity': 1,
-        name: 'Laderan Tanki to Bird Island Overlook',
-        desc: 'Route runs downhill through jungle',
-        condition: 'Bees!',
-        last: 'Oct 2016',
-        displayed: false
+        'name': 'Laderan Tanki to Bird Island Overlook',
+        'desc': 'Route runs downhill through jungle',
+        'condition': 'Bees!',
+        'last': 'Oct 2016',
+        'displayed': false
       },
       geometry: {
         type: 'LineString',

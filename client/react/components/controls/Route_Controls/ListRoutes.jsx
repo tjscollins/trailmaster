@@ -18,7 +18,7 @@ export class ListRoutes extends BaseComponent {
     //Display point on map
     let {dispatch} = this.props;
     return () => {
-      dispatch(actions.toggleVisibility(id));
+      dispatch(actions.toggleFeatureOnMap(id));
     };
   }
   displayStyle(id) {

@@ -7,8 +7,16 @@ export const logout = () => {
   return {type: 'LOGOUT'};
 };
 
-export const toggleVisibility = (id) => {
+export const toggleFeatureOnMap = (id) => {
   return {type: 'TOGGLE_VISIBILITY', id};
+};
+
+export const displayFeatureOnMap = (id) => {
+  return {type: 'DISPLAY_FEAT_ON_MAP', id};
+};
+
+export const hideFeatureOnMap = (id) => {
+  return {type: 'HIDE_FEAT_ON_MAP', id};
 };
 
 export const updateDistanceFilter = (distance) => {

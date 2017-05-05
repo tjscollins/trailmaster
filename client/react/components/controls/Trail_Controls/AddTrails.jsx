@@ -75,7 +75,7 @@ export class AddTrails extends BaseComponent {
   remove(id) {
     let {dispatch} = this.props;
     return () => {
-      dispatch(actions.toggleVisibility(id));
+      dispatch(actions.toggleFeatureOnMap(id));
     };
   }
   saveTrail = () => {

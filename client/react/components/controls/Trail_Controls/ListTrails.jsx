@@ -52,7 +52,7 @@ export class ListTrails extends BaseComponent {
         trail[0]
           .list
           .forEach((feature) => {
-            dispatch(actions.toggleVisibility(feature._id));
+            dispatch(actions.displayFeatureOnMap(feature._id));
           });
       }
     };

@@ -18,13 +18,13 @@ export class ListPOI extends BaseComponent {
    * display - generates a toggle display function for a give geoJSON feature
    *
    * @param  {string} id string identify geoJSON feature
-   * @return {function}    function to dispatch.toggleVisibility
+   * @return {function}    function to dispatch.toggleFeatureOnMap
    */
   display(id) {
     return () => {
       this
         .props
-        .dispatch(actions.toggleVisibility(id));
+        .dispatch(actions.toggleFeatureOnMap(id));
     };
   }
   displayStyle(id) {
