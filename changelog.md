@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 - Attempting to save a trail when not logged in now produces an alert advising the user to login and then displays the login prompt.
 
 ### Changed
-- Fixed AddTrails component to display lengths of routes included in the new trail.
+- Fixed AddTrails component to display lengths of routes included in the new saved trail.
 - Improved integration tests.
 - Minor CSS fixes.
 

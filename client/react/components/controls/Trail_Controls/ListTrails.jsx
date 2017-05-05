@@ -64,6 +64,8 @@ export class ListTrails extends BaseComponent {
       .myTrails
       .map((trail) => {
         let {name, desc, date, _id} = trail;
+        const length = this.trailLength(_id);
+        const distString = length !== null ? `${length} miles` : 'N/A';
         return name.match(new RegExp(trailSearchText, 'i'))
           ? (
             <tr id={_id} style={{cursor: 'pointer'}} className='point-of-interest' key={_id}>
@@ -71,7 +73,7 @@ export class ListTrails extends BaseComponent {
               <td onClick={this.display(_id)} >{desc}</td>
               <td onClick={this.display(_id)} >{date}</td>
               <td className='trail-length' onClick={this.display(_id)} >
-                <p>{`${this.trailLength(_id)} miles`}</p>
+                <p>{distString}</p>
               </td>
               <td style={{cursor: 'default'}}>
                 <button className='btn btn-danger delete-trail' onClick={this.markForDelete(_id)}>
@@ -111,7 +113,9 @@ export class ListTrails extends BaseComponent {
         });
       }
     });
-    return Math.floor(total*100)/100;
+    return total > 0
+      ? Math.floor(total*100)/100
+      : null;
   }
   render() {
     return (
