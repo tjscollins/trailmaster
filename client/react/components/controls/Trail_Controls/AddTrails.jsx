@@ -3,6 +3,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import $ from 'jquery';
 import * as actions from 'actions';
+import lineDistance from '@turf/line-distance';
 // import mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
 // import MapboxDirections from '@mapbox/mapbox-gl-directions';
 
@@ -29,15 +30,18 @@ export class AddTrails extends BaseComponent {
           .indexOf(point._id) > -1;
       })
       .map((point) => {
-        let id = point._id;
-        let {name, desc, condition, last} = point.properties;
+        const id = point._id;
+        const {name, desc, condition, last} = point.properties;
+        const {type} = point.geometry;
+        const length = type === 'LineString' ? lineDistance(point, 'miles') : null;
+        const route = length !== null;
         return (
           <tr onClick={this.remove(id)} id={id} className='point-of-interest' key={id} style={{
             cursor: 'pointer'
           }}>
             <td>{name}</td>
             <td>{desc}</td>
-            <td>{condition}</td>
+            <td>{condition}<br /> <br />{route ? `${Math.round(length*100)/100} miles` : null} </td>
             <td>{last}</td>
           </tr>
         );

@@ -81,7 +81,7 @@ describe('MockLocation', () => {
     expect(dispatch.called).toBe(false);
     mockLocation.refs.longitude.value = '-118.3004';
     mockLocation.submit(event);
-    expect(dispatch.calledOnce).toBe(true);
+    expect(dispatch.calledTwice).toBe(true);
   });
 
   it('should unMock a mocked position from the redux store', () => {
