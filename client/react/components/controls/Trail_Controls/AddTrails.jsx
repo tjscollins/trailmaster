@@ -18,6 +18,9 @@ export class AddTrails extends BaseComponent {
     super();
     this._bind('submit', 'fillRoads');
   }
+  clearMap = () => {
+    this.props.dispatch(actions.clearMap());
+  }
   currentTrail() {
     let {geoJSON: {features}, userSession} = this.props;
     if (features === undefined) {
@@ -141,13 +144,21 @@ export class AddTrails extends BaseComponent {
   render() {
     return (
       <div>
-        <button
-          id='save-current-trail-btn'
-          onClick={this.saveTrail}
-          className='btn btn-info form-control'
-          type='submit'>
-          Save Currently Displayed Trail
-        </button>
+        <div id='save-or-clear-map'>
+          <button
+            id='clear-current-map-btn'
+            onClick={this.clearMap}
+            className='btn btn-default'>
+            Clear Map
+          </button>
+          <button
+            id='save-current-trail-btn'
+            onClick={this.saveTrail}
+            className='btn btn-primary'
+            type='submit'>
+            Save Current Map
+          </button>
+        </div>
         <br /><br />
         <h4 className='current-trail-header'>Currently Displayed Trail</h4>
         <table className='list-box table table-striped'>

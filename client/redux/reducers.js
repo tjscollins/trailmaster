@@ -47,6 +47,11 @@ export const userSessionReducer = (state = {
         _id: null,
         email: null
       };
+    case 'CLEAR_MAP':
+      return {
+        ...state,
+        visibleFeatures: [],
+      };
     case 'TOGGLE_VISIBILITY':
       return state
         .visibleFeatures

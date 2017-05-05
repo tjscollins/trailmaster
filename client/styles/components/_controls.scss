@@ -95,3 +95,12 @@ div {
 input {
   margin-bottom: 5px;
 }
+
+#save-or-clear-map {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  button {
+    width: 40%;
+  }
+}

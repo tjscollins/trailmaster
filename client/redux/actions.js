@@ -19,6 +19,10 @@ export const hideFeatureOnMap = (id) => {
   return {type: 'HIDE_FEAT_ON_MAP', id};
 };
 
+export const clearMap = () => {
+  return {type: 'CLEAR_MAP'};
+};
+
 export const updateDistanceFilter = (distance) => {
   return {type: 'UPDATE_DISTANCE_FILTER', distance};
 };
